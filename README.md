@@ -23,3 +23,6 @@ Published research articles since the early 2000s are assigned a DOI. A DOI is s
 At the moment, we do not have a standard format for organizing files for curation. The primary directory should contain a README.md with the DOI or other information needed in order to identify the set of experiments that the curated data should be linked to. Each "sample" should have its own sub-directory containing the completed Excel template along with any supplemental data files (.csv, .jpg, etc.).
 
 
+test update
+
+
