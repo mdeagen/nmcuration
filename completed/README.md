@@ -1,5 +1,6 @@
 # "Completed" Curation Projects
-Move the sub-directory for a publication to this directory after:
+Move the sub-directory for a project to this directory after:
+* The project has resided in the "In Progress" directory
 * Excel templates have been generated for each "sample" in the publication
 * A "dataset" for the publication has been created in NanoMine (QA)
 * The "filesets" have been uploaded to NanoMine (QA)
