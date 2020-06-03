@@ -38,7 +38,9 @@ An example format for the Traveler (in markdown format) is:
 > \## Datasets of Interest
 >
 > \* Figure 1, Tg vs. Mass Fraction data
+>
 > \* Figure 2, Stress-strain data
+>
 > \* Figure 5, Storage and loss modulus data
 >
 > \---
