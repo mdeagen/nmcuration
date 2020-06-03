@@ -35,6 +35,14 @@ An example format for the Traveler (in markdown format) is:
 > 
 > \---
 >
+> \## Datasets of Interest
+>
+> \* Figure 1, Tg vs. Mass Fraction data
+> \* Figure 2, Stress-strain data
+> \* Figure 5, Storage and loss modulus data
+>
+> \---
+>
 > \## Events
 >
 > 2020-06-03: Added publication, curation project to "Wishlist" directory (M.E.D.)
