@@ -13,17 +13,21 @@ Analogous to a *manufacturing traveler*, this document will accompany the curati
 The format of the traveler is a `README.md` markdown file located in the sub-directory for the curation project. The purpose of this file is to document key steps in the curation process (e.g., moving the project between curation stages), as well as any issues/roadblocks encountered along the way. Documentation of issues and roadblocks is valuable information that will help the team continue to improve and streamline the curation process.
 
 An example format for the Traveler (in markdown format) is:
-> # AuthName_YYYY
+> \# AuthName_YYYY
 >
-> ## DOI: 10.1234/example.123.45
+> \## DOI: 10.1234/example.123.45
 > 
-> ## Traveler Created: 2020-06-03
-> ## Traveler Modified: 2020-07-05
+> \## Traveler Created: 2020-06-03
+> \## Traveler Modified: 2020-07-05
 > 
 > 2020-06-03: Added publication, curation project to Wishlist directory (M.E.D.)
+
 > 2020-06-04: Finalized list of figures with datasets of interest (M.E.D.)
+
 > 2020-06-05: Added project to "In Progress" (M.E.D.)
+
 > 2020-06-09: Completed Excel template files (M.E.D.)
+
 > 2020-06-10: Uploaded files to NanoMine successfully, moved project to "Complete" (M.E.D.)
 
 ## Requesting Raw Datasets from Authors
