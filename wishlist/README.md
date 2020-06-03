@@ -37,7 +37,7 @@ An example format for the Traveler (in markdown format) is:
 >
 > \## Events
 >
-> 2020-06-03: Added publication, curation project to Wishlist directory (M.E.D.)
+> 2020-06-03: Added publication, curation project to "Wishlist" directory (M.E.D.)
 >
 > 2020-06-04: Finalized list of figures with datasets of interest (M.E.D.)
 >
