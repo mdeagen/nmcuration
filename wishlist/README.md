@@ -1,7 +1,7 @@
 # Curation Project "Wishlist"
-This directory is intended for curation progress that have reached an internal or external roadblock and are **no longer actively in progress** until a requested fix has been implemented.
+This directory is intended for nascent curation jobs, and specifically to pre-process these jobs before they are moved to "In-Progress".
 
-Before moving a project to the "In Progress" directory
+Before moving a project to the "In-Progress" directory:
 * Create a sub-directory for the curation job
 * Create a Traveler README.md (see below for instructions)
 * Identify datasets of interest (including Figure/Table number where applicable)
