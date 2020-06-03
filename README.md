@@ -15,13 +15,13 @@ This repository is dedicated to the curation of published data from the polymer 
 * [**NanoMine Ontology spreadsheet**](https://docs.google.com/spreadsheets/d/1hDqbUzgJ2menVFhkjAvZs5uWgVoO-lxi7nxOh6W2QiA/): Google Sheet used to collaboratively develop the NanoMine ontology
 
 ## File and Folder Organization
-At the moment, we do not have a standard format for organizing files for curation. The primary directory should contain a README.md with the DOI or other information needed in order to identify the set of experiments that the curated data should be linked to. In the README, it would also be useful to include the relevant experimental factors that varied in the experiment. Each "sample" should have its own sub-directory containing the completed Excel template along with any supplemental data files (.csv, .jpg, etc.). It may be helpful to place these within a "Curated" directory to keep these folders separate from the raw data files or any code used to wrangle and prepare data.
+Within a curation job's sub-directory, the file organization depends on what makes the most sense for the curator. However, the sub-directory should contain a "Traveler" (README.md) with the DOI and other information relevant to the curation process. Because data in NanoMine are uploaded on a per-sample basis, it is suggested to give each "sample" its own child sub-directory containing the completed Excel template along with any supplemental data files (.csv, .jpg, etc.).
 
 ## Curation Workflow
 There are five directories in this repository that can be considered "stages" of the curation process:
 
 ### [Wishlist](https://github.com/mdeagen/nmcuration/tree/master/wishlist)
-At the "**Wishlist**" stage, a curation job is prepared by creating a sub-directory, initializing a **Traveler** (README.md file) in the sub-directory, and identifying figures/data of interest. Once the raw data have been retrieved (either provided by the original authors or through a digital extraction tool), 
+At the "**Wishlist**" stage, a curation job is prepared by creating a sub-directory, initializing a "**Traveler**" (README.md file) in the sub-directory, and identifying figures/data of interest. Once the raw data have been retrieved (either provided by the original authors or through a digital extraction tool), 
 
 ### [In-Progress](https://github.com/mdeagen/nmcuration/tree/master/in-progress)
 The "**In-Progress**" stage should be kept as uncluttered as possible, with only those curation jobs that are actively in progress. Curation jobs should spend as little time as reasonable in this directory and should be moved to either "**Completed**" or "**Stalled**."
