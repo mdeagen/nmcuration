@@ -1,7 +1,7 @@
 # "In Progress" Curation Projects
-This directory is intended for curation progress that are **actively in progress**.
+This directory is intended for curation jobs that are **actively in progress**. By design, this directory should be kept as uncluttered as possible.
 
-Move a sub-directory for a pproject to this directory after:
+Move a sub-directory for a curation job to this directory after:
 * A sub-directory has been created in the "Wishlist" directory
 * Figures/data of interest to NanoMine have been identified and added to the README.md in the sub-directory
 * All raw data has been obtained (in the event that the curator is working with the author(s) of the paper)
@@ -9,7 +9,7 @@ Move a sub-directory for a pproject to this directory after:
 
 Once all template files and supplementary files have been added to NanoMine (QA), and a "Success!" report has been returned for each fileset, move the sub-directory to the "Completed" directory.
 
-If the curation process reaches a significant roadblock, add a description to the README.md file and move the sub-directory to the "Stalled" directory.
+If the curation job encounters a significant roadblock, add a description to the README.md file and move the sub-directory to the "Stalled" directory.
 
 ## Links and Resources
 * [**NanoMine Uploader**](https://qa.materialsmine.org/nm#/XMLCONV): Excel template to XML converter on the NanoMine QA server
