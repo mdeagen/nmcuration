@@ -20,19 +20,19 @@ At the moment, we do not have a standard format for organizing files for curatio
 ## Curation Workflow
 There are five directories in this repository that can be considered "stages" of the curation process:
 
-### Wishlist
+### [Wishlist](https://github.com/mdeagen/nmcuration/tree/master/wishlist)
 At the "**Wishlist**" stage, a curation job is prepared by creating a sub-directory, initializing a Traveler (README.md file) in the sub-directory, and identifying figures/data of interest. Once the raw data have been retrieved (either provided by the original authors or through a digital extraction tool), 
 
-### In-Progress
+### [In-Progress](https://github.com/mdeagen/nmcuration/tree/master/in-progress)
 The "**In-Progress**" stage should be kept as uncluttered as possible, with only those curation jobs that are actively in progress. Curation jobs should spend as little time as reasonable in this directory and should be moved to either "**Completed**" or "**Stalled**."
 
-### Completed
+### [Completed](https://github.com/mdeagen/nmcuration/tree/master/completed)
 The "**Completed**" stage is designed to keep track of curation jobs that have *already been uploaded to NanoMine QA*. This is ideally the final location for the curation job, unless there are modifications or updates to make in which case the sub-directory should be moved to the "**Revisited**" directory.
 
-### Stalled
+### [Stalled](https://github.com/mdeagen/nmcuration/tree/master/stalled)
 If a significant roadblock is encountered, the curation job can be moved to the "**Stalled**" stage. Documenting the issue as clearly as possible will help the team make the necessary improvements or updates to the system. Once a solution has been identified, the job can be returned to the "**In-Progress**" directory.
 
-### Revisited
+### [Revisited](https://github.com/mdeagen/nmcuration/tree/master/revisited)
 If a curation job in the NanoMine system ("**Completed**") requires some revision, the sub-directory should be moved to the "**Revision**" stage. At this point, the issue should be clearly described before moving the curation job to the "**In-Progress**" stage.
 
 The overall workflow is illustrated in the diagram below.
