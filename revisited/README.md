@@ -1,7 +1,7 @@
 # "Revisited" Curation Projects
 This directory is intended for curation progress that were **previously in the NanoMine system** but require some correction 
 
-Move a sub-directory for a publication to this directory after:
+Move a sub-directory for a pproject to this directory after:
 * The sub-directory has resided in the "Completed" directory
 * An issue has been identified for the curated publication
 

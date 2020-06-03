@@ -1,7 +1,7 @@
-# "In-Progress" Curation Projects
+# "In Progress" Curation Projects
 This directory is intended for curation progress that are **actively in progress**.
 
-Move a sub-directory for a publication to this directory after:
+Move a sub-directory for a pproject to this directory after:
 * A sub-directory has been created in the "Wishlist" directory
 * All raw data has been obtained (in the event that the curator is working with the author(s) of the paper)
 * Figures/data of interest to NanoMine have been identified and added to the README.md in the sub-directory
