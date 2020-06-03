@@ -21,7 +21,7 @@ At the moment, we do not have a standard format for organizing files for curatio
 There are five directories in this repository that can be considered "stages" of the curation process:
 
 ### [Wishlist](https://github.com/mdeagen/nmcuration/tree/master/wishlist)
-At the "**Wishlist**" stage, a curation job is prepared by creating a sub-directory, initializing a Traveler (README.md file) in the sub-directory, and identifying figures/data of interest. Once the raw data have been retrieved (either provided by the original authors or through a digital extraction tool), 
+At the "**Wishlist**" stage, a curation job is prepared by creating a sub-directory, initializing a **Traveler** (README.md file) in the sub-directory, and identifying figures/data of interest. Once the raw data have been retrieved (either provided by the original authors or through a digital extraction tool), 
 
 ### [In-Progress](https://github.com/mdeagen/nmcuration/tree/master/in-progress)
 The "**In-Progress**" stage should be kept as uncluttered as possible, with only those curation jobs that are actively in progress. Curation jobs should spend as little time as reasonable in this directory and should be moved to either "**Completed**" or "**Stalled**."
