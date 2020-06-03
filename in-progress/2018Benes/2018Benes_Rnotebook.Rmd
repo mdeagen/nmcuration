@@ -1,0 +1,397 @@
+---
+title: "Benes *et al.* **Macromolecules** (2018)"
+author: "Curated by Michael Deagen"
+date: "7 Feb, 2020"
+output: html_notebook
+---
+
+### Introduction
+
+```{r include=FALSE}
+#options(java.parameters = "-Xmx2048m") ## if XLConnect runs into memory issues, use this to increase memory allocation for Java
+
+require(rcrossref) # package for scraping CrossRef database given a DOI
+require(XLConnect) # package for MS Excel integration
+require(tidyr)     # data wrangling/tidying
+require(tibble)    # improvement on dataframes
+require(readr)     # read_csv functionality
+require(here)      # identify present working directory based on file location
+require(dplyr)     # data wrangling tools
+require(magrittr)  # pipe operator (%>%), compound assignment operator (%<>%), exposition operator (%$%)
+
+# Set the working directory to the location of this R notebook (this directory should contain the master template and associated data to import)
+current_directory <- here()
+
+setwd(current_directory)
+
+# folder containing downloaded data (provided by the author)
+data_path <- "./Benes Group-20200130T165429Z-001/Benes Group/"
+
+# Name of MASTER TEMPLATE FILE, which must be stored in same directory as this R notebook
+master_template_path <- "master_template_2020_Benes.xlsx"
+
+# load master template file 
+masterwb <- loadWorkbook(file=master_template_path, create = FALSE) ## requires input of template file name
+
+# DOI of paper (extracted from DOI field of master template file)
+myDOI <- readWorksheet(masterwb, sheet = "1. Data Origin", startRow = 11, startCol = 2, endRow = 11, endCol = 2, header = FALSE)[[1]]
+```
+
+[R Markdown](http://rmarkdown.rstudio.com) Notebook for [this 2019 paper by Benes *et al.*](`r paste0("http://doi.org/", myDOI)`), for the purposes of semi-automated curation into NanoMine Excel template files.
+
+---
+
+### Definition of **Global Constants**
+
+All schema variables that remain constant throughout these experiments shall be saved in the file ```r master_template_path```.
+
+This file will be copied, and schema variables for a given sample will be placed in the appropriate cells of that copy.
+
+---
+
+### Definition of **Experimental Factors** (Controlled Independent Variables)
+
+The *minimal* subset of controlled parameters necessary to uniquely define each sample in the experiment is:
+
+* **Particle surface treatment** of titanate nanotubes (pristine, APMBP, PEI, PDA)
+* **Filler loading**, either 3 wt % or neat
+
+These **experimental factors** shall serve as the *primary key* needed to link variable data to the appropriate sample.
+
+---
+
+### **Factor-Level-Linked** Independent Variables (Functional Dependencies)
+
+Variables exhibiting a direct dependence on factor variables include:
+
+* Particle surface treatment chemical info
+* Particle surface treatment processing steps
+* Nanocomposite processing (vs. neat matrix)
+
+---
+
+### **"Abandoned" Data**
+
+Data that appear relevant to the context of the experiment but do not necessarily fit within the current version of the schema include:
+
+* Rheology comparing hardener (D2000) interactions with TiNT, versus D2000 and PDA-TiNT (Supporting Fig. S3c)
+* Alpha relaxation temperature, $T_\alpha$ (Table 4)
+* Storage modulus at rubber plateau, $G'_R$ (Table 4)
+* Reaction kinetics (Table 3)
+* Heat of reaction and onset temperature of reaction in ternary and binary systems (Table 2)
+* NIR data showing epoxy and amine conversions over time (Fig. 5)
+* Tabular data from XPS analysis (Supporting Table S1)
+* Temporal DSC data of isothermal curing (Supporting Fig. S4)
+* NIR spectra as a function of curing time (Supporting Fig. S5, S6)
+* Oscillatory chemo-rheology showing complex viscosity (Fig. S7)
+* Storage and loss modulus as a function of temperature (Fig. S8)
+
+---
+
+### Materials **Processing** Information
+
+Particle surface treatment (PST) process differs across the various surface treatment types. Otherwise, the preparation of the nanocomposites is the same (aside from the neat polymer not including addition of filler).
+
+
+```{r processing_PST, echo=TRUE, eval=TRUE}
+# List suffixes of Processing Excel Files
+processing <- c("PST_APMBP",
+                "PST_PEI",
+                "PST_PDA",
+                "Neat",
+                "Nanocomposite")
+
+# Paste directory info and file extension
+processing %<>% paste0("Process_Benes_",.,".xlsx")
+
+# Capture processing information in dataframe
+processing_df <- tibble(filename=processing, process=list(NA), PST_process=list(NA), NP_loading=c(3,3,3,0,3)/100, PST=c("APMBP","PEI","PDA",NA,NA))
+
+for (i in 1:nrow(processing_df)) {
+  # extract process from respective Excel file
+  if(i==4) { # neat matrix polymer
+    processing_df[[i,2]] <- readWorksheetFromFile(file=processing_df[[4,1]], sheet=1, header=FALSE)
+  } else processing_df[[i,2]] <- readWorksheetFromFile(file=processing_df[[5,1]], sheet=1, header=FALSE) # nanocomposite processing
+  if(i<=3) { # has a surface polymer
+    processing_df[[i,3]] <- readWorksheetFromFile(file=processing_df[[i,1]], sheet=1, header=FALSE)
+  }
+}
+
+```
+
+PST processing are stored in separate Excel files:
+
+ ```r processing[1]``` (APMBP)
+ 
+ ```r processing[2]``` (PEI)
+ 
+ ```r processing[3]``` (PDA)
+ 
+Nanocomposite processing procedures are defined within:
+ 
+ ```r processing[4]``` (neat)
+ 
+ ```r processing[5]``` (containing TiNT)
+ 
+ All processing Excel files and their respective processing steps are stored in `processing_df`.
+
+---
+
+### Identifying Actions for **Tabular Data**
+
+The following table states how each dataset provided by the author shall be managed.
+
+```{r tabular_data_actions, echo=TRUE, eval=TRUE}
+# Table4.xlsx
+# Read table from only worksheet
+table4_df <- readWorksheetFromFile(file=paste0(data_path,"Table4.xlsx"), sheet=1, startRow=6, header=TRUE)
+# Add columns for experimental factors
+table4_df$NP_loading <- c(0,3,3,3,3)/100 # divide by 100 to convert % to fraction
+table4_df$PST <- c(NA,NA,"APMBP","PEI","PDA")
+
+# FigS3.xlsx
+# Sheet 1 & 2: ADD (datafiles) corresponding to storage and loss modulus, respectively
+# Sheet 3: IGNORE
+
+# Sheets 1 and 2 contain 5 datasets each, corresponding to samples in the same order as Table 4
+
+# Final dataframes in the form Dx.1 and Dx.2 corresponding to storage and loss modulus datafiles, respectively
+startcols <- c(1,4,7,10,13)
+
+for(i in 1:5) { # loop through each dataset
+  for (j in 1:2) { # loop through each sheet
+    assign(paste0("D",i,".",j), readWorksheetFromFile(file=paste0(data_path,"FigS3.xlsx"), sheet=j, startRow=6, startCol=startcols[i], endCol=startcols[i]+1, header=TRUE))
+  }
+}
+
+```
+
+---
+
+### Assembling Data into **R Dataframe**
+
+For this dataset, the *mappings* to the Excel template (sheet, row, col) will be stored in a separate dataframe. In an alternate approach, these mappings could be added as metadata using the `attr()` function, and these mappings can be read later using the `attributes()` function.
+
+```{r assemble_data, echo=TRUE, eval=TRUE}
+mydf <- tibble(NP_loading=NA, PST=NA)
+mydf <- mydf[-1,]
+
+# Table 4: Onset degradation temperature
+mydf %<>% add_column(Tonset=NA)
+
+mydf %<>% add_row(NP_loading=table4_df$NP_loading,PST=table4_df$PST,Tonset=table4_df[,2])
+
+# Add processing information using LEFT_JOIN (more effective if all factor levels have been included)
+mydf %<>% left_join(.,processing_df[,2:5])
+
+# FigS3a,b: Storage and loss modulus datafiles
+mydf %<>% add_column(storage_modulus_filename=NA,storage_modulus_df=NA,loss_modulus_filename=NA,loss_modulus_df=NA)
+
+for (i in 1:5) { # borrow factor values from table4_df because ordering of datafiles is the same
+  mydf$storage_modulus_filename <- "_storage_modulus.csv"
+  mydf$loss_modulus_filename <- "_loss_modulus.csv"
+  mydf$storage_modulus_df[i] <- paste0("D",i,".",1)
+  mydf$loss_modulus_df[i] <- paste0("D",i,".",2)
+}
+
+# FILLER INFO (only applies to NP_loading=0.3; use left_join)
+fillerinfo <- tribble(
+  ~x,~y,~z,
+  "Titanate nanotubes",NA,NA, # Filler description
+  "Titanate",NA,NA, # Filler chemical name/filler name
+  NA,NA,NA, # Filler PubChem ref
+  "TiNT",NA,NA, # Filler Abbrev
+  NA,NA,NA, # Mfgr or source name
+  NA,NA,NA, # Trade name
+  NA,NA,NA, # Density
+  "H2Ti3O7",NA,NA, # Crystal phase
+  NA,NA,NA, # Particle diameter
+  NA, 309, "m^2/g",# Specific surface area
+  NA,NA,NA, # Total surface area
+  NA,NA,NA, # Aspect ratio
+  NA,NA,NA, # Non spherical shape- width
+  NA,NA,NA, # Non spherical shape- length
+  NA,NA,NA # Non spherical shape- depth
+)
+fillerinfo_df <- tibble(NP_loading=0.03, fillerinfo=list(fillerinfo))
+
+mydf %<>% left_join(.,fillerinfo_df)
+
+# PST chemical info (applies only to particles with surface treatment; use left_join)
+APMBPinfo <- tribble(
+  ~x,~y,
+  "[(4-aminophenyl)(hydroxy)-methandiyl]biphosphonic acid monosodium salt",NA, # PST chemical name
+  "APMBP",NA, # PST abbrev
+  NA,NA, # PST constitutional unit
+  NA,NA, # PST manufacturer or source name
+  NA,NA, # PST trade name
+  NA,NA, # PST density
+  NA,NA, # PST population density
+  NA,NA, # PST mol. weight
+  "measured using TGA", 0.275 # PST component composition weight fraction
+)
+
+PEIinfo <- tribble(
+  ~x,~y,~z,
+  "Polyethyleneimine",NA,NA, # PST chemical name
+  "PEI",NA,NA, # PST abbrev
+  NA,NA,NA, # PST constitutional unit
+  "Sigma Aldrich",NA,NA, # PST manufacturer or source name
+  NA,NA,NA, # PST trade name
+  NA,NA,NA, # PST density
+  NA,NA,NA, # PST population density
+  NA,25000,"g/mol", # PST mol. weight
+  "measured using TGA", 0.411, NA # PST component composition weight fraction
+)
+
+PDAinfo <- tribble(
+  ~x,~y,
+  "Polydopamine",NA, # PST chemical name
+  "PDA",NA, # PST abbrev
+  NA,NA, # PST constitutional unit
+  "Sigma Aldrich",NA, # PST manufacturer or source name
+  NA,NA, # PST trade name
+  NA,NA, # PST density
+  NA,NA, # PST population density
+  NA,NA, # PST mol. weight
+  "measured using TGA", 0.274 # PST component composition weight fraction
+)
+
+PSTinfo_df <- tibble(PST=c("APMBP","PEI","PDA"),PSTinfo=list(APMBPinfo,PEIinfo,PDAinfo))
+
+mydf %<>% left_join(.,PSTinfo_df)
+
+```
+
+---
+
+### Assigning **Surrogate Key** ("Sample ID")
+
+Using `unique()` function to identify all unique pairs of factors (in this case, is trivial), define sample IDs that can then be right-joined to the primary R dataframe.
+
+```{r assign_surrogate_key, echo=TRUE, eval=TRUE}
+mydf <- mydf %$% unique(.[,1:2]) %>% add_column(sampleID=paste0("S",seq.int(nrow(.))), .before=1) %>% right_join(., mydf)
+
+# Adding sample ID prefix to _filename
+for (j in 1:ncol(mydf)) {
+  if(grepl("_filename",names(mydf)[j])) {
+    for (i in 1:nrow(mydf)) {
+      mydf[i,j] <- ifelse(is.na(mydf[i,j]),mydf[i,j], paste0(mydf[i,1],mydf[i,j])) # if is NA, leave as is, otherwise prepend sample ID to filename
+    }
+  }
+}
+
+# REMOVE NP_loading=0 and replace with NA
+mydf$NP_loading[mydf$NP_loading==0] <- NA
+
+```
+
+---
+
+### Define **"Control" Samples**
+
+Control samples at present are defined only with respect to **filler loading**. Therefore, for a given set of experimental factors (F1, F2, F3, ...) where one of these factors (e.g., F1) represents filler loading, the control samples represent the combinations of factor levels in which the filler loading is the null condition (filler loading = 0). While the samples include all combinations of (F1, F2, F3, ...), the control samples include the subset (F1=0, F2, F3, ...).
+
+Once the dataframe has been assembled with all other variables, the control samples may be added.
+
+```{r control_samples, echo=TRUE, eval=TRUE}
+
+# In this experiment, only one sample has NP_loading=0. Although untreated TiNT is a control sample for the PST-TiNTs, in this case we will refer to the pure matrix sample as the "control" for ALL samples
+
+mydf %<>% add_column(control_sampleID="S1") %>% print()
+
+```
+
+---
+
+### Assign **Mappings** from R Dataframe to Excel schema template
+
+The `mappings` dataframe tells the `writeWorksheetToFile()` function the sheet, row, and column where to paste data from `mydf` into the Excel schema template files for each sample. In the case of data comprising multiple rows and/or columns, the row and cell mappings indicate the start row and cell for these data. Any data pasted to the template as multiple rows and columns should be contiguous, as it will overwrite any previous values writted to those cells.
+
+```{r define_mappings, echo=TRUE, eval=TRUE}
+# Assign mappings to Excel schema templates
+mappings <- tibble(variable = colnames(mydf), sheet = NA, cellrow = NA, cellcol = NA)
+
+# Function for adding mappings from variables in masterdf to location (sheet,row,col) in Excel template
+addToMappings <- function(var, sheetname, row, col, mappingdf = mappings) {
+  mappingdf[mappingdf$variable==var,"sheet"] <- sheetname
+  mappingdf[mappingdf$variable==var,"cellrow"] <- row
+  mappingdf[mappingdf$variable==var,"cellcol"] <- col
+  
+  return(mappingdf)
+}
+
+# Individual mappings for relevant columns in mydf
+mappings <- addToMappings("NP_loading","2. Material Types",46,3)
+mappings <- addToMappings("sampleID","1. Data Origin",5,2)
+mappings <- addToMappings("control_sampleID","1. Data Origin",6,2)
+mappings <- addToMappings("storage_modulus_filename","5.6 Properties-Rheological",14,3)
+mappings <- addToMappings("loss_modulus_filename","5.6 Properties-Rheological",15,3)
+mappings <- addToMappings("process","3. Synthesis and Processing",7,1)
+mappings <- addToMappings("PST_process", "2. Material Types",62,1)
+mappings <- addToMappings("fillerinfo","2. Material Types",27,2)
+mappings <- addToMappings("PSTinfo","2. Material Types",49,2)
+mappings <- addToMappings("Tonset","5.4 Properties-Thermal",24,3)
+```
+
+
+
+---
+
+### **Auto-Fill Excel Templates** and **Export Supplementary Datafiles (.csv)**
+
+Programmatically generate Excel schema template files for each sample by:
+
+1. Creating a copy of the master Excel template (already filled out with global constants), if a new template has not yet been created
+2. Storing the template file in a sub-directory with sample ID as the folder name
+3. For each row in `mydf`, looping along columns
+    + If column header contains `mappings` attributes, write to Excel template according to mapping
+    + If column header is a "_datafile", write the "_filename" to the Excel template and save the tibble as a csv in the sub-directory
+4. If there are no image files to copy over, the process is complete
+
+```{r write_templates, echo=TRUE, eval=TRUE}
+
+# create directory for submission files (if already exists, nothing happens)
+dir.create("./SUBMISSION")
+
+# Initialize Boolean list for Sample IDs indicating whether to write new set of Excel template files
+   # (i.e. repeated sampleID rows in mydf do not overwrite previous, while also ensuring new set of files is created every time this code chunk is run)
+
+writenew <- tibble(sampleID=mydf$sampleID, write=TRUE)
+
+for (i in 1:nrow(mydf)) {
+  
+  rowSampleID <- mydf$sampleID[i]
+  
+  sample_folder <- paste0("./SUBMISSION/", rowSampleID) # sub-directory name for sample
+  
+  dir.create(sample_folder) # create directory (if already exists, will throw warning)
+  
+  templateFile <- paste0(sample_folder, "/", rowSampleID, "_template.xlsx") # filename for the Excel schema template file for the sample
+  
+  if(writenew[writenew$sampleID==rowSampleID,2][[1]]) { # create file if script is running anew
+    saveWorkbook(masterwb, templateFile) # save a copy of the master template, prepended with the "sample ID" surrogate key
+    writenew[writenew$sampleID==rowSampleID,2][[1]] <- FALSE # once template file created, ensures new file not saved over previous during rest of chunk
+  } 
+  
+  # Loop along columns in mydf
+  for (j in 1:ncol(mydf)) {
+    
+    if(!is.na(mappings$sheet[j])) { # only execute if a worksheet name is given in mappings dataframe
+      writeWorksheetToFile(file = templateFile, data = mydf[[i,j]], sheet = mappings$sheet[j], startRow = mappings$cellrow[j], startCol = mappings$cellcol[j], header = FALSE)
+    }
+    
+    # Loop for writing datafiles
+    if(grepl("_df", names(mydf)[j])) { # only execute if "_df" is in column header (a.k.a. needs to be exported as separate csv)
+      
+      if(!is.na(mydf[[i,j]])) { # execute if the the value is NOT NA
+        # write nested tibble in _df column to csv in sub-directory
+        write_csv(get(mydf[[i,j]]), path=paste0(sample_folder, "/", mydf[[i,j-1]])) # (filename is i,j-1) [filename defined 2 columns before datafile tibble]
+        # use get(df[i,j-1]) to write the dataframe object directly
+      }
+    }
+  }
+}
+```
+
+
