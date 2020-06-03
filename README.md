@@ -17,7 +17,27 @@ This repository is dedicated to the curation of published data from the polymer 
 ## File and Folder Organization
 At the moment, we do not have a standard format for organizing files for curation. The primary directory should contain a README.md with the DOI or other information needed in order to identify the set of experiments that the curated data should be linked to. In the README, it would also be useful to include the relevant experimental factors that varied in the experiment. Each "sample" should have its own sub-directory containing the completed Excel template along with any supplemental data files (.csv, .jpg, etc.). It may be helpful to place these within a "Curated" directory to keep these folders separate from the raw data files or any code used to wrangle and prepare data.
 
-## Git Workflow
-To collaboratively manage and keep track of changes to curation-related files, the git workflow will be adopted. Raw data tables and the code used to prepare the raw data should be included.
+## Curation Workflow
+There are five directories in this repository that can be considered "stages" of the curation process:
+
+### Wishlist
+At the "**Wishlist**" stage, a curation job is prepared by creating a sub-directory, initializing a Traveler (README.md file) in the sub-directory, and identifying figures/data of interest. Once the raw data have been retrieved (either provided by the original authors or through a digital extraction tool), 
+
+### In-Progress
+The "**In-Progress**" stage should be kept as uncluttered as possible, with only those curation jobs that are actively in progress. Curation jobs should spend as little time as reasonable in this directory and should be moved to either "**Completed**" or "**Stalled**."
+
+### Completed
+The "**Completed**" stage is designed to keep track of curation jobs that have *already been uploaded to NanoMine QA*. This is ideally the final location for the curation job, unless there are modifications or updates to make in which case the sub-directory should be moved to the "**Revisited**" directory.
+
+### Stalled
+If a significant roadblock is encountered, the curation job can be moved to the "**Stalled**" stage. Documenting the issue as clearly as possible will help the team make the necessary improvements or updates to the system. Once a solution has been identified, the job can be returned to the "**In-Progress**" directory.
+
+### Revisited
+If a curation job in the NanoMine system ("**Completed**") requires some revision, the sub-directory should be moved to the "**Revision**" stage. At this point, the issue should be clearly described before moving the curation job to the "**In-Progress**" stage.
+
+The overall workflow is illustrated in the diagram below.
+![Illustration of the NanoMine curation process](https://github.com/mdeagen/nmcuration/raw/master/www/images/NM_Curation-Kanban.png)
+
+To collaboratively manage and keep track of changes to curation-related files, the git workflow will be adopted. Raw data tables and the code used to prepare the raw data should be included in a shared repository (e.g. Dropbox, Google Drive). This Github repository is not designed to host raw data, so any curation jobs in the "**Completed**" stage should be configured to ignore the raw data files and only track the Traveler and other small files (such as the master Excel template and any *R* code).
 
 
