@@ -70,6 +70,8 @@ CURATION JOB TRAVELER
 
 2020-06-04: Returned curation job to "In-Progress"
 
+2020-06-04: Successfully uploaded samples S5-15 to NanoMine QA
+
 
 
 
