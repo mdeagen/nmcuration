@@ -41,6 +41,9 @@ CURATION JOB TRAVELER
 
 2020-06-04: Ran R code, uploaded curated files to repo (M.E.D.)
 
+2020-06-04: Manually uploaded all samples (S1-S5) to QA NanoMine Uploader (M.E.D.)
+* Received 5 "Success!" auto-generated emails (10:26-10:27 AM)
+
 
 
 ---
