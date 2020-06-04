@@ -23,7 +23,12 @@ CURATION JOB TRAVELER
 
 ## Datasets of Interest
 
-* 
+* Fig 2 (Sheet 3): Diffusivity of polymer vs. NP loading
+* Fig 4-5 (Sheet 5): Diffusivity of NPs and viscosity vs. Matrix MW
+* Fig S2 (Sheet 7): Tg vs. NP loading and Matrix MW
+* Fig S3 (Sheet 8): Xray scattering data
+* Fig S5a (Sheet 10): Dielectric spectra vs. NP loading
+* Fig S7 (Sheet 12): Dielectric spectra vs. Matrix MW
 
 ---
 
