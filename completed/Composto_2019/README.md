@@ -66,13 +66,13 @@ CURATION JOB TRAVELER
 
 2020-06-04: Moved curation job to "Stalled" pending bug fix to Uploader on NanoMine QA (M.E.D.)
 
-2020-06-04: Notified B.H., who has fixed bug but is not online yet. Workaround is to submit the template file in the second upload box in addition to the template upload box.
+2020-06-04: Notified B.H., who has fixed bug but is not online yet. Workaround is to submit the template file in the second upload box in addition to the template upload box. (M.E.D.)
 
-2020-06-04: Returned curation job to "In-Progress"
+2020-06-04: Returned curation job to "In-Progress" (M.E.D.)
 
-2020-06-04: Successfully uploaded samples S5-15 to NanoMine QA
+2020-06-04: Successfully uploaded samples S5-15 to NanoMine QA (M.E.D.)
 
-2020-06-04: Moved curation job to "Completed"
+2020-06-04: Moved curation job to "Completed" (M.E.D.)
 
 
 
