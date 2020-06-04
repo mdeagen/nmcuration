@@ -7,13 +7,13 @@ Before moving a project to the "In-Progress" directory:
 * Identify datasets of interest (including Figure/Table number where applicable)
 * If in communication with the author(s), request and obtain raw datasets where applicable
 
-## Creating the "Traveler" for a Curation Project (README.md)
+## Creating the "Traveler" for a Curation Job (README.md)
 Analogous to a *manufacturing traveler*, this document will accompany the curation project throughout its journey from "Wishlist" to "Completed."
 
-The format of the traveler is a `README.md` markdown file located in the sub-directory for the curation project. The purpose of this file is to document key steps in the curation process (e.g., moving the project between curation stages), as well as any issues/roadblocks encountered along the way. Documentation of issues and roadblocks is valuable information that will help the team continue to improve and streamline the curation process.
+The format of the traveler is a `README.md` markdown file located in the sub-directory for the curation job. The purpose of this file is to document key steps in the curation process (e.g., moving the project between curation stages), as well as any issues/roadblocks encountered along the way. Documentation of issues and roadblocks is valuable information that will help the team continue to improve and streamline the curation process.
 
 An example format for the Traveler (in markdown format) is:
-> CURATION TRAVELER
+> CURATION JOB TRAVELER
 > 
 > \# AuthName_YYYY [name of sub-directory]
 >
