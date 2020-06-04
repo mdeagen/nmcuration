@@ -8,7 +8,7 @@ CURATION TRAVELER
 
 **Traveler Created:** 2020-06-03
 
-**Traveler Modified:** 2020-06-03
+**Traveler Modified:** 2020-06-04
 
 **Current Status:** *In-Progress*
 
