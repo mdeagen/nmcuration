@@ -10,7 +10,7 @@ CURATION JOB TRAVELER
 
 **Traveler Modified:** 2020-06-04
 
-**Current Status:** *In-Progress*
+**Current Status:** *Stalled*
 
 ---
 
@@ -64,7 +64,7 @@ CURATION JOB TRAVELER
 * This is a clear bug that affected 11 of the 17 samples in this curation job
 * S1-4,16,17 have been successfully uploaded, S5-15 await a fix to this bug before they can be uploaded
 
-
+2020-06-04: Moved curation job to "Stalled" pending bug fix to Uploader on NanoMine QA (M.E.D.)
 
 
 
