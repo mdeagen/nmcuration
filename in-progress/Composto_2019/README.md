@@ -46,15 +46,61 @@ CURATION JOB TRAVELER
 
 2020-06-04: Ran R code to generate sample filesets (M.E.D.)
 
+2020-06-04: Received error messages on first attempt at Upload of S1 to QA (M.E.D.)
+* Made correction to export formats in R code list(tibble())
+
+2020-06-04: Received error message on second attempt at Upload of S1 to QA (M.E.D.)
+* Removed "several hours" from processing step in master_template that was causing the issue
+* Note for future schema updates: should be able to accept commonly used terms as reported by authors
+
+2020-06-04: Received new error message on third attempt at Upload of S1 to QA (M.E.D.)
+* When FillerComposition is 0, apparently the entire filler section should remain blank
+* Removed Filler Info from master template, configured R code to only populate when NP_Loading > 0
+
+2020-06-04: Successful upload of S1 to NanoMine QA (M.E.D.)
+
+2020-06-04: Encountered issue uploading certain filesets to NanoMine QA (M.E.D.)
+* Uploader will NOT allow submission of a sample where there is only a template file (and no supplementary datafiles) in the fileset
+* This is a clear bug that affected 11 of the 17 samples in this curation job
+* S1-4,16,17 have been successfully uploaded, S5-15 await a fix to this bug before they can be uploaded
+
+
+
+
 
 
 ---
 
 ## Open Issues
 
+NanoMine Uploader (QA) **not allowing submission** for filesets that contain *only* a template.xlsx and no supplementary datafiles
+S1,2,3,4,16,17 were succesfully uploaded
+S5-15 (template only) were NOT uploaded
+
 ---
 
 ## Closed Issues
+
+### Error 1
+>job result code: 21
+>error messages: [XML Schema Validation Error] Element 'value': 'several' is not a valid value of the atomic type 'xs:double', should be a number. [XML Schema Validation Error] Element 'value': 'Celsius' is not a valid value of the atomic type 'xs:double', should be a number. [XML Schema Validation Error] Element 'GlassTransitionTemperature': Missing child element(s). Expected is ( unit )
+
+**Error:** Identified. "Celsius" mapping to Value field of schema template.
+**Fix:** list(tibble()) when adding row to mydf, to preserve columns when writing to Excel templates
+
+### Error 2
+>job result code: 21
+>error messages: [XML Schema Validation Error] Element 'value': 'several' is not a valid value of the atomic type 'xs:double', should be a number.
+
+**Error:** Identified. Schema unable to accept "several hours" (which was reported by authors) as a processing step.
+**Fix:** Removed from master_template. However, such a commonly used term should be accommodated in the future.
+
+### Error 3
+>job result code: 21
+>error messages: exception occurred during mass fraction-volume fraction conversion exception: Traceback (most recent call last): File "/apps/nanomine/src/jobs/XMLCONV/code_src/conversion.py", line 292, in conversion mvc.run() File "/apps/nanomine/src/jobs/XMLCONV/code_src/mfvf.py", line 288, in run self.computeFiller() File "/apps/nanomine/src/jobs/XMLCONV/code_src/mfvf.py", line 77, in computeFiller raise LookupError('[Filler Error] FillerComposition is missing.') LookupError: [Filler Error] FillerComposition is missing.
+
+**Error:** Identified. XMLCONV unable to handle edge case where filler composition is 0.
+**Fix:** Removed filler info from master_template. Changed R code to only fill out when NP_Loading > 0
 
 ---
 
@@ -63,3 +109,4 @@ CURATION JOB TRAVELER
 * `master_template_2020_Bailey.xlsx`
 * `Bailey_2019_notebook.Rmd`
 * `/RawDataFromAuthors/`
+* `/SUBMISSION/`
