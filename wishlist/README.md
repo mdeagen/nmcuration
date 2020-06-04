@@ -15,7 +15,9 @@ The format of the traveler is a `README.md` markdown file located in the sub-dir
 An example format for the Traveler (in markdown format) is:
 > CURATION TRAVELER
 > 
-> \# AuthName_YYYY (name of sub-directory)
+> \# AuthName_YYYY [name of sub-directory]
+>
+> \*\*Description:\*\* [brief description of curation job and purpose]
 >
 > \---
 > 
@@ -27,11 +29,11 @@ An example format for the Traveler (in markdown format) is:
 >
 > \---
 > 
-> \## Bibliographic Info (DOI is sufficient if one exists, otherwise provide full info needed to identify dataset)
+> \## Bibliographic Info [DOI is sufficient if one exists, otherwise provide full info needed to identify dataset]
 >
-> \* DOI: 10.1234/example.123.45 (DOI of publication)
+> \* DOI: 10.1234/example.123.45 [DOI of publication]
 >
-> \* DOI: 10.1234/example.123.45.001 (optional additional DOI of e.g., Supporting Info)
+> \* DOI: 10.1234/example.123.45.001 [optional additional DOI of e.g., Supporting Info]
 > 
 > \---
 >
@@ -67,7 +69,7 @@ An example format for the Traveler (in markdown format) is:
 >
 > \---
 >
-> \## Sub-directory Contents (Google Drive, not synced with Github)
+> \## Sub-directory Contents [Google Drive/Dropbox, not synced with Github]
 >
 > \* \`ExampleName_2018_master-template.xlsx\`
 >
