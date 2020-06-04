@@ -56,6 +56,12 @@ CURATION JOB TRAVELER
 
 ## Closed Issues
 
+>job result code: 21
+>error messages: [File Error] Missing file! Please include "S1_storage_modulus.csv.xlsx" in your uploads. [File Error] Missing file! Please include "S1_loss_modulus.csv.xlsx" in your uploads.
+
+**Error:** XMLCONV cannot handle .csv files, instead only accepts .xlsx for tabular data
+**Fix:** Changed output in R script for these datafiles to .xlsx instead of .csv. However, .csv is a more compact and standard format for tabular data and should be supported.
+
 ---
 
 ## Sub-directory Contents
