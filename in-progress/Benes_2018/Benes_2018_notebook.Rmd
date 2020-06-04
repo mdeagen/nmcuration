@@ -19,16 +19,17 @@ require(here)      # identify present working directory based on file location
 require(dplyr)     # data wrangling tools
 require(magrittr)  # pipe operator (%>%), compound assignment operator (%<>%), exposition operator (%$%)
 
-# Set the working directory to the location of this R notebook (this directory should contain the master template and associated data to import)
-current_directory <- here()
-
-setwd(current_directory)
 
 # folder containing downloaded data (provided by the author)
-data_path <- "./Benes Group-20200130T165429Z-001/Benes Group/"
+data_path <- "./RawDataFromAuthors/" #updated 2020-06-04
 
 # Name of MASTER TEMPLATE FILE, which must be stored in same directory as this R notebook
 master_template_path <- "master_template_2020_Benes.xlsx"
+
+# Set the working directory to the location of this R notebook (this directory should contain the master template and associated data to import)
+#current_directory <- here # removed 2020-06-04
+
+current_directory <- getwd()
 
 # load master template file 
 masterwb <- loadWorkbook(file=master_template_path, create = FALSE) ## requires input of template file name
@@ -110,10 +111,10 @@ processing_df <- tibble(filename=processing, process=list(NA), PST_process=list(
 for (i in 1:nrow(processing_df)) {
   # extract process from respective Excel file
   if(i==4) { # neat matrix polymer
-    processing_df[[i,2]] <- readWorksheetFromFile(file=processing_df[[4,1]], sheet=1, header=FALSE)
-  } else processing_df[[i,2]] <- readWorksheetFromFile(file=processing_df[[5,1]], sheet=1, header=FALSE) # nanocomposite processing
+    processing_df[[i,2]] <- list(readWorksheetFromFile(file=processing_df[[4,1]], sheet=1, header=FALSE)) # 2020-06-04 added list() due to R 4.0 changes
+  } else processing_df[[i,2]] <- list(readWorksheetFromFile(file=processing_df[[5,1]], sheet=1, header=FALSE)) # nanocomposite processing
   if(i<=3) { # has a surface polymer
-    processing_df[[i,3]] <- readWorksheetFromFile(file=processing_df[[i,1]], sheet=1, header=FALSE)
+    processing_df[[i,3]] <- list(readWorksheetFromFile(file=processing_df[[i,1]], sheet=1, header=FALSE))
   }
 }
 
@@ -131,7 +132,7 @@ Nanocomposite processing procedures are defined within:
  
  ```r processing[4]``` (neat)
  
- ```r processing[5]``` (containing TiNT)
+ ```r processing[5]``` (containing TiNT without surface treatment)
  
  All processing Excel files and their respective processing steps are stored in `processing_df`.
 
@@ -148,6 +149,7 @@ table4_df <- readWorksheetFromFile(file=paste0(data_path,"Table4.xlsx"), sheet=1
 # Add columns for experimental factors
 table4_df$NP_loading <- c(0,3,3,3,3)/100 # divide by 100 to convert % to fraction
 table4_df$PST <- c(NA,NA,"APMBP","PEI","PDA")
+names(table4_df)[2] <- "Tonset"
 
 # FigS3.xlsx
 # Sheet 1 & 2: ADD (datafiles) corresponding to storage and loss modulus, respectively
@@ -160,7 +162,11 @@ startcols <- c(1,4,7,10,13)
 
 for(i in 1:5) { # loop through each dataset
   for (j in 1:2) { # loop through each sheet
-    assign(paste0("D",i,".",j), readWorksheetFromFile(file=paste0(data_path,"FigS3.xlsx"), sheet=j, startRow=6, startCol=startcols[i], endCol=startcols[i]+1, header=TRUE))
+    df_name <- paste0("D",i,".",j)
+    assign(df_name, readWorksheetFromFile(file=paste0(data_path,"FigS3.xlsx"), sheet=j, startRow=6, startCol=startcols[i], endCol=startcols[i]+1, header=TRUE))
+    if (j==1) {
+      assign(df_name, get(df_name) %>% 'colnames<-'(c("Frequency (rad/s)","Storage Modulus (Pa)")))    # 2020-06-04 added colnames to supplementary datafiles
+    } else assign(df_name, get(df_name) %>% 'colnames<-'(c("Frequency (rad/s)","Loss Modulus (Pa)")))
   }
 }
 
@@ -173,13 +179,15 @@ for(i in 1:5) { # loop through each dataset
 For this dataset, the *mappings* to the Excel template (sheet, row, col) will be stored in a separate dataframe. In an alternate approach, these mappings could be added as metadata using the `attr()` function, and these mappings can be read later using the `attributes()` function.
 
 ```{r assemble_data, echo=TRUE, eval=TRUE}
-mydf <- tibble(NP_loading=NA, PST=NA)
+mydf <- tibble(NP_loading=NA, PST=as.character(NA)) # 2020-06-04 added as.character() to allow later add_row function
 mydf <- mydf[-1,]
 
 # Table 4: Onset degradation temperature
 mydf %<>% add_column(Tonset=NA)
 
 mydf %<>% add_row(NP_loading=table4_df$NP_loading,PST=table4_df$PST,Tonset=table4_df[,2])
+
+
 
 # Add processing information using LEFT_JOIN (more effective if all factor levels have been included)
 mydf %<>% left_join(.,processing_df[,2:5])
@@ -188,8 +196,8 @@ mydf %<>% left_join(.,processing_df[,2:5])
 mydf %<>% add_column(storage_modulus_filename=NA,storage_modulus_df=NA,loss_modulus_filename=NA,loss_modulus_df=NA)
 
 for (i in 1:5) { # borrow factor values from table4_df because ordering of datafiles is the same
-  mydf$storage_modulus_filename <- "_storage_modulus.csv"
-  mydf$loss_modulus_filename <- "_loss_modulus.csv"
+  mydf$storage_modulus_filename <- "_storage_modulus.xlsx" # updated 2020-06-04
+  mydf$loss_modulus_filename <- "_loss_modulus.xlsx"       # updated 2020-06-04
   mydf$storage_modulus_df[i] <- paste0("D",i,".",1)
   mydf$loss_modulus_df[i] <- paste0("D",i,".",2)
 }
@@ -310,7 +318,7 @@ The `mappings` dataframe tells the `writeWorksheetToFile()` function the sheet, 
 
 ```{r define_mappings, echo=TRUE, eval=TRUE}
 # Assign mappings to Excel schema templates
-mappings <- tibble(variable = colnames(mydf), sheet = NA, cellrow = NA, cellcol = NA)
+mappings <- tibble(variable = colnames(mydf), sheet = as.character(NA), cellrow = as.numeric(NA), cellcol = as.numeric(NA)) # 2020-06-04 added as.character,as.numeric
 
 # Function for adding mappings from variables in masterdf to location (sheet,row,col) in Excel template
 addToMappings <- function(var, sheetname, row, col, mappingdf = mappings) {
@@ -385,9 +393,14 @@ for (i in 1:nrow(mydf)) {
     if(grepl("_df", names(mydf)[j])) { # only execute if "_df" is in column header (a.k.a. needs to be exported as separate csv)
       
       if(!is.na(mydf[[i,j]])) { # execute if the the value is NOT NA
-        # write nested tibble in _df column to csv in sub-directory
-        write_csv(get(mydf[[i,j]]), path=paste0(sample_folder, "/", mydf[[i,j-1]])) # (filename is i,j-1) [filename defined 2 columns before datafile tibble]
+        # write nested tibble in _df column to csv in sub-directory (COMMENTED OUT 2020-06-04)
+        # write_csv(get(mydf[[i,j]]), path=paste0(sample_folder, "/", mydf[[i,j-1]])) # (filename is i,j-1) [filename defined 2 columns before datafile tibble]
         # use get(df[i,j-1]) to write the dataframe object directly
+        
+        # updated 2020-06-04
+        # write supplementary datafiles to .xlsx
+        writeWorksheetToFile(file=paste0(sample_folder, "/", mydf[[i,j-1]]), data=get(mydf[[i,j]]), sheet="Sheet1")
+        
       }
     }
   }
