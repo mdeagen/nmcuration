@@ -62,5 +62,5 @@ CURATION JOB TRAVELER
 * `Process_Benes_PST_APBMP.xlsx`
 * `Process_Benes_PST_PDA.xlsx`
 * `Process_Benes_PST_PEI.xlsx`
-
 * `/RawDataFromAuthors/`
+* `/SUBMISSION/`
