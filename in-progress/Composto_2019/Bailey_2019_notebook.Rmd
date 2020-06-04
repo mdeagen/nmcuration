@@ -20,13 +20,13 @@ require(dplyr)     # data wrangling tools
 require(magrittr)  # pipe operator (%>%), compound assignment operator (%<>%), exposition operator (%$%)
 
 # Set the working directory to the location of this R notebook (this directory should contain the master template and associate data to import)
-current_directory <- here()
-
+#current_directory <- here()
+current_directory <- getwd()
 setwd(current_directory)
 
 
 # file containing downloaded data (provided by the author)
-data_path <- "1911_BaileyEric_OAPS_P2VP_Dynamics_Data_V1.xlsx"
+data_path <- "./RawDataFromAuthors/1911_BaileyEric_OAPS_P2VP_Dynamics_Data_V1.xlsx" # added sub-directory 2020-06-04
 
 # Name of MASTER TEMPLATE FILE, which must be stored in same directory as this R notebook
 master_template_path <- "master_template_2020_Bailey.xlsx"
@@ -172,11 +172,11 @@ sheetactions
   # Col 3 is diffusivity_uncertainty (absolute)
   # Matrix_Mw is 100 kg/mol for this set (per Fig 2 caption in the paper)
 temp3 <- readWorksheet(authorwb,sheet=sheets[3],header=TRUE)
-mydf <- add_column(mydf, diffusivity = NA)
+mydf <- add_column(mydf, diffusivity = as.list(NA)) # 2020-06-04 added as.list() for nested tibble handling
 mydf$diffusivity <- as.list(mydf$diffusivity)
 temp_diff <- tibble(a=temp3[,2],b="cm^2s^-1",c="absolute",d=temp3[,3])
 for (i in 1:nrow(temp_diff)) {
-  mydf <- add_row(mydf, NP_loading=temp3[i,1],matrix_Mw=100000,diffusivity=tibble(temp_diff)[i,])
+  mydf <- add_row(mydf, NP_loading=temp3[i,1],matrix_Mw=100000,diffusivity=as.list(as.character(tibble(temp_diff)[i,]))) # 2020-06-04 added as.character
 }
 
 # 4. IGNORE
@@ -188,9 +188,9 @@ for (i in 1:nrow(temp_diff)) {
 temp5 <- readWorksheet(authorwb,sheet=sheets[5],header=TRUE)
 mydf <- add_column(mydf, viscosity = NA)
 mydf$viscosity <- as.list(mydf$viscosity)
-temp_visc <- tibble(a=temp5[,4],b="Pa*s")
+temp_visc <- tibble(a=as.character(temp5[,4]),b="Pa*s") # 2020-06-04 added as.character
 for (i in 1:nrow(temp_visc)) {
-  mydf <- add_row(mydf, NP_loading=0.05,matrix_Mw=temp5[i,1],viscosity=tibble(temp_visc)[i,])
+  mydf <- add_row(mydf, NP_loading=0.05,matrix_Mw=temp5[i,1],viscosity=as.list(tibble(temp_visc)[i,])) # 2020-06-04 added as.list
 }
 
 
@@ -203,9 +203,9 @@ for (i in 1:nrow(temp_visc)) {
 temp7 <- readWorksheet(authorwb,sheet=sheets[7],header=TRUE)
 mydf <- add_column(mydf, Tg = NA)
 mydf$Tg <- as.list(mydf$Tg)
-temp_Tg <- tibble(a=temp7[,3],b="Celsius")
+temp_Tg <- tibble(a=as.character(temp7[,3]),b="Celsius") # 2020-06-04 added as.character
 for (i in 1:nrow(temp_Tg)) {
-  mydf <- add_row(mydf, NP_loading=temp7[i,2]/100,matrix_Mw=temp7[i,1],Tg=tibble(temp_Tg)[i,])
+  mydf <- add_row(mydf, NP_loading=temp7[i,2]/100,matrix_Mw=temp7[i,1],Tg=as.list(tibble(temp_Tg)[i,])) # 2020-06-04 added as.list
 }
 
 # 8. ADD (datafiles)
@@ -226,7 +226,7 @@ for (i in 1:4) {
   assign(paste0("D8.",i), temp)
   
   # add filename and datafile to appropriate rows in dataframe
-  mydf <- add_row(mydf, NP_loading=c(0,0.07,0.15,0.25)[i], matrix_Mw=100000, Xray_filename="_XrayScattering_data.csv", Xray_df=paste0("D8.",i))
+  mydf <- add_row(mydf, NP_loading=c(0,0.07,0.15,0.25)[i], matrix_Mw=100000, Xray_filename="_XrayScattering_data.xlsx", Xray_df=paste0("D8.",i)) # 2020-06-04 changed from .csv to .xlsx
 }
 
 # 9. IGNORE
@@ -244,11 +244,11 @@ for (i in 1:4) {
   # create new dataframe with name D10.1,D10.2,D10.3,D10.4 comprising Col 1 of D10 bound to Col 2,3,4,5 respectively
   assign(paste0("D10.",i), bind_cols(D10[1],D10[i+1]))
   temp <- get(paste0("D10.",i))
-  colnames(temp) <- c("Frequency (Hz)", "e\"/e\"_peak") # note special characters in column 2 name
+  colnames(temp) <- c("Frequency (Hz)", "NormalizedPermittivity_ImaginaryComponent") # note special characters in column 2 name
   assign(paste0("D10.",i), temp)
   
   # add filename and datafile to appropriate rows in dataframe
-  mydf <- add_row(mydf, NP_loading=c(0,0.07,0.15,0.25)[i], matrix_Mw=100000, BDS_filename="_BDS_data.csv", BDS_df=paste0("D10.",i))
+  mydf <- add_row(mydf, NP_loading=c(0,0.07,0.15,0.25)[i], matrix_Mw=100000, BDS_filename="_BDS_data.xlsx", BDS_df=paste0("D10.",i)) # 2020-06-04 changed from .csv to .xlsx
 }
 
 # 11. IGNORE
@@ -265,11 +265,11 @@ for (i in 1:3) {
   # create new dataframe with name D12.1,D12.2,D12.3 comprising Col 1 of D12 bound to Col 2,3,4 respectively
   assign(paste0("D12.",i), bind_cols(D12[1],D12[i+1]))
   temp <- get(paste0("D12.",i))
-  colnames(temp) <- c("Frequency (Hz)", "e\"/e\"_peak") # note special characters in column 2 name
+  colnames(temp) <- c("Frequency (Hz)", "NormalizedPermittivity_ImaginaryComponent") # note special characters in column 2 name
   assign(paste0("D12.",i), temp)
   
   # add filename and datafile to appropriate rows in dataframe
-  mydf <- add_row(mydf, NP_loading=0, matrix_Mw=c(33000,100000,467000)[i], BDS_filename="_BDS_data.csv", BDS_df=paste0("D12.",i))
+  mydf <- add_row(mydf, NP_loading=0, matrix_Mw=c(33000,100000,467000)[i], BDS_filename="_BDS_data.xlsx", BDS_df=paste0("D12.",i)) # 2020-06-04 changed from .csv to .xlsx
 }
 ```
 
@@ -291,7 +291,7 @@ mydf <- right_join(uniquedf, mydf) # add sampleID column and assign proper ID to
 for (j in 1:ncol(mydf)) {
   if(grepl("_datafile",names(mydf)[j])){
     for (i in 1:nrow(mydf)) {
-      if(!is.na(mydf[i,j-1])) mydf[[i,j]] <- get(mydf[[i,j-1]])
+      if(!is.na(mydf[i,j-1])) mydf[[i,j]] <- list(get(mydf[[i,j-1]]))
     }
   }
 }
@@ -348,7 +348,7 @@ mydf %<>% right_join(.,controls[,c('matrix_Mw','control_sampleID')]) %>% print()
 These mappings define in which sheet/cell(range) of the Excel template to paste each value(tibble) within the dataframe. If an attribute is not defined in the Excel template, do not provide a mapping.
 
 ```{r define_mappings, echo=TRUE, eval=TRUE}
-mappings <- tibble(variable = colnames(mydf), sheet = NA, cellrow = NA, cellcol = NA)
+mappings <- tibble(variable = colnames(mydf), sheet = as.character(NA), cellrow = as.numeric(NA), cellcol = as.numeric(NA)) # 2020-06-04 added as.character, as.numeric
 
 # Function for adding mappings from variables in masterdf to location (sheet,row,col) in Excel template
 addToMappings <- function(var, sheetname, row, col, mappingdf = mappings) {
@@ -392,7 +392,7 @@ Programmatically generate Excel schema template files for each sample by:
 ```{r write_templates, echo=TRUE, eval=TRUE}
 
 # create directory for submission files (if already exists, nothing happens)
-dir.create("./SUBMISSION")
+dir.create("./SUBMISSION", showWarnings = FALSE) # 2020-06-04 changed showWarnings to FALSE
 
 # Initialize Boolean list for Sample IDs indicating whether to write new set of Excel template files
    # (i.e. repeated sampleID rows in mydf do not overwrite previous, while also ensuring new set of files is created every time this code chunk is run)
@@ -407,7 +407,7 @@ for (i in 1:nrow(mydf)) {
   
   sample_folder <- paste0("./SUBMISSION/", rowSampleID) # sub-directory name for sample
   
-  dir.create(sample_folder) # create directory (if already exists, will throw warning)
+  dir.create(sample_folder, showWarnings = FALSE) # create directory (if already exists, will throw warning) # 2020-06-04 changed showWarnings to FALSE
   
   templateFile <- paste0(sample_folder, "/", rowSampleID, "_template.xlsx") # filename for the Excel schema template file for the sample
   
@@ -427,9 +427,14 @@ for (i in 1:nrow(mydf)) {
     if(grepl("_datafile", names(mydf)[j])) { # only execute if "_datafile" is in column header
       
       if(!is.na(mydf[[i,j-1]])) { # execute if the adjacent df cell NOT NA
-        # write nested tibble in _datafile column to csv in sub-directory
-        write_csv(mydf[[i,j]], path=paste0(sample_folder, "/", mydf[[i,j-2]])) # (filename is i,j-2) [filename defined 2 columns before datafile tibble]
+        # write nested tibble in _datafile column to csv in sub-directory (COMMENTED OUT 2020-06-04)
+        # write_csv(mydf[[i,j]], path=paste0(sample_folder, "/", mydf[[i,j-2]])) # (filename is i,j-2) [filename defined 2 columns before datafile tibble]
         # alternatively, can use get(df[i,j-1]) rather than writing tibble df[i,j] to csv 
+        
+        # updated 2020-06-04
+        # write supplementary datafiles to .xlsx
+        if(!file.exists(paste0(sample_folder, "/", mydf[[i,j-2]]))) # due to redundancy in mydf, only create if does not exist (added 2020-06-04)
+           writeWorksheetToFile(file=paste0(sample_folder, "/", mydf[[i,j-2]]), data=get(mydf[[i,j-1]]), sheet="Sheet1")
       }
     }
   }
