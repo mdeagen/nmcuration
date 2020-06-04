@@ -32,6 +32,13 @@ CURATION TRAVELER
 
 2020-06-03: Added job to "In-Progress" (M.E.D.)
 
+2020-06-04: Made updates to R code
+* Several updates to variable casting for NA handling (as.character, as.numeric) due to R 4.0 changes
+* Added column names (with units) to data frames later exported as supplementary datafiles
+* Changed exported datafile format to .xlsx (previously was .csv)
+
+2020-06-04: Ran R code, uploaded curated files to repo
+
 
 
 ---
