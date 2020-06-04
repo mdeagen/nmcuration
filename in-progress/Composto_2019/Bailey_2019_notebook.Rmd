@@ -1,0 +1,438 @@
+---
+title: "Bailey *et al.* **Macromolecules** (2019)"
+author: "Curated by Michael Deagen"
+date: "6 Feb, 2020"
+output: html_notebook
+---
+
+### Introduction
+
+```{r include=FALSE}
+#options(java.parameters = "-Xmx2048m") ## if XLConnect runs into memory issues, use this to increase memory allocation for Java
+
+require(rcrossref) # package for scraping CrossRef database given a DOI
+require(XLConnect) # package for MS Excel integration
+require(tidyr)     # data wrangling/tidying
+require(tibble)    # improvement on dataframes
+require(readr)     # read_csv functionality
+require(here)      # identify present working directory based on file location
+require(dplyr)     # data wrangling tools
+require(magrittr)  # pipe operator (%>%), compound assignment operator (%<>%), exposition operator (%$%)
+
+# Set the working directory to the location of this R notebook (this directory should contain the master template and associate data to import)
+current_directory <- here()
+
+setwd(current_directory)
+
+
+# file containing downloaded data (provided by the author)
+data_path <- "1911_BaileyEric_OAPS_P2VP_Dynamics_Data_V1.xlsx"
+
+# Name of MASTER TEMPLATE FILE, which must be stored in same directory as this R notebook
+master_template_path <- "master_template_2020_Bailey.xlsx"
+
+# load master template file 
+masterwb <- loadWorkbook(file=master_template_path, create = FALSE) ## requires input of template file name
+
+
+# DOI of paper (extracted from DOI field of master template file)
+myDOI <- readWorksheet(masterwb, sheet = "1. Data Origin", startRow = 11, startCol = 2, endRow = 11, endCol = 2, header = FALSE)[[1]]
+```
+
+[R Markdown](http://rmarkdown.rstudio.com) Notebook for [this 2019 paper by Bailey *et al.*](`r paste0("http://doi.org/", myDOI)`), for the purposes of semi-automated curation into NanoMine Excel template files.
+
+---
+
+### Definition of **Global Constants**
+
+All schema variables that remain constant throughout these experiments shall be saved in the file ```r master_template_path```.
+
+This file will be copied, and schema variables for a given sample will be placed in the appropriate cells of that copy.
+
+---
+
+### Definition of **Experimental Factors** (Controlled Independent Variables)
+
+The *minimal* subset of controlled parameters necessary to uniquely define each sample in the experiment are:
+
+* **Filler loading** of octa(aminophenyl) polyhedral oligomeric silsesquioxane (OAPS) NPs
+* **Molecular weight** of poly(2-vinylpyridine) (P2VP) matrix
+
+These **experimental factors** shall serve as the *primary key* needed to link variable data to the appropriate sample.
+
+---
+
+### Definition of **Response Variables** (Dependent Variables, or Measurements)
+
+Variable outputs from these experiments which are relevant to the schema include:
+
+* **Diffusion coefficient** of dP2VP
+* **Matrix viscosity**
+* **Glass transition temperature**
+* **X-ray scattering** [datafiles]
+* **Dielectric spectra** [datafiles]
+
+---
+
+### **Factor-Level-Linked** Independent Variables (Functional Dependencies)
+
+Variables exhibiting a direct dependence on factor variables include:
+
+* Units (for example, only show "Celsius" in neighboring cell if there is a value for Glass Transition Temperature)
+* Uncertainty in diffusion coefficient (enter the value, as well as the uncertainty value)
+
+In this paper, the factor-level-linked variables are contained within the same line, therefore will be stored as a nested tibble within the R dataframe. This tibble will be written to the Excel template in its entirety, spanning a range of cells.
+
+---
+
+### **"Abandoned" Data**
+
+Data that appear relevant to the context of the experiment but do not have a place in the current version of the schema include:
+
+* Concentration as a function of depth in thin film samples (to assess diffusivity), from Rutherford Backscattering Spectrometry (RBS)
+* Segmental relaxation time
+* Chain reptation time
+* Different post-processing for different types of characterizations (should post-processing be separated, so that all properties can still be associated with a given sample despite different sample prep that may occur?)
+* Different annealing times and the depth profiles associated with them (using Elastic Recoil Detection, or ERD)
+
+---
+
+### Materials **Processing** Information
+
+The relevant processing steps remain constant for this experiment, therefore are defined within ```r master_template_path```.
+
+---
+
+### Initializing **R Dataframe**
+
+The dataframe `mydf` will become the *relation* that stores data that will be mapped to Excel templates and supplementary files. Once coalesced, each *tuple* in this relation will represent an *experimental unit*, and schema-relevant variables will be included as *attributes*. The *experimental factors* act as a *primary key*, and prior to exporting the data we will assign each tuple a *surrogate key* representing "sample ID" (S1, S2, etc.).
+
+```{r create_dataframe, echo=TRUE, eval=TRUE}
+# Dataframe that will hold variables to be mapped to Excel templates or exported .csv's
+mydf <- tibble(NP_loading = NA, matrix_Mw = NA)
+mydf <- mydf[-1,] # keep columns but remove "dummy" row of NAs
+```
+
+---
+
+### Uploading **Tabular Data**
+
+First, upload tabular data in either csv format (using `read_csv()`) or Excel format (using `readWorksheetFromFile()` or `loadWorkbook()` and `readWorksheet()` functions from the `XLConnect` library).
+
+The `sheetactions` dataframe defines how each author-provided dataset will be handled.
+
+```{r decide_actions, echo=FALSE, eval=TRUE}
+# load workbook provided by author
+authorwb <- loadWorkbook(file=data_path, create = FALSE)
+
+# list all sheets
+sheets <- getSheets(authorwb)
+# create dataframe to identify actions for each dataset
+sheetactions <- tibble(sheetname=sheets)
+# add column with dataset descriptions
+sheetactions <- add_column(sheetactions, description = c("ERD depth data",
+                                                         "ERD depth data",
+                                                         "Diffusivity (polymer) vs NP Loading",
+                                                         "RBS depth data",
+                                                         "Diffusivity (NPs) and viscosity vs Matrix Mw",
+                                                         "Relaxation and reptation time vs Matrix Mw",
+                                                         "Tg as a function of NP Loading and Matrix Mw",
+                                                         "X-ray scattering",
+                                                         "RBS depth data",
+                                                         "Dielectic spectra vs NP Loading",
+                                                         "Relaxation time vs inverse temperature",
+                                                         "Dielectric spectra vs. Matrix Mw"))
+# state actions that will be performed for each dataset
+sheetactions <- add_column(sheetactions, action = c("IGNORE",
+                                                         "IGNORE",
+                                                         "ADD (tabular)",
+                                                         "IGNORE",
+                                                         "ADD (tabular)",
+                                                         "IGNORE",
+                                                         "ADD (tabular)",
+                                                         "ADD (datafiles)",
+                                                         "IGNORE",
+                                                         "ADD (datafiles)",
+                                                         "IGNORE",
+                                                         "ADD (datafiles)"))
+# display sheetactions
+sheetactions
+```
+
+```{r upload_data, echo=TRUE,eval=TRUE}
+# For each dataset, import into a tidy dataframe (or separate into individual dataframes)
+
+# 1. IGNORE
+
+# 2. IGNORE
+
+# 3. ADD (tabular)
+  # Col 1 is NP_loading
+  # Col 2 is diffusivity
+  # Col 3 is diffusivity_uncertainty (absolute)
+  # Matrix_Mw is 100 kg/mol for this set (per Fig 2 caption in the paper)
+temp3 <- readWorksheet(authorwb,sheet=sheets[3],header=TRUE)
+mydf <- add_column(mydf, diffusivity = NA)
+mydf$diffusivity <- as.list(mydf$diffusivity)
+temp_diff <- tibble(a=temp3[,2],b="cm^2s^-1",c="absolute",d=temp3[,3])
+for (i in 1:nrow(temp_diff)) {
+  mydf <- add_row(mydf, NP_loading=temp3[i,1],matrix_Mw=100000,diffusivity=tibble(temp_diff)[i,])
+}
+
+# 4. IGNORE
+
+# 5. ADD (tabular)
+  # Col 1 is Matrix_Mw
+  # Col 4 is matrix viscosity
+  # NP_loading is 5 vol% for this set (varied depending on depth, but confirmed with author that 5% is representative)
+temp5 <- readWorksheet(authorwb,sheet=sheets[5],header=TRUE)
+mydf <- add_column(mydf, viscosity = NA)
+mydf$viscosity <- as.list(mydf$viscosity)
+temp_visc <- tibble(a=temp5[,4],b="Pa*s")
+for (i in 1:nrow(temp_visc)) {
+  mydf <- add_row(mydf, NP_loading=0.05,matrix_Mw=temp5[i,1],viscosity=tibble(temp_visc)[i,])
+}
+
+
+# 6. IGNORE
+
+# 7. ADD (tabular)
+  # Col 1 is Matrix_Mw
+  # Col 2 is NP_loading (note: needs to be converted from % to fraction)
+  # Col 3 is Tg, in degrees Celsius
+temp7 <- readWorksheet(authorwb,sheet=sheets[7],header=TRUE)
+mydf <- add_column(mydf, Tg = NA)
+mydf$Tg <- as.list(mydf$Tg)
+temp_Tg <- tibble(a=temp7[,3],b="Celsius")
+for (i in 1:nrow(temp_Tg)) {
+  mydf <- add_row(mydf, NP_loading=temp7[i,2]/100,matrix_Mw=temp7[i,1],Tg=tibble(temp_Tg)[i,])
+}
+
+# 8. ADD (datafiles)
+  # 4 datasets, each representing a different NP_loading
+  # Matrix_Mw = 100 kg/mol for all datasets, per Fig. S3 legend
+  # Each datafile is 2 columns (q and I)
+startrows <- c(1,1,1,1)
+startcols <- c(1,3,5,7)
+endcols <- c(2,4,6,8)
+
+mydf <- add_column(mydf, Xray_filename=NA, Xray_df=NA, Xray_datafile=NA)
+mydf$Xray_datafile <- as.list(mydf$Xray_datafile)
+for (i in 1:4) {
+  # create new dataframe with name D8.1, D8.2, D8.3, D8.4 corresponding to respective set of columns
+  assign(paste0("D8.",i), readWorksheet(authorwb, sheet = sheets[8], startCol = startcols[i], endCol = endcols[i], startRow = startrows[i], header = TRUE))
+  temp <- get(paste0("D8.",i))
+  colnames(temp) <- c("q", "I")
+  assign(paste0("D8.",i), temp)
+  
+  # add filename and datafile to appropriate rows in dataframe
+  mydf <- add_row(mydf, NP_loading=c(0,0.07,0.15,0.25)[i], matrix_Mw=100000, Xray_filename="_XrayScattering_data.csv", Xray_df=paste0("D8.",i))
+}
+
+# 9. IGNORE
+
+# 10. ADD (datafiles)
+  # Col 1 is Frequency (Hz)
+  # Col 2,3,4,5 represent loss permittivity at NP_loading of 0,0.07,0.15,0.25 vol frac, respectively
+  # Matrix_Mw = 100 kg/mol for all datasets, per Fig. S5a legend
+# D10 dataframe will be ALL the data (because first column is shared), and this dataframe will be split into 4 individual dataframes D10.1,D10.2,etc.
+D10 <- readWorksheet(authorwb, sheet = sheets[10], header=TRUE)
+
+mydf <- add_column(mydf, BDS_filename=NA, BDS_df=NA, BDS_datafile=NA)
+mydf$BDS_datafile <- as.list(mydf$BDS_datafile)
+for (i in 1:4) {
+  # create new dataframe with name D10.1,D10.2,D10.3,D10.4 comprising Col 1 of D10 bound to Col 2,3,4,5 respectively
+  assign(paste0("D10.",i), bind_cols(D10[1],D10[i+1]))
+  temp <- get(paste0("D10.",i))
+  colnames(temp) <- c("Frequency (Hz)", "e\"/e\"_peak") # note special characters in column 2 name
+  assign(paste0("D10.",i), temp)
+  
+  # add filename and datafile to appropriate rows in dataframe
+  mydf <- add_row(mydf, NP_loading=c(0,0.07,0.15,0.25)[i], matrix_Mw=100000, BDS_filename="_BDS_data.csv", BDS_df=paste0("D10.",i))
+}
+
+# 11. IGNORE
+
+# 12. ADD (datafiles)
+  # Col 1 is Frequency (Hz)
+  # Col 2,3,4 represent loss permittivity at matrix_Mw of 33k,100k,467k, respectively
+  # NP_loading = 0 for all datasets, per Fig. S7 caption indicating these are bulk P2VP
+# D12 dataframe will be ALL data (first column is shared), and will be split into the 3 inidividual dataframes
+# NOTE: No need to add_col, as D10 already created BDS-related columns in mydf
+D12 <- readWorksheet(authorwb, sheet = sheets[12], header=TRUE)
+
+for (i in 1:3) {
+  # create new dataframe with name D12.1,D12.2,D12.3 comprising Col 1 of D12 bound to Col 2,3,4 respectively
+  assign(paste0("D12.",i), bind_cols(D12[1],D12[i+1]))
+  temp <- get(paste0("D12.",i))
+  colnames(temp) <- c("Frequency (Hz)", "e\"/e\"_peak") # note special characters in column 2 name
+  assign(paste0("D12.",i), temp)
+  
+  # add filename and datafile to appropriate rows in dataframe
+  mydf <- add_row(mydf, NP_loading=0, matrix_Mw=c(33000,100000,467000)[i], BDS_filename="_BDS_data.csv", BDS_df=paste0("D12.",i))
+}
+```
+
+---
+
+### Assign **Surrogate Key** ("Sample ID")
+
+Once all data have been imported, identify all *unique* rows where the *factors are equivalent*, as these represent the same *experimental units*. Generate a *surrogate key* ("sample ID") for each factor-level combination. Add Sample ID column to the primary dataframe using a right-join.
+
+```{r coalesce_dataframe, echo=TRUE, eval=TRUE}
+
+# Create dataframe with all unique factor pairs and assign a surrogate key (sample ID) to each pair
+uniquedf <- mydf %$% unique(.[,1:2])  # apply to factors only (in this case, first two rows)
+uniquedf %<>% add_column(sampleID=paste0("S",seq.int(nrow(.))), .before=1) # add surrogate key
+mydf <- right_join(uniquedf, mydf) # add sampleID column and assign proper ID to each row in mydf
+
+
+# PLACE DATAFILE TIBBLE TO _datafile columns if !is.na
+for (j in 1:ncol(mydf)) {
+  if(grepl("_datafile",names(mydf)[j])){
+    for (i in 1:nrow(mydf)) {
+      if(!is.na(mydf[i,j-1])) mydf[[i,j]] <- get(mydf[[i,j-1]])
+    }
+  }
+}
+
+# Adding sample ID prefix to _filename
+for (j in 1:ncol(mydf)) {
+  if(grepl("_filename",names(mydf)[j])) {
+    for (i in 1:nrow(mydf)) {
+      mydf[i,j] <- ifelse(is.na(mydf[i,j]),mydf[i,j], paste0(mydf[i,1],mydf[i,j])) # if is NA, leave as is, otherwise prepend sample ID to filename
+    }
+  }
+}
+
+
+```
+
+---
+
+### Define **"Control" Samples**
+
+Control samples at present are defined only with respect to **filler loading**. Therefore, for a given set of experimental factors (F1, F2, F3, ...) where one of these factors (e.g., F1) represents filler loading, the control samples represent the combinations of factor levels in which the filler loading is the null condition (filler loading = 0). While the samples include all combinations of (F1, F2, F3, ...), the control samples include the subset (F1=0, F2, F3, ...).
+
+Once the dataframe has been assembled with all other variables, the control samples may be added.
+
+```{r control_samples, echo=TRUE, eval=TRUE}
+
+# Identify list of unique combinations of factors EXCLUDING filler loading (in this case, matrix_Mw)
+
+controls <- mydf %$% unique(.[,c('matrix_Mw')]) %>% add_column(NP_loading=0) 
+
+# Map control sample IDs to `controls` dataframe using left_join(), and change colname to control_sampleID
+
+controls %<>% left_join(.,mydf[,c('matrix_Mw','NP_loading','sampleID')]) 
+
+# Rename sampleID to control_sampleID
+
+names(controls)[3] <- "control_sampleID"
+
+
+# REMOVE NP_loading=0 and replace with NA
+mydf$NP_loading[mydf$NP_loading==0] <- NA
+
+
+# Add control_sampleID to masterdf using right_join() on all columns EXCEPT NP_loading
+
+mydf %<>% right_join(.,controls[,c('matrix_Mw','control_sampleID')]) %>% print()
+
+```
+
+---
+
+### Define **Mappings** from the Dataframe to Excel Templates
+
+These mappings define in which sheet/cell(range) of the Excel template to paste each value(tibble) within the dataframe. If an attribute is not defined in the Excel template, do not provide a mapping.
+
+```{r define_mappings, echo=TRUE, eval=TRUE}
+mappings <- tibble(variable = colnames(mydf), sheet = NA, cellrow = NA, cellcol = NA)
+
+# Function for adding mappings from variables in masterdf to location (sheet,row,col) in Excel template
+addToMappings <- function(var, sheetname, row, col, mappingdf = mappings) {
+  mappingdf[mappingdf$variable==var,"sheet"] <- sheetname
+  mappingdf[mappingdf$variable==var,"cellrow"] <- row
+  mappingdf[mappingdf$variable==var,"cellcol"] <- col
+  
+  return(mappingdf)
+}
+
+# Add mappings for variables in dataframe (NOTE: COLUMNS MUST ALREADY EXIST IN masterdf)
+mappings <- addToMappings("NP_loading","2. Material Types",46,3)
+mappings <- addToMappings("matrix_Mw","2. Material Types",15,3)
+mappings <- addToMappings("diffusivity","5.4 Properties-Thermal",38,3)
+mappings <- addToMappings("viscosity","2. Material Types",19,3)
+mappings <- addToMappings("Tg","5.4 Properties-Thermal",26,3)
+mappings <- addToMappings("Xray_filename","4. Characterization Methods",82,7)
+mappings <- addToMappings("BDS_filename","5.3 Properties-Electrical",18,5)
+mappings <- addToMappings("sampleID","1. Data Origin",5,2)
+mappings <- addToMappings("control_sampleID","1. Data Origin",6,2)
+
+mappings
+
+```
+
+
+
+---
+
+### **Auto-Fill Excel Templates** and **Export Supplementary Datafiles (.csv)**
+
+Programmatically generate Excel schema template files for each sample by:
+
+1. Creating a copy of the master Excel template (already filled out with global constants), if a new template has not yet been created
+2. Storing the template file in a sub-directory with sample ID as the folder name
+3. For each row in `mydf`, looping along columns
+    + If column header is included in `mappings`, and if the value is not `NULL`, write to Excel template according to mapping
+    + If column header is a "_datafile", write the "_filename" to the Excel template and save the tibble as a csv in the sub-directory
+4. If there are no image files to copy over, the process is complete
+
+```{r write_templates, echo=TRUE, eval=TRUE}
+
+# create directory for submission files (if already exists, nothing happens)
+dir.create("./SUBMISSION")
+
+# Initialize Boolean list for Sample IDs indicating whether to write new set of Excel template files
+   # (i.e. repeated sampleID rows in mydf do not overwrite previous, while also ensuring new set of files is created every time this code chunk is run)
+
+writenew <- tibble(sampleID=uniquedf$sampleID, write=TRUE)
+
+# Create a copy of the master template for each sample and place in a dedicate subdirectory with the sample ID as the folder name
+
+for (i in 1:nrow(mydf)) {
+  
+  rowSampleID <- mydf$sampleID[i]
+  
+  sample_folder <- paste0("./SUBMISSION/", rowSampleID) # sub-directory name for sample
+  
+  dir.create(sample_folder) # create directory (if already exists, will throw warning)
+  
+  templateFile <- paste0(sample_folder, "/", rowSampleID, "_template.xlsx") # filename for the Excel schema template file for the sample
+  
+  if(writenew[writenew$sampleID==rowSampleID,2][[1]]) { # create file if script is running anew
+    saveWorkbook(masterwb, templateFile) # save a copy of the master template, prepended with the "sample ID" surrogate key
+    writenew[writenew$sampleID==rowSampleID,2][[1]] <- FALSE # once template file created, ensures new file not saved over previous during rest of chunk
+  } 
+  
+  # Loop along columns in mydf
+  for (j in 1:ncol(mydf)) {
+    
+    if(!is.na(mappings$sheet[j])) { # only execute if a worksheet name is given in mappings dataframe
+      writeWorksheetToFile(file = templateFile, data = mydf[[i,j]], sheet = mappings$sheet[j], startRow = mappings$cellrow[j], startCol = mappings$cellcol[j], header = FALSE)
+    }
+    
+    # Loop for writing datafiles
+    if(grepl("_datafile", names(mydf)[j])) { # only execute if "_datafile" is in column header
+      
+      if(!is.na(mydf[[i,j-1]])) { # execute if the adjacent df cell NOT NA
+        # write nested tibble in _datafile column to csv in sub-directory
+        write_csv(mydf[[i,j]], path=paste0(sample_folder, "/", mydf[[i,j-2]])) # (filename is i,j-2) [filename defined 2 columns before datafile tibble]
+        # alternatively, can use get(df[i,j-1]) rather than writing tibble df[i,j] to csv 
+      }
+    }
+  }
+}
+```
+
