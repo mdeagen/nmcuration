@@ -1,6 +1,8 @@
 CURATION TRAVELER
 
-# Benes_2018_VirtualIssue
+# Benes_2018
+
+**Description:** Published article by Benes *et al.* for the Macromolecules **Virtual Issue**
 
 ---
 
