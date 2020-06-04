@@ -172,11 +172,11 @@ sheetactions
   # Col 3 is diffusivity_uncertainty (absolute)
   # Matrix_Mw is 100 kg/mol for this set (per Fig 2 caption in the paper)
 temp3 <- readWorksheet(authorwb,sheet=sheets[3],header=TRUE)
-mydf <- add_column(mydf, diffusivity = as.list(NA)) # 2020-06-04 added as.list() for nested tibble handling
+mydf <- add_column(mydf, diffusivity = list(NA)) # 2020-06-04 added list() for nested tibble handling
 mydf$diffusivity <- as.list(mydf$diffusivity)
 temp_diff <- tibble(a=temp3[,2],b="cm^2s^-1",c="absolute",d=temp3[,3])
 for (i in 1:nrow(temp_diff)) {
-  mydf <- add_row(mydf, NP_loading=temp3[i,1],matrix_Mw=100000,diffusivity=as.list(as.character(tibble(temp_diff)[i,]))) # 2020-06-04 added as.character
+  mydf <- add_row(mydf, NP_loading=temp3[i,1],matrix_Mw=100000,diffusivity=list(tibble(temp_diff)[i,])) # 2020-06-04 added as.character
 }
 
 # 4. IGNORE
@@ -186,11 +186,11 @@ for (i in 1:nrow(temp_diff)) {
   # Col 4 is matrix viscosity
   # NP_loading is 5 vol% for this set (varied depending on depth, but confirmed with author that 5% is representative)
 temp5 <- readWorksheet(authorwb,sheet=sheets[5],header=TRUE)
-mydf <- add_column(mydf, viscosity = NA)
+mydf <- add_column(mydf, viscosity = list(NA))
 mydf$viscosity <- as.list(mydf$viscosity)
 temp_visc <- tibble(a=as.character(temp5[,4]),b="Pa*s") # 2020-06-04 added as.character
 for (i in 1:nrow(temp_visc)) {
-  mydf <- add_row(mydf, NP_loading=0.05,matrix_Mw=temp5[i,1],viscosity=as.list(tibble(temp_visc)[i,])) # 2020-06-04 added as.list
+  mydf <- add_row(mydf, NP_loading=0.05,matrix_Mw=temp5[i,1],viscosity=list(tibble(temp_visc)[i,])) # 2020-06-04 added as.list
 }
 
 
@@ -201,11 +201,11 @@ for (i in 1:nrow(temp_visc)) {
   # Col 2 is NP_loading (note: needs to be converted from % to fraction)
   # Col 3 is Tg, in degrees Celsius
 temp7 <- readWorksheet(authorwb,sheet=sheets[7],header=TRUE)
-mydf <- add_column(mydf, Tg = NA)
+mydf <- add_column(mydf, Tg = list(NA))
 mydf$Tg <- as.list(mydf$Tg)
 temp_Tg <- tibble(a=as.character(temp7[,3]),b="Celsius") # 2020-06-04 added as.character
 for (i in 1:nrow(temp_Tg)) {
-  mydf <- add_row(mydf, NP_loading=temp7[i,2]/100,matrix_Mw=temp7[i,1],Tg=as.list(tibble(temp_Tg)[i,])) # 2020-06-04 added as.list
+  mydf <- add_row(mydf, NP_loading=temp7[i,2]/100,matrix_Mw=temp7[i,1],Tg=list(tibble(temp_Tg)[i,])) # 2020-06-04 added as.list
 }
 
 # 8. ADD (datafiles)
@@ -437,6 +437,30 @@ for (i in 1:nrow(mydf)) {
            writeWorksheetToFile(file=paste0(sample_folder, "/", mydf[[i,j-2]]), data=get(mydf[[i,j-1]]), sheet="Sheet1")
       }
     }
+  }
+}
+
+
+# 2020-06-04: Only populate filler info if NP_loading > 0
+
+# FILLER INFO 
+fillerinfo <- tribble(
+  ~x,~y,~z,
+  "octa(aminophenyl) polyhedral oligomeric silsesquioxane",NA,NA, # Filler chemical name/filler name
+  NA,NA,NA, # Filler PubChem ref
+  "OAPS",NA,NA, # Filler Abbrev
+  NA,NA,NA, # Mfgr or source name
+  NA,NA,NA, # Trade name
+  NA,NA,NA, # Density
+  NA,NA,NA, # Crystal phase
+  NA,"1.8","nm", # Particle diameter
+)
+  
+# Add FILLER INFO only if NP_loading > 0 (use uniquedf to accomplish this without unnecessary repetion)
+for(i in 1:nrow(uniquedf)) {
+  if(uniquedf$NP_loading[i]>0){
+    writeWorksheetToFile(file=paste0("./SUBMISSION/", uniquedf$sampleID[i], "/", uniquedf$sampleID[i], "_template.xlsx"),
+                         data = fillerinfo, sheet = "2. Material Types", startRow = 28, startCol = 2, header=FALSE)
   }
 }
 ```
