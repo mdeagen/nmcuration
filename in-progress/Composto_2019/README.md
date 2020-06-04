@@ -2,7 +2,7 @@ CURATION JOB TRAVELER
 
 # Composto_2019
 
-**Description:** Published article by Bailey *et al.* for the Macromolecules **Virtual Issue**
+**Description:** Published article by Bailey *et al.* (Composto group) for the Macromolecules **Virtual Issue**
 
 ---
 
@@ -34,9 +34,17 @@ CURATION JOB TRAVELER
 
 ## Events
 
-2020-06-02: (Virtually) added publication, curation project to "Wishlist" (M.E.D.)
+2020-06-02: (Virtually) added publication, curation job to "Wishlist" (M.E.D.)
 
 2020-06-04: Added job to "In-Progress" (M.E.D.)
+
+2020-06-04: Made updates to R code (M.E.D.)
+* Updated column headers for supplementary datafiles
+* Changed datafile export from .csv to .xlsx (NOTE: This causes a SIGNIFICANT increase in execution time compared to the efficient `write_csv` function)
+* Various edits for NA handling related to R 4.0 changes
+* This R code is less efficient than later iterations that used left_join to assemble the dataframe
+
+2020-06-04: Ran R code to generate sample filesets (M.E.D.)
 
 
 
