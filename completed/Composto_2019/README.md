@@ -92,6 +92,7 @@ CURATION JOB TRAVELER
 >error messages: [XML Schema Validation Error] Element 'value': 'several' is not a valid value of the atomic type 'xs:double', should be a number. [XML Schema Validation Error] Element 'value': 'Celsius' is not a valid value of the atomic type 'xs:double', should be a number. [XML Schema Validation Error] Element 'GlassTransitionTemperature': Missing child element(s). Expected is ( unit )
 
 **Error:** Identified. "Celsius" mapping to Value field of schema template.
+
 **Fix:** list(tibble()) when adding row to mydf, to preserve columns when writing to Excel templates
 
 ### Issue 2
@@ -99,6 +100,7 @@ CURATION JOB TRAVELER
 >error messages: [XML Schema Validation Error] Element 'value': 'several' is not a valid value of the atomic type 'xs:double', should be a number.
 
 **Error:** Identified. Schema unable to accept "several hours" (which was reported by authors) as a processing step.
+
 **Fix:** Removed from master_template. However, such a commonly used term should be accommodated in the future.
 
 ### Issue 3
@@ -106,6 +108,7 @@ CURATION JOB TRAVELER
 >error messages: exception occurred during mass fraction-volume fraction conversion exception: Traceback (most recent call last): File "/apps/nanomine/src/jobs/XMLCONV/code_src/conversion.py", line 292, in conversion mvc.run() File "/apps/nanomine/src/jobs/XMLCONV/code_src/mfvf.py", line 288, in run self.computeFiller() File "/apps/nanomine/src/jobs/XMLCONV/code_src/mfvf.py", line 77, in computeFiller raise LookupError('[Filler Error] FillerComposition is missing.') LookupError: [Filler Error] FillerComposition is missing.
 
 **Error:** Identified. XMLCONV unable to handle edge case where filler composition is 0.
+
 **Fix:** Removed filler info from master_template. Changed R code to only fill out when NP_Loading > 0
 
 ### Issue 4
@@ -114,6 +117,7 @@ S1,2,3,4,16,17 were succesfully uploaded
 S5-15 (template only) were NOT uploaded
 
 **Error:** Uploader requires at least 1 file in each upload box in order to enable submission
+
 **Workaround:** Upload the template file in each upload box
 
 ---
