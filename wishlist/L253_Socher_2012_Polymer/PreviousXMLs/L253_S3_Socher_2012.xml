@@ -1,0 +1,188 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<PolymerNanocomposite>
+    <ID>L253_S3_Socher_2012</ID>
+    <Control_ID>L253_S1_Socher_2012</Control_ID>
+    <SchemaVersion>PNC_schema_010720</SchemaVersion>
+    <SchemaID>someschemaid</SchemaID>
+    <DatasetID>somedatasetid</DatasetID>
+    <DATA_SOURCE>
+        <Citation>
+            <CommonFields>
+                <CitationType>research article</CitationType>
+                <Publication>Polymer</Publication>
+                <Title>The influence of matrix viscosity on MWCNT dispersion and electrical properties in different thermoplastic nanocomposites</Title>
+                <Author>Socher, Robert</Author>
+                <Author>Krause, Beate</Author>
+                <Author>Müller, Michael T.</Author>
+                <Author>Boldt, Regine</Author>
+                <Author>Pötschke, Petra</Author>
+                <Keyword>Carbon nanotubes</Keyword>
+                <Keyword>Thermoplastic composites</Keyword>
+                <Keyword>Matrix viscosity</Keyword>
+                <Publisher>Elsevier</Publisher>
+                <PublicationYear>2012</PublicationYear>
+                <DOI>10.1016/j.polymer.2011.12.019</DOI>
+                <Volume>53</Volume>
+                <URL>https://www.sciencedirect.com/science/article/pii/S0032386111010251?via%3Dihub</URL>
+                <Language>English</Language>
+                <Location>Leibniz Institute of Polymer Research Dresden (IPF), Hohe Str. 6, 01069 Dresden, Germany</Location>
+                <DateOfCitation>2017-07-26</DateOfCitation>
+            </CommonFields>
+            <CitationType>
+                <Journal>
+                    <ISSN>0032-3861</ISSN>
+                    <Issue>2</Issue>
+                </Journal>
+            </CitationType>
+        </Citation>
+    </DATA_SOURCE>
+    <MATERIALS>
+        <Matrix>
+            <MatrixComponent>
+                <ChemicalName>poly(imino-1-oxododecamethylene)</ChemicalName>
+                <StdChemicalName>Nylon 12</StdChemicalName>
+                <uSMILES>C(CCCCCCCCCCC(N[*])=O)[*]</uSMILES>
+                <Abbreviation>PA12</Abbreviation>
+                <ManufacturerOrSourceName>Evonik Industries</ManufacturerOrSourceName>
+                <TradeName>VESTAMID L grade</TradeName>
+                <Density>
+                    <description>inserted from ChemProps, NanoMine</description>
+                    <value>0.98</value>
+                    <unit>g/cm3</unit>
+                </Density>
+            </MatrixComponent>
+            <Description>viscosity level: low, with an excess of acid end groups</Description>
+        </Matrix>
+        <Filler>
+            <FillerComponent>
+                <ChemicalName>multi-walled carbon nanotubes</ChemicalName>
+                <StdChemicalName>Multi-wall carbon nanotubes</StdChemicalName>
+                <Abbreviation>MWCNT</Abbreviation>
+                <ManufacturerOrSourceName>Bayer MaterialScience AG, Leverkusen, Germany</ManufacturerOrSourceName>
+                <TradeName>Baytubes C150P</TradeName>
+                <Density>
+                    <description>inserted from ChemProps, NanoMine</description>
+                    <value>2.6</value>
+                    <unit>g/cm3</unit>
+                </Density>
+                <NonSphericalShape>
+                    <Width>
+                        <description>mean diameter of 10.5 nm</description>
+                        <value>10.5</value>
+                        <unit>nm</unit>
+                    </Width>
+                    <Depth>
+                        <description>mean diameter of 10.5 nm</description>
+                        <value>10.5</value>
+                        <unit>nm</unit>
+                    </Depth>
+                </NonSphericalShape>
+            </FillerComponent>
+            <FillerComposition>
+                <Fraction>
+                    <mass>
+                        <value>0.01</value>
+                        <source>reported</source>
+                    </mass>
+                </Fraction>
+            </FillerComposition>
+        </Filler>
+    </MATERIALS>
+    <PROCESSING>
+        <MeltMixing>
+            <ChooseParameter>
+                <Extrusion>
+                    <TwinScrewExtrusion>
+                        <Extruder>conical co-rotating twin-screw microcompounder (DACA Instruments, Santa Barbara, USA)</Extruder>
+                        <RotationMode>CoRotation</RotationMode>
+                    </TwinScrewExtrusion>
+                </Extrusion>
+            </ChooseParameter>
+            <ChooseParameter>
+                <Mixing>
+                    <MixingMethod>blending</MixingMethod>
+                    <ChemicalUsed>
+                        <description>PA12</description>
+                    </ChemicalUsed>
+                    <ChemicalUsed>
+                        <description>MWCNT</description>
+                    </ChemicalUsed>
+                    <Time>
+                        <value>5</value>
+                        <unit>minutes</unit>
+                    </Time>
+                    <Temperature>
+                        <value>260</value>
+                        <unit>Celsius</unit>
+                    </Temperature>
+                </Mixing>
+            </ChooseParameter>
+            <ChooseParameter>
+                <Heating>
+                    <Description>preheating</Description>
+                    <Time>
+                        <value>2.5</value>
+                        <unit>minutes</unit>
+                    </Time>
+                </Heating>
+            </ChooseParameter>
+            <ChooseParameter>
+                <Mixing>
+                    <RPM>
+                        <value>250</value>
+                    </RPM>
+                    <Temperature>
+                        <value>260</value>
+                        <unit>Celsius</unit>
+                    </Temperature>
+                </Mixing>
+            </ChooseParameter>
+            <ChooseParameter>
+                <Heating>
+                    <Temperature>
+                        <value>260</value>
+                        <unit>Celsius</unit>
+                    </Temperature>
+                    <Time>
+                        <value>1</value>
+                        <unit>minutes</unit>
+                    </Time>
+                </Heating>
+            </ChooseParameter>
+            <ChooseParameter>
+                <Molding>
+                    <MoldingMode>hot-pressing</MoldingMode>
+                </Molding>
+            </ChooseParameter>
+        </MeltMixing>
+    </PROCESSING>
+    <CHARACTERIZATION>
+        <Transmission_Electron_Microscopy>
+            <EquipmentUsed>LIBRA120</EquipmentUsed>
+            <Description>Carl Zeiss GmbH, Jena, Germany</Description>
+            <AcceleratingVoltage>
+                <value>120</value>
+                <unit>kV</unit>
+            </AcceleratingVoltage>
+        </Transmission_Electron_Microscopy>
+        <Rheometery>
+            <RheometerType>plate</RheometerType>
+            <Description>Rheometric Scientific Inc., Piscataway, USA</Description>
+            <Equipment>ARES oscillatory rheometer</Equipment>
+        </Rheometery>
+        <Electrometry>
+            <Equipment>Keithley electrometer 6517A</Equipment>
+        </Electrometry>
+        <Electrometry>
+            <Equipment>Keithley 8009 Resistivity Test Fixture</Equipment>
+        </Electrometry>
+    </CHARACTERIZATION>
+    <PROPERTIES>
+        <Electrical>
+            <VolumeResistivity>
+                <value>287418879.788</value>
+                <unit>ohm-cm</unit>
+            </VolumeResistivity>
+        </Electrical>
+    </PROPERTIES>
+</PolymerNanocomposite>
