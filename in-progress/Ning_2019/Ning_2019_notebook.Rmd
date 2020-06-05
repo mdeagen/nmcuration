@@ -1,0 +1,838 @@
+---
+title: "Ning *et al.* **ACS Macro Letters** (2019)"
+author: "Curated by Michael Deagen"
+date: "4 Feb, 2020"
+output: html_notebook
+---
+
+### Introduction
+
+```{r include=FALSE}
+options(java.parameters = "-Xmx2048m") ## increase memory allocation for Java (for XLConnect library)
+
+require(rcrossref) # package for scraping CrossRef database given a DOI
+require(XLConnect) # package for MS Excel integration
+require(tidyr)     # data wrangling/tidying
+require(tibble)    # improvement on dataframes
+require(readr)     # read_csv functionality
+require(here)      # identify present working directory based on file location
+require(dplyr)     # data wrangling tools
+require(magrittr)  # pipe operator (%>%), compound assignment operator (%<>%), exposition operator (%$%)
+
+# Set the working directory to the location of this R notebook (this directory should contain the master template and associate data to import)
+setwd(here())
+
+# Sub-directory containing downloaded data
+data_path <- "./DATA-20191212T200104Z-001/DATA"
+
+# Sub-directory containing image data
+image_path <- "./Images-20191212T200117Z-001/Images"
+
+# Name of MASTER TEMPLATE FILE, which must be stored in same directory as this R notebook
+master_template_path <- "master_template_2020_Ning.xlsx"
+
+# load master template file 
+master1 <- loadWorkbook(master_template_path, create = FALSE) ## requires input of template file name
+
+
+# DOI of paper (extracted from DOI field of master template file)
+myDOI <- readWorksheet(master1, sheet = "1. Data Origin", startRow = 11, startCol = 2, endRow = 11, endCol = 2, header = FALSE)[[1]]
+```
+
+[R Markdown](http://rmarkdown.rstudio.com) Notebook for [this 2019 paper by Ning *et al.*](`r paste0("http://doi.org/", myDOI)`), for the purposes of semi-automated curation into NanoMine Excel template files.
+
+---
+
+### Extraction of DOI Metadata
+
+Knowing the DOI (`r myDOI`), we extract some metadata from the Crossref database using the `rcrossref` library.
+
+
+```{r retrieve_DOI_metadata, echo=FALSE}
+myCitation <- cr_cn(myDOI, format = "citeproc-json")
+
+# TITLE INFORMATION
+myTitle <- ""
+if("title" %in% names(myCitation)) {
+  myTitle <- myCitation$title
+}else {
+  myTitle <- "[No results found]"
+}
+
+# AUTHOR INFORMATION
+authorlist <- ""
+if("author" %in% names(myCitation)) {
+  for (i in 1:length(myCitation$author$family)) {
+    if(i<length(myCitation$author$family)) {
+      authorlist <- paste(authorlist, myCitation$author$given[i], " ", myCitation$author$family[i], sep="")
+      if(i<(length(myCitation$author$family) - 1))
+        authorlist <- paste(authorlist, ",", sep = "")
+      authorlist <- paste(authorlist, " ", sep = "")
+    }
+    else if(i==length(myCitation$author$family) & i>1) authorlist <- paste(authorlist, "and ", myCitation$author$given[i], " ", myCitation$author$family[i], sep="")
+  }
+} else authorlist <- "[No results found]"
+
+# JOURNAL INFORMATION
+myJournal <- ""
+if("container-title" %in% names(myCitation)) {myJournal <- myCitation$`container-title`
+}else myJournal <- "[No results found]"
+
+# ISSUED DATE INFORMATION
+myIssuedDate <- ""
+if("issued" %in% names(myCitation)) {
+  for (i in 1:length(myCitation$issued$`date-parts`)){
+    if(i>1) myCitation$issued$`date-parts`[i] <- sprintf("%02d", as.numeric(myCitation$issued$`date-parts`[i]))
+  }
+  
+  myIssuedDate <- paste(myCitation$issued$`date-parts`[1:length(myCitation$issued$`date-parts`)], collapse = "-")
+  
+}else myIssuedDate <- "[No results found]"
+
+# CITED BY INFORMATION
+myCitedBy <- ""
+if("is-referenced-by-count" %in% names(myCitation)) {myCitedBy <- myCitation$`is-referenced-by-count`
+}else myCitedBy <- "[No results found]"
+
+# SUBJECTS INFORMATION
+mySubjects <- ""
+if("subject" %in% names(myCitation)) {
+  for (i in 1:length(myCitation$subject)) {
+    if(i<length(myCitation$subject)) {
+      mySubjects <- paste(mySubjects, myCitation$subject[i])
+      mySubjects <- paste(mySubjects, ", ", sep = "")
+    }
+    else if(i==length(myCitation$subject) & i>1) mySubjects <- paste(mySubjects, "and ", myCitation$subject[i])
+  }
+}else mySubjects <- "[No results found]"
+```
+
+
+
+```{r show_DOI_metadata, tidy=TRUE, echo=FALSE}
+myTitle
+authorlist
+myJournal
+myIssuedDate
+#myCitedBy
+#mySubjects
+```
+
+
+---
+
+### Defining **Global Constants**
+
+Certain inputs remain constant throughout the entire experiment (such as equipment, procedures, etc.), and these will need to be defined so that each "sample" is given the fullest *context* as possible when stored in NanoMine.
+
+Examples include:
+
+* NP diameter = 14 nm
+* NP shape = spherical
+* Matrix material = polyethylene
+* Particle surface treatment = C_18
+* DOI
+* Curator name
+* etc...
+
+For convenience, global constants will be defined within a master template (in Excel), and these values will be copied into sample template files when the master template is duplicated. This is the equivalent of using "Save As" to generate copies of the template file.
+
+---
+
+### Definition of **Experimental Factors** (Controlled Independent Variables)
+
+Experimental factors are the input variables controlled by the experimenter. There may be several input variables linked to a particular factor (e.g. process parameters required to achieve different levels of a factor), however we will define factors as the *minimal* subset of controlled attributes necessary to uniquely define each sample in the experiment. The following table from the paper indicates the experimental factors in this experiment are **Matrix $M_w$**, **NP loading**, and **crystallization process**. Together, these factors form a "composite key" that uniquely identifies each experimental unit (sample). The factors do NOT need to be XML schema terms.
+
+#![This is Table 1](Table1.png)
+
+---
+
+### **Factor-Level-Linked** Independent Variables (Functional Dependencies)
+
+Some input variables are linked to the levels of a particular factor (while remaining independent to the other factors). For example, in Table 1, the **graft density** is linked to the levels of **NP Loading**, where the value is 1.3 $ch/nm^2$ when loading is 10 wt%, and blank when loading is 0 wt%. In relational database terminology, this is an example of a **functional dependency**. (In other words, in the case of X --> Y; if you know the value of X, then you can infer the value of Y).
+
+Such factor-level-linked variables are not part of the composite key that defines samples, but are variable inputs and need to be included as columns in the R dataframe which will be created.
+
+---
+
+### Definition of **Response Variables** (Dependent Variables or Measurements)
+
+Definition of response variables requires examination of the provided data. What was quantified or categorized throughout the course of the experiment? If a response variable is included in the NanoMine XML schema, then these variables should be mapped accordingly.
+
+
+Examples include:
+
+* $T_m$, Melting temperature [via DSC] 
+* $X_c$, Degree of crystallization [via DSC]
+* E', Storage modulus; and E", Loss modulus [via DMA]
+* Dielectric permittivity (real and loss) [via Dielectric Spectroscopy]
+* NP d-spacing [via SAXS]
+
+In some cases, these response variables are singular values. In those cases, they have their own column in the R dataframe and those values will be mapped directly into the sample template files.
+
+In other cases, response variables may be datafiles (e.g. spectra, curves). In these cases, the tabular data are saved separately (.csv format) and only the filenames are mapped to the sample template files. The tabular data are stored in elements of a list-column, where each element is a tibble.
+
+---
+
+### Materials **Processing** Information
+
+Materials processing as a factor can be quite complex, as there may be diffent types and quantities of variables associated with each process. In other cases, perhaps only one parameter changed (for example, curing temperature) while all other steps and parameters remained the same.
+
+If the structure of the processing varies, then make an Excel template sheet for each process and refer to each by a unique name (e.g., ProcessA.xlsx, ProcessB.xlsx, etc.). The sheet itself will be copied and pasted into the sample template files.
+
+If the case is simple, and the structure of the process remains constant, create the structure of the process in the master template and map the variable(s) to the appropriate cells.
+
+---
+
+### Initializing **R Dataframe**
+
+We require a dataframe in the tidydata format, where *each column represents a unique attribute*, and *each row represents a unique observation (sample)*.
+
+To begin, we initialize a dataframe with the experimental factors. As these form the "composite key" which we need in order to uniquely tie results to samples, these factor variables must be fully defined for each incoming dataset.
+
+```{r}
+masterdf <- tibble(matrix_MW = NA, NP_loading = NA, crystallization_process = NA)
+```
+
+
+### Uploading Tabular Data
+
+First, upload tabular data in either csv format (using `read_csv()`) or Excel format (using `readWorksheetFromFile()` or `loadWorkbook()` and `readWorksheet()` functions from the `XLConnect` library).
+
+Load each dataset in R as its own dataframe. If rows in the dataframe correspond to experimental units (samples), the dataframe will be added to the `masterdf` dataframe (e.g., data from Table 1). Otherwise, if all rows in a tabular dataset correspond to a single sample (e.g., spectra, stress-strain curves, temporal distributions) then the dataframe will be saved as a "datafile" in the same folder, with the datafile name added to the appropriate cell of the schema. If each column is an individual sample, these must be separated and multiple datafiles will be created (one for each sample, corresponding to the range of rows that represent each respective sample).
+
+Next, create a "tidy" table (if an attribute is spread across several columns, separate these attributes into their own columns; if multiple variables are encoded in a single column, break it into individual columns).
+
+```{r describe-data, echo = FALSE, eval = TRUE}
+# Import and categorize data provided by the researcher
+
+
+
+# Dataframe with information on files submitted by the user
+data_info <- tibble(filename = list.files(data_path))
+
+filelist <- "Copy of RPI_XN (SAXS).xlsx, Dielectric Spectrum of 152k PE System.xlsx, Dielectric Spectrum of 4k PE System.xlsx, DLS.PNG, DMA results of 152k PE System.xlsx, DSC_152k PE system.xlsx, E_Isothermal Crystallized over E_neat.xlsx, SAXS 152K.csv, SAXS_DATA.xlsx, TGA.xlsx"
+
+#data_info <- tibble(filename = filelist)
+
+data_info["description"] <- c(
+  "SAXS. ",
+  "Dielec. Spect.",
+  "Dielec. Spect.",
+  "DLS image. ",
+  "DMA. ",
+  "DSC. ",
+  "DMA. Storage modulus normalized.",
+  "SAXS. ",
+  "SAXS. ",
+  "TGA. "
+)
+data_info["contents"] <- c(
+  "5 sheets, multiple tables; various SAXS data",
+  "1 sheet, 4 tables",
+  "1 sheet, 4 tables",
+  "particle size distribution from DLS",
+  "1 sheet, 4 tables; Storage modulus, Loss modulus, Tan delta",
+  "1 sheet, 3 tables; DSC curves; constant Matrix_Mw=152 and NP_loading=10; variable crystallization_process",
+  "1 sheet, 1 table; ",
+  "1 sheet, 2 tables; various SAXS data",
+  "1 sheet, 2 tables; combined SAXS data (this will be imported)",
+  "1 sheet, 3 tables; "
+)
+data_info["approach"] <- c(
+  "IGNORE",
+  "ADD AS DATAFILES",
+  "ADD AS DATAFILES",
+  "IGNORE",
+  "ADD AS DATAFILES",
+  "ADD AS DATAFILES",
+  "IGNORE",
+  "IGNORE",
+  "ADD AS DATAFILES",
+  "ADD AS DATAFILES"
+)
+
+```
+
+
+```{r upload_data, echo=TRUE, eval=TRUE, results='hide'}
+
+## Table 1 data
+table1 <- readWorksheetFromFile("table1.xlsx", "Sheet1")
+colnames(table1) <- c("NAME", "MatrixMW", "graft-dens", "NPloading", "Crystallization", "Tm", "Xc")
+
+
+## DATA folder
+
+# Relevant files in folder, from which we will extract data (tables for input into masterdf, or attached as separate datafiles)
+filesToExtractFrom <- data_info$filename[data_info$approach != "IGNORE"] # all filenames whose "approach" column is NOT set to "IGNORE"
+
+# 1-2: Dielectric Spectra
+# Each dataset comprises 3 columns [frequency, real permittivity, and loss permittivity]; each will be separated into 2 "datafiles,"
+#   both containing frequency as the first column and either real or loss permittivity as the second column
+# Datasets labeled according to filename, dataset (in current format), and split (if needed)
+#   e.g. D1.1   --> Dielectric Spectrum of 152k PE System.xlsx ; dataset 1 [still needs to be split]
+#   e.g. D1.1.1 --> Dielectric Spectrum of 152k PE System.xlsx ; dataset 1 ; real permittivity (cols 1 and 3)
+
+# D1: Factor Matrix_MW = 152
+# D1.1, D1.2: Factor NP_loading = 0
+# D1.3, D1.4: Factor NP_loading = 10
+# D1.1, D1.3: Factor Crystallization_process = Quenched
+# D1.2, D1.4: Factor Crystallization_process = Iso 128C
+dataset <- 1
+startrows <- c(3,3,3,3)
+startcols <- c(1,5,10,16)
+endcols <- c(3,7,12,18)
+
+for (i in 1:4) {
+  assign(paste0("D",dataset, ".", i), readWorksheetFromFile(paste0(data_path, "/", filesToExtractFrom[dataset]), sheet = 1, startCol = startcols[i], endCol = endcols[i], startRow = startrows[i], header = TRUE))
+  temp <- get(paste0("D",dataset,".",i))
+  colnames(temp) <- c("Frequency (Hz)", "Real Permittivity", "Loss Permittivity")
+  assign(paste0("D",dataset,".",i), temp)
+  for (j in 1:2) {
+    assign(paste0("D",dataset,".",i,".",j), get(paste0("D",dataset,".",i))[,c(1,j+1)])
+  }
+}
+
+
+# D2: Factor Matrix_MW = 4
+# D2.1, D2.2: Factor NP_loading = 10
+# D2.3, D2.4: Factor NP_loading = 0
+# D2.1, D2.3: Factor Crystallization_process = Quenched
+# D2.2, D2.4: Factor Crystallization_process = Iso 105C
+
+dataset <- 2
+startrows <- c(2,2,2,2)
+startcols <- c(1,5,9,13)
+endcols <- c(3,7,11,15)
+
+for (i in 1:4) {
+  assign(paste0("D",dataset,".",i), readWorksheetFromFile(paste0(data_path, "/", filesToExtractFrom[dataset]), sheet = 1, startCol = startcols[i], endCol = endcols[i], startRow = startrows[i], header = TRUE))
+  temp <- get(paste0("D",dataset,".",i))
+  colnames(temp) <- c("Frequency (Hz)", "Real Permittivity", "Loss Permittivity")
+  assign(paste0("D",dataset,".",i), temp)
+  for (j in 1:2) {
+    assign(paste0("D",dataset,".",i,".",j), get(paste0("D",dataset,".",i))[,c(1,j+1)])
+  }
+}
+
+# 3: DMA results (152k MW samples only)
+# Each dataset comprises 3 columns [frequency, storage modulus, loss modulus, and tan delta]; each will be separated into 3 "datafiles,"
+#   all containing frequency as the first column and either storage mod/loss mod/tan delta as the second column
+
+# D3: Factor Matrix_MW = 152
+# D3.1, D3.2: Factor NP_loading = 0
+# D3.3, D3.4: Factor NP_loading = 10
+# D3.1, D3.3: Factor Crystallization_process = Quenched
+# D3.2, D3.4: Factor Crystallization_process = Iso 128C
+
+dataset <- 3
+startrows <- c(2,2,2,2)
+startcols <- c(2,8,14,19)
+endcols <- c(5,11,17,22)
+
+for (i in 1:4) {
+  assign(paste0("D",dataset,".",i), readWorksheetFromFile(paste0(data_path, "/", filesToExtractFrom[dataset]), sheet = 1, startCol = startcols[i], endCol = endcols[i], startRow = startrows[i], header = TRUE))
+  temp <- get(paste0("D",dataset,".",i))
+  colnames(temp) <- c("Frequency (Hz)", "Storage Modulus (Pa)", "Loss Modulus (Pa)", "Tan delta")
+  assign(paste0("D",dataset,".",i), temp)
+  for (j in 1:3) {
+    assign(paste0("D",dataset,".",i,".",j), get(paste0("D",dataset,".",i))[,c(1,j+1)])
+  }
+}
+
+
+# 4: DSC results (152k MW samples only, 10wt% loading samples only)
+# Each dataset comprises 2 relevant columns [time (min), heat flow (W/g)]; 3 datasets in total; 
+# only the isothermal cooling temperature varies (125C, 128C, 129.5C), therefore no need to split datasets
+
+# D4 Factor Matrix_MW = 152, Factor NP_loading = 10
+# D4.1: Factor Crystallization_process = Iso 125C
+# D4.2: Factor Crystallization_process = Iso 128C
+# D4.3: Factor Crystallization_process = Iso 129.5C
+
+dataset <- 4
+startrows <- c(3,3,3)
+startcols <- c(2,9,16)
+endcols <- c(3,10,17)
+
+for (i in 1:3) {
+  assign(paste0("D",dataset,".",i), readWorksheetFromFile(paste0(data_path, "/", filesToExtractFrom[dataset]), sheet = 1, startCol = startcols[i], endCol = endcols[i], startRow = startrows[i], header = TRUE))
+  temp <- get(paste0("D",dataset,".",i))
+  colnames(temp) <- c("Time (min)", "Heat Flow (W/g)")
+  assign(paste0("D",dataset,".",i), temp)
+}
+
+
+# 5: SAXS results
+# Each datafile will comprise 2 columns [q and I]
+# D5.1: 4 datasets for the 152k samples (all with NP_loading = 0): Quenched, Iso 128C, Iso 129.5C, Iso 130C
+# D5.2: 3 datasets for the 152k samples (all with NP_loading = 10): Quenched, Iso 128C, Iso 129.5C
+# D5.3: 4 datasets for the 4k samples: (NP_loading = 0,10) x (Quenched, Iso 105C)
+
+# D5.1.1: Factor Matrix_MW = 152k, Factor NP_loading = 0, Factor Crystallization_process = Quenched
+# D5.1.2: Factor Matrix_MW = 152k, Factor NP_loading = 0, Factor Crystallization_process = Iso 128C
+# D5.1.3: Factor Matrix_MW = 152k, Factor NP_loading = 0, Factor Crystallization_process = Iso 129.5C
+# D5.1.4: Factor Matrix_MW = 152k, Factor NP_loading = 0, Factor Crystallization_process = Iso 130C
+
+# D5.2.1: Factor Matrix_MW = 152k, Factor NP_loading = 10, Factor Crystallization_process = Quenched
+# D5.2.2: Factor Matrix_MW = 152k, Factor NP_loading = 10, Factor Crystallization_process = Iso 128C
+# D5.2.3: Factor Matrix_MW = 152k, Factor NP_loading = 10, Factor Crystallization_process = Iso 129.5C
+
+# IGNORE THE COLUMNS WITH "IQ^2" HEADER
+
+# D5.3.1: Factor Matrix_MW = 4k, Factor NP_loading = 0, Factor Crystallization_process = Quenched
+# D5.3.2: Factor Matrix_MW = 4k, Factor NP_loading = 0, Factor Crystallization_process = Iso 105C
+# D5.3.3: Factor Matrix_MW = 4k, Factor NP_loading = 10, Factor Crystallization_process = Quenched
+# D5.3.4: Factor Matrix_MW = 4k, Factor NP_loading = 10, Factor Crystallization_process = Iso 105C
+
+dataset <- 5
+startrows <- c(2,2,2)
+startcols <- c(1,7,17)
+endcols <- c(5,10,21)
+
+for (i in 1:3) {
+  assign(paste0("D",dataset,".",i), readWorksheetFromFile(paste0(data_path, "/", filesToExtractFrom[dataset]), sheet = 1, startCol = startcols[i], endCol = endcols[i], startRow = startrows[i], header = TRUE))
+  temp <- get(paste0("D",dataset,".",i))
+  colnames(temp)[1] <- "q" # first column is "q"
+  for (k in 2:ncol(get(paste0("D",dataset,".",i)))) {
+    colnames(temp)[k] <- "I" # all subsequent columns (each a new sample) is "I"
+  }
+  assign(paste0("D",dataset,".",i), temp)
+  for (j in 1:(ncol(get(paste0("D",dataset,".",i)))-1)) {
+    assign(paste0("D",dataset,".",i,".",j), get(paste0("D",dataset,".",i))[,c(1,j+1)])
+  }
+}
+
+
+# 6: TGA results
+# Each datafile will comprise 4 columns [time (min), T (C), mass (mg), and %] and applies to all samples where factor NP_loading = 10
+# D6.1: Corresponds to 152k samples
+# D6.2: Corresponds to 4k samples
+
+dataset <- 6
+startrows <- c(1,1)
+startcols <- c(8,14)
+endcols <- c(11,17)
+
+for (i in 1:2) {
+  assign(paste0("D",dataset,".",i), readWorksheetFromFile(paste0(data_path, "/", filesToExtractFrom[dataset]), sheet = 1, startCol = startcols[i], endCol = endcols[i], startRow = startrows[i], header = TRUE))
+  temp <- get(paste0("D",dataset,".",i))
+  colnames(temp) <- c("Time (min)", "T (C)", "mass (mg)", "%")
+  assign(paste0("D",dataset,".",i), temp)
+}
+
+
+```
+
+```{r compile_dataframe, echo=TRUE, eval=TRUE}
+
+# Compile tabular data into masterdf dataframe
+# First, add_column() function for any new variables that are not yet in masterdf (i.e. response variables)
+#  --> in the case of dataile columns, these must then be converted to list type at th
+# Second, add_row() where all variables are defined (either constant, or as columns of the incoming table)
+
+# Initialize dataframe
+masterdf <- tibble(matrix_MW = NA, NP_loading = NA, crystallization_process = NA)
+
+#######
+
+# ADD NECESSARY COLUMNS
+
+# Table 1 data (melting_temp, degree_crystallization)
+masterdf <- add_column(masterdf, melting_temp = NA, degree_crystallization = NA)
+# D1-D2: Dielectric Spectra (datafiles: real permittivity, loss permittivity)
+masterdf <- add_column(masterdf, dielec_perm_real_filename = "_DS_real_permittivity.csv", dielec_perm_real_datafile = NA, dielec_perm_loss_filename = "_DS_loss_permittivity.csv", dielec_perm_loss_datafile = NA)
+# D3: DMA (datafiles: storage modulus, loss modulus, tan delta)
+masterdf <- add_column(masterdf, storage_modulus_filename = "_DMA_storage_modulus.csv", storage_modulus_datafile = NA, loss_modulus_filename = "_DMA_loss_modulus.csv", loss_modulus_datafile = NA, DMA_tan_delta_filename = "_DMA_tan_delta.csv", DMA_tan_delta_datafile = NA)
+# D4: DSC
+masterdf <- add_column(masterdf, DSC_filename = "_DSC_data.csv", DSC_datafile = NA)
+# D5: SAXS
+masterdf <- add_column(masterdf, SAXS_filename = "_SAXS_data.csv", SAXS_datafile = NA)
+# D6: TGA
+masterdf <- add_column(masterdf, TGA_filename = "_TGA_data.csv", TGA_datafile = NA)
+
+#######
+
+# Coerce all columns ending in "_datafile" to type LIST
+masterdf[,grep("_datafile", names(masterdf))] <- lapply(names(masterdf[,grep("_datafile", names(masterdf))]), as.list)
+
+#######
+
+# ADD NECESSARY ROWS (data!) [be sure all necessary factors are defined]
+
+# Table 1
+masterdf <- add_row(masterdf, matrix_MW = table1[,2], NP_loading = table1[,4], crystallization_process = table1[,5], melting_temp = table1[,6], degree_crystallization = table1[,7])
+
+# D1 Dielec Spec (4 datasets, each producing 2 datafiles)
+for (i in 1:4) {
+  temp_MW <- 152
+  temp_loading <- c(0,0,10,10)
+  temp_cryst <- c("quenched", "isothermal crystallized (Tc = 128 °C)","quenched", "isothermal crystallized (Tc = 128 °C)")
+
+  # Real permittivity
+  masterdf$dielec_perm_real_datafile[!is.na(masterdf$matrix_MW) & masterdf$matrix_MW==temp_MW & masterdf$NP_loading==temp_loading[i] & masterdf$crystallization_process==temp_cryst[i]][[1]] <- get(paste0("D1.",i,".1"))
+  # Loss permittivity
+  masterdf$dielec_perm_loss_datafile[!is.na(masterdf$matrix_MW) & masterdf$matrix_MW==temp_MW & masterdf$NP_loading==temp_loading[i] & masterdf$crystallization_process==temp_cryst[i]][[1]] <- get(paste0("D1.",i,".2"))
+}
+
+# D2 Dielec Spec (4 datasets, each producing 2 datafiles)
+for (i in 1:4) {
+  temp_MW <- 4
+  temp_loading <- c(10,10,0,0)
+  temp_cryst <- c("quenched", "isothermal crystallized (Tc = 105 °C)","quenched", "isothermal crystallized (Tc = 105 °C)")
+
+  # Real permittivity
+  masterdf$dielec_perm_real_datafile[!is.na(masterdf$matrix_MW) & masterdf$matrix_MW==temp_MW & masterdf$NP_loading==temp_loading[i] & masterdf$crystallization_process==temp_cryst[i]][[1]] <- get(paste0("D2.",i,".1"))
+  # Loss permittivity
+  masterdf$dielec_perm_loss_datafile[!is.na(masterdf$matrix_MW) & masterdf$matrix_MW==temp_MW & masterdf$NP_loading==temp_loading[i] & masterdf$crystallization_process==temp_cryst[i]][[1]] <- get(paste0("D2.",i,".2"))
+}
+
+# D3 DMA (4 datasets, each producing 3 datafiles)
+for (i in 1:4) {
+  temp_MW <- 152
+  temp_loading <- c(0,0,10,10)
+  temp_cryst <- c("quenched", "isothermal crystallized (Tc = 128 °C)","quenched", "isothermal crystallized (Tc = 128 °C)")
+
+  # Storage modulus
+  masterdf$storage_modulus_datafile[!is.na(masterdf$matrix_MW) & masterdf$matrix_MW==temp_MW & masterdf$NP_loading==temp_loading[i] & masterdf$crystallization_process==temp_cryst[i]][[1]] <- get(paste0("D3.",i,".1"))
+  # Loss modulus
+  masterdf$loss_modulus_datafile[!is.na(masterdf$matrix_MW) & masterdf$matrix_MW==temp_MW & masterdf$NP_loading==temp_loading[i] & masterdf$crystallization_process==temp_cryst[i]][[1]] <- get(paste0("D3.",i,".2"))
+  # Tan delta
+  masterdf$DMA_tan_delta_datafile[!is.na(masterdf$matrix_MW) & masterdf$matrix_MW==temp_MW & masterdf$NP_loading==temp_loading[i] & masterdf$crystallization_process==temp_cryst[i]][[1]] <- get(paste0("D3.",i,".3"))
+}
+
+# D4 DSC (152k and 10% loading only)
+# First must add two new rows because new level of crystallization_process introduced (Iso 125)
+masterdf <- add_row(masterdf, matrix_MW=152, NP_loading=10, crystallization_process=c("isothermal crystallized (Tc = 125 °C)"))
+for (i in 1:3) {
+  temp_MW <- 152
+  temp_loading <- 10
+  temp_cryst <- c("isothermal crystallized (Tc = 125 °C)","isothermal crystallized (Tc = 128 °C)","isothermal crystallized (Tc = 129.5 °C)")
+
+  # DSC curve
+  masterdf$DSC_datafile[!is.na(masterdf$matrix_MW) & masterdf$matrix_MW==temp_MW & masterdf$NP_loading==temp_loading & masterdf$crystallization_process==temp_cryst[i]][[1]] <- get(paste0("D4.",i))
+}
+
+# D5 SAXS data
+# First must add two new rows because new level of crystallization_process introduced (Iso 130)
+masterdf <- add_row(masterdf, matrix_MW=152, NP_loading=0, crystallization_process=c("isothermal crystallized (Tc = 130 °C)"))
+# D5.1.x
+for (i in 1:4) {
+  temp_MW <- 152
+  temp_loading <- 0
+  temp_cryst <- c("quenched","isothermal crystallized (Tc = 128 °C)","isothermal crystallized (Tc = 129.5 °C)","isothermal crystallized (Tc = 130 °C)")
+
+  # DSC curve
+  masterdf$SAXS_datafile[!is.na(masterdf$matrix_MW) & masterdf$matrix_MW==temp_MW & masterdf$NP_loading==temp_loading & masterdf$crystallization_process==temp_cryst[i]][[1]] <- get(paste0("D5.1.",i))
+}
+# D5.2.x
+for (i in 1:3) {
+  temp_MW <- 152
+  temp_loading <- 10
+  temp_cryst <- c("quenched","isothermal crystallized (Tc = 128 °C)","isothermal crystallized (Tc = 129.5 °C)")
+
+  # DSC curve
+  masterdf$SAXS_datafile[!is.na(masterdf$matrix_MW) & masterdf$matrix_MW==temp_MW & masterdf$NP_loading==temp_loading & masterdf$crystallization_process==temp_cryst[i]][[1]] <- get(paste0("D5.2.",i))
+}
+# D5.3.x
+for (i in 1:4) {
+  temp_MW <- 4
+  temp_loading <- c(0,0,10,10)
+  temp_cryst <- c("quenched","isothermal crystallized (Tc = 105 °C)","quenched","isothermal crystallized (Tc = 105 °C)")
+
+  # DSC curve
+  masterdf$SAXS_datafile[!is.na(masterdf$matrix_MW) & masterdf$matrix_MW==temp_MW & masterdf$NP_loading==temp_loading[i] & masterdf$crystallization_process==temp_cryst[i]][[1]] <- get(paste0("D5.3.",i))
+}
+
+
+# D6 TGA data
+# Same dataset applies to multiple samples (depends on loading)
+# D6.1: Corresponds to 152k samples
+# D6.2: Corresponds to 4k samples
+for (i in 1:nrow(masterdf)) {
+  if(!is.na(masterdf$matrix_MW[i]) & masterdf$matrix_MW[i]==152 & masterdf$NP_loading[i]==10) masterdf$TGA_datafile[[i]] <- get("D6.1")
+  if(!is.na(masterdf$matrix_MW[i]) & masterdf$matrix_MW[i]==4 & masterdf$NP_loading[i]==10) masterdf$TGA_datafile[[i]] <- get("D6.2")
+}
+
+
+# Fill out "filename" rows by copying first row value into all subsequent rows (use grep("_filename"))
+masterdf <- fill(masterdf, names(masterdf[,grep("_filename", names(masterdf))]))
+
+
+# FACTOR-LINKED VARIABLES
+
+# NP_Loading = 10
+fillerinfo_df <- tribble( # Filler info 
+  ~x, ~y, ~z,
+  "silica", NA, NA,
+  "Silicon dioxide", NA, NA,
+  NA, NA, NA,
+  "SiO2", NA, NA,
+  "Nissan Chemical Co.", NA, NA,
+  "MEK-ST", NA, NA,
+  NA, NA, NA,
+  NA, NA, NA,
+  NA, 14, "nm"
+)
+PSTinfo_df <- tribble( # Particle surface treatment info
+  ~x, ~y, ~z,
+  "n-octadecyldimethylmethoxysilane",NA,NA,
+  "C18",NA,NA,
+  "CH2",NA,NA,
+  "Gelest",NA,NA,
+  NA,NA,NA,
+  NA,NA,NA,
+  "graft density",1.3,"ch/nm^2"
+)
+process_PST <- as_tibble(readWorksheetFromFile("Process_Ning_SurfaceChemical.xlsx",sheet=1, header=FALSE)) # used Excel template to define process
+
+# Sheet '3. Synthesis and Processing' varies depending on Matrix_MW (final equilibration temperature)
+process_PNC_152k <- as_tibble(readWorksheetFromFile("Process_Ning_PNC_152k.xlsx",sheet=1, header=FALSE))
+process_PNC_4k <- as_tibble(readWorksheetFromFile("Process_Ning_PNC_4k.xlsx",sheet=1, header=FALSE))
+
+masterdf <- add_column(masterdf, fillerinfo=NA, PSTinfo=NA, processing=NA)
+masterdf$fillerinfo <- as.list(masterdf$fillerinfo) # coerce column as list because entering table of values
+masterdf$PSTinfo <- as.list(masterdf$PSTinfo)
+masterdf$processing <- as.list(masterdf$processing)
+
+for (i in 1:nrow(masterdf)) {
+  if(!is.na(masterdf$matrix_MW[i]) & masterdf$NP_loading[i]==10) {
+      masterdf$fillerinfo[[i]] <- fillerinfo_df # filler info
+      masterdf$PSTinfo[[i]] <- PSTinfo_df # particle surface treatment info
+    if(masterdf$matrix_MW[i]==152) {
+      masterdf$processing[[i]] <- process_PNC_152k # processing info (152k MW)
+    }
+    if(masterdf$matrix_MW[i]==4) {
+      masterdf$processing[[i]] <- process_PNC_4k # processing info (4k MW)
+    }
+  }
+  
+}
+
+
+# Quenched vs isothermal crystallization
+# Cooling rate of DSC (20 C/min for quenched and 2 C/min isothermal)
+
+masterdf <- add_column(masterdf, DSCcoolingrate=NA)
+for (i in 1:nrow(masterdf)) {
+  if(!is.na(masterdf$matrix_MW[i]) & masterdf$crystallization_process[i]=="quenched") {
+    masterdf$DSCcoolingrate <- 20
+  } else masterdf$DSCcoolingrate <- 2
+  
+}
+
+
+# Subfolders containing TEM images
+masterdf <- add_column(masterdf, imagefolder = NA)
+for (i in 1:nrow(masterdf)) {
+  if(!is.na(masterdf$matrix_MW[i]) & masterdf$NP_loading[i]==10) { #TEM images only for composite samples
+    # 4k matrix MW
+    if(masterdf$matrix_MW[i]==4 & masterdf$crystallization_process[i]=="isothermal crystallized (Tc = 103.5 °C)") masterdf$imagefolder[[i]] <- paste0(image_path, "/4k Composite 103.5C")
+    if(masterdf$matrix_MW[i]==4 & masterdf$crystallization_process[i]=="isothermal crystallized (Tc = 105 °C)") masterdf$imagefolder[[i]] <- paste0(image_path, "/4k Composite 105C")
+    if(masterdf$matrix_MW[i]==4 & masterdf$crystallization_process[i]=="quenched") masterdf$imagefolder[[i]] <- paste0(image_path, "/4k Composite Quench")
+    
+    # 152k matrix MW
+    if(masterdf$matrix_MW[i]==152 & masterdf$crystallization_process[i]=="isothermal crystallized (Tc = 128 °C)") masterdf$imagefolder[[i]] <- paste0(image_path, "/152k Composite 128C")
+    if(masterdf$matrix_MW[i]==152 & masterdf$crystallization_process[i]=="quenched") masterdf$imagefolder[[i]] <- paste0(image_path, "/152k Composite Quench")
+  }
+}
+
+
+
+# Remove rows where any factors are NA
+masterdf <- masterdf[!is.na(masterdf$matrix_MW) & !is.na(masterdf$NP_loading) & !is.na(masterdf$crystallization_process),]
+
+# UNIT CONVERSIONS (e.g. NP_loading as weight fraction)
+masterdf$NP_loading <- masterdf$NP_loading/100
+
+
+```
+
+
+```{r sample_IDs, echo=FALSE, eval=TRUE}
+
+#### Add filenames with sample prefix (e.g. S1_SAXS_datafile.csv)
+# Add column with sample ID prefixes (e.g. S1, S2, etc.)
+masterdf$sampleID <- paste0("S",seq.int(nrow(masterdf)))
+
+# Prepend sampleID to all _filename values
+for (i in 1:nrow(masterdf)) {
+  for (j in 1:ncol(masterdf)) {
+    if(grepl("_filename", names(masterdf)[j])) {# execute if "_filename" within column header
+      masterdf[i,j] <- paste0(masterdf$sampleID[i], masterdf[i,j])
+    }
+  }
+}
+
+```
+
+---
+
+### Define **"Control" Samples**
+
+Control samples at present are defined only with respect to **filler loading**. Therefore, for a given set of experimental factors (F1, F2, F3, ...) where one of these factors (e.g., F1) represents filler loading, the control samples represent the combinations of factor levels in which the filler loading is the null condition (filler loading = 0). While the samples include all combinations of (F1, F2, F3, ...), the control samples include the subset (F1=0, F2, F3, ...).
+
+Once the dataframe has been assembled with all other variables, the control samples may be added.
+
+```{r control_samples, echo=TRUE, eval=TRUE}
+
+# Identify list of unique combinations of factors EXCLUDING filler loading (in this case, matrix_Mw and crystallization_process)
+
+controls <- masterdf %$% unique(.[,c(1,3)]) %>% add_column(NP_loading=0) 
+
+# Map control sample IDs to `controls` dataframe using left_join(), and change colname to control_sampleID
+
+controls %<>% left_join(.,masterdf[,c(1:3,27)]) 
+
+# Rename sampleID to control_sampleID
+
+names(controls)[4] <- "control_sampleID"
+
+# REMOVE NP_loading=0 and replace with NA
+masterdf$NP_loading[masterdf$NP_loading==0] <- NA
+
+# Add control_sampleID to masterdf using right_join() on all columns EXCEPT NP_loading
+
+masterdf %<>% right_join(.,controls[,c(1,2,4)]) %>% print()
+
+```
+
+
+---
+
+### Define Custom Function with Mappings from Dataframe to Schema Template
+
+```{r mappings-to-template, echo=FALSE, eval=TRUE, warning=FALSE}
+
+# Table with masterdf column names as rows and template locations (sheet, cell) as columns
+
+mappings <- tibble(variable = colnames(masterdf), sheet = NA, cellrow = NA, cellcol = NA)
+
+# Function for adding mappings from variables in masterdf to location (sheet,row,col) in Excel template
+addToMappings <- function(var, sheetname, row, col, mappingdf = mappings) {
+  mappingdf[mappingdf$variable==var,"sheet"] <- sheetname
+  mappingdf[mappingdf$variable==var,"cellrow"] <- row
+  mappingdf[mappingdf$variable==var,"cellcol"] <- col
+  
+  return(mappingdf)
+}
+
+# Add mappings for variables in dataframe (NOTE: COLUMNS MUST ALREADY EXIST IN masterdf)
+mappings <- addToMappings("matrix_MW","2. Material Types",15,3)
+mappings <- addToMappings("NP_loading","2. Material Types",46,3)
+mappings <- addToMappings("melting_temp","5.4 Properties-Thermal",30,3)
+mappings <- addToMappings("degree_crystallization","5.4 Properties-Thermal",12,3)
+mappings <- addToMappings("dielec_perm_real_filename","5.3 Properties-Electrical",17,5)
+mappings <- addToMappings("dielec_perm_loss_filename","5.3 Properties-Electrical",18,5)
+mappings <- addToMappings("storage_modulus_filename","5.2 Properties-Viscoelastic",19,3)
+mappings <- addToMappings("loss_modulus_filename","5.2 Properties-Viscoelastic",20,3)
+mappings <- addToMappings("DMA_tan_delta_filename","5.2 Properties-Viscoelastic",21,3)
+mappings <- addToMappings("DSC_filename","5.4 Properties-Thermal",6,2)
+mappings <- addToMappings("DSC_filename","4. Characterization Methods",66,7) # NOTE: There are two locations in schema template for DSC profile information
+mappings <- addToMappings("SAXS_filename","4. Characterization Methods",82,7)
+mappings <- addToMappings("TGA_filename","4. Characterization Methods",71,7)
+mappings <- addToMappings("sampleID","1. Data Origin",5,2)
+mappings <- addToMappings("control_sampleID","1. Data Origin",6,2)
+mappings <- addToMappings("fillerinfo", "2. Material Types",27,2)
+mappings <- addToMappings("PSTinfo", "2. Material Types",62,1)
+mappings <- addToMappings("processing", "3. Synthesis and Processing",3,1)
+mappings <- addToMappings("DSCcoolingrate","4. Characterization Methods",64,3)
+
+mappings
+
+```
+
+
+---
+
+### Create and Fill Out Excel Template Files for Each Sample
+
+```{r load-master-template, echo=TRUE, eval=FALSE}
+
+# create directory for submission files (if already exists, nothing happens)
+dir.create("./SUBMISSION")
+
+# make copies of master template file for each "sample" 
+for (i in 1:nrow(masterdf)) {
+  ## NOTE: UPDATE SO THAT EACH TEMPLATE GOES INTO SUBFOLDER "S1", "S2", etc.
+  sample_folder <- paste0("./SUBMISSION/", masterdf$sampleID[i])
+  
+  dir.create(sample_folder)
+  
+  templateFile <- paste0(sample_folder, "/", masterdf$sampleID[i], "_template.xlsx")
+  
+  # save a copy of the master template, prepended with the "sample ID" surrogate key
+  saveWorkbook(master1, templateFile)
+  
+  
+  # Loop along columns in masterdf (add individual variables to worksheet, as well as save datafiles as separate csv's)
+  for (j in 1:ncol(masterdf)) {
+    
+    
+    if(!is.na(mappings$sheet[j])) { # only execute if a worksheet name is given in mappings dataframe
+      writeWorksheetToFile(file = templateFile, data = masterdf[[i,j]], sheet = mappings$sheet[j], startRow = mappings$cellrow[j], startCol = mappings$cellcol[j],header = FALSE)
+    }
+    
+    # Loop for writing datafiles
+    if(grepl("_datafile", names(masterdf)[j])) { # only execute if "_datafile" is in column header
+      #print(names(masterdf[j]))
+      if(!is.null(masterdf[[i,j]])) { # execute if the datafile cell is NOT NULL
+        #print(paste0("./SUBMISSION/", masterdf$sampleID[i], "/", masterdf[[i,j-1]]))
+        write_csv(masterdf[[i,j]], path=paste0("./SUBMISSION/", masterdf$sampleID[i], "/", masterdf[[i,j-1]])) # (filename is i,j-1)
+        ## NOTE: write_excel_csv produces unreadable files; we should implement csv handling (or JSON handling where can include metadata)
+        ## the files are only readable once .csv is appended
+      }
+    }
+  }
+    
+  # Loop for saving images (if an imagefolder is assigned to the sample)
+  if(!is.na(masterdf$imagefolder[i])) { # if sample has a folder of images associated with it
+    # save temporary list of all files in the image directory
+    temp_list_of_images <- list.files(masterdf$imagefolder[i])
+    # copy all files to the sample subdirectory
+    file.copy(paste0(masterdf$imagefolder[i],"/",temp_list_of_images), sample_folder)
+    
+    # list files in Excel sample template
+    # base tibble (1 image, with data and placeholder for filename)
+    image_info <- tribble(
+      ~x, ~y, ~z,
+      "Imagefile #", "Datafile name.jpg/png/tif/gif", "Note",
+      "Microstructure filename", NA, NA,
+      "Description", NA, NA,
+      "Microscopy type", "TEM", NA,
+      "Image type", "grayscale", NA,
+      NA,NA,NA,
+      "Image dimension", "Fixed Value", "Unit",
+      "Width", 4000, "pixel",
+      "Height", 2996, "pixel",
+      "Depth", 8, "bit",
+      "Preprocessing", NA, NA,
+      NA,NA,NA
+    )
+    aggregate_image_info <- tibble(x=NA,y=NA,z=NA)
+    image_info_sample <- tribble(
+      ~x,~y,~z,
+      "Sample experimental info", "Fixed Value", "Unit",
+      "Sample size", NA, NA,
+      "Sample thickness", 125, "nm"
+    )
+    # rbind tibbles for each image in temp_list_of_images
+    for (k in 1:length(temp_list_of_images)) {
+      temp_image_info <- image_info
+      temp_image_info[[2,2]] <- temp_list_of_images[k]
+      
+      aggregate_image_info <- rbind(aggregate_image_info,temp_image_info)
+    }
+    
+    # append final info with sample thickness to tibble
+    aggregate_image_info <- rbind(aggregate_image_info,image_info_sample)
+    
+    # add complete tibble to sheet '6. Microstructure' of sample template
+    writeWorksheetToFile(file = templateFile, data = aggregate_image_info, sheet = "6. Microstructure", startRow = 3, startCol = 1, header = FALSE)
+  }
+}
+
+```
+
+
