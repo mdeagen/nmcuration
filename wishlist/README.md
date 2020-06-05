@@ -85,7 +85,9 @@ Raw datasets that generated a figure are preferred over manual/digital extractio
 
 The corresponding author of a publication, whose contact information is included on either the first or last page of a published article, is typically the leader of the lab that produced the publication. Requests should be respectful of the author's time and specific to the datasets of interest to NanoMine, with the realization that the raw datasets may not have been archived in a repository. The corresponding author may direct you to contact the lead author of the paper, who may or may not still be a member of the research group.
 
-
+## Links and Resources
+* [**List of papers to possibly curate:**](https://docs.google.com/spreadsheets/d/1JIi_GlqX2KqiNfb7EF4cwO30_tDAg96wYxcHctefUJM/edit) Google Sheet with a (non-prioritized) list of papers to potentially curate
+* [**Issue tracker spreadsheet:**](https://docs.google.com/spreadsheets/d/1g3nWS48fCwsUAJjBezQFrGWUsNnp0EnDoNpAEAr6lyE/edit#gid=0) Google Sheet with list of issues with already curated samples
 
 
 
