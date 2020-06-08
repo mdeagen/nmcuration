@@ -35,6 +35,11 @@ CURATION JOB TRAVELER
 2020-06-05: Added curation job to "Wishlist" (M.E.D.)
 * Added list of datasets of interest
 
+2020-06-08: Added datasets from AFRL collaborators (M.E.D.)
+* Not all of these datasets will be used, but "Datasets of Interest" should be among these
+* `.opj` is only openable with Origin (freely available [Origin Viewer](https://www.originlab.com/viewer/) can be used to read these)
+* Should convert relevant tabular datasets to `.csv` for processing
+
 
 
 
