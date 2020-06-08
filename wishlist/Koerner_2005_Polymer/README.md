@@ -30,11 +30,6 @@ CURATION JOB TRAVELER
 
 ---
 
-## Added Excel Template
-* `Koerner_2005_Polymer_Master.xlsx`
-
----
-
 ## Events
 
 2020-06-05: Added curation job to "Wishlist" (M.E.D.)
@@ -44,6 +39,11 @@ CURATION JOB TRAVELER
 * Not all of these datasets will be used, but "Datasets of Interest" should be among these
 * `.opj` is only openable with Origin (freely available [Origin Viewer](https://www.originlab.com/viewer/) can be used to read these)
 * Should convert relevant tabular datasets to `.csv` for processing
+
+2020-06-08: Added master excel file for data curation (H.D.)
+* Currently an initial draft covering the overall information
+* This excel file can be used as a starting point for each of the following samples
+* `Koerner_2005_Polymer_Master.xlsx`
 
 
 
