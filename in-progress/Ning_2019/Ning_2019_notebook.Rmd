@@ -15,18 +15,18 @@ require(XLConnect) # package for MS Excel integration
 require(tidyr)     # data wrangling/tidying
 require(tibble)    # improvement on dataframes
 require(readr)     # read_csv functionality
-require(here)      # identify present working directory based on file location
+#require(here)      # identify present working directory based on file location   # removed 2020-06-08
 require(dplyr)     # data wrangling tools
 require(magrittr)  # pipe operator (%>%), compound assignment operator (%<>%), exposition operator (%$%)
 
 # Set the working directory to the location of this R notebook (this directory should contain the master template and associate data to import)
-setwd(here())
+job_directory <- getwd() # 2020-06-08 updated by replacing here()
 
 # Sub-directory containing downloaded data
-data_path <- "./DATA-20191212T200104Z-001/DATA"
+data_path <- "./RawDataFromAuthors/" # 2020-06-08 updated for repo directory
 
 # Sub-directory containing image data
-image_path <- "./Images-20191212T200117Z-001/Images"
+image_path <- "./Images/" # 2020-06-08 updated for repo directory
 
 # Name of MASTER TEMPLATE FILE, which must be stored in same directory as this R notebook
 master_template_path <- "master_template_2020_Ning.xlsx"
@@ -285,7 +285,7 @@ startcols <- c(1,5,10,16)
 endcols <- c(3,7,12,18)
 
 for (i in 1:4) {
-  assign(paste0("D",dataset, ".", i), readWorksheetFromFile(paste0(data_path, "/", filesToExtractFrom[dataset]), sheet = 1, startCol = startcols[i], endCol = endcols[i], startRow = startrows[i], header = TRUE))
+  assign(paste0("D",dataset, ".", i), readWorksheetFromFile(paste0(data_path, filesToExtractFrom[dataset]), sheet = 1, startCol = startcols[i], endCol = endcols[i], startRow = startrows[i], header = TRUE))
   temp <- get(paste0("D",dataset,".",i))
   colnames(temp) <- c("Frequency (Hz)", "Real Permittivity", "Loss Permittivity")
   assign(paste0("D",dataset,".",i), temp)
@@ -307,7 +307,7 @@ startcols <- c(1,5,9,13)
 endcols <- c(3,7,11,15)
 
 for (i in 1:4) {
-  assign(paste0("D",dataset,".",i), readWorksheetFromFile(paste0(data_path, "/", filesToExtractFrom[dataset]), sheet = 1, startCol = startcols[i], endCol = endcols[i], startRow = startrows[i], header = TRUE))
+  assign(paste0("D",dataset,".",i), readWorksheetFromFile(paste0(data_path, filesToExtractFrom[dataset]), sheet = 1, startCol = startcols[i], endCol = endcols[i], startRow = startrows[i], header = TRUE))
   temp <- get(paste0("D",dataset,".",i))
   colnames(temp) <- c("Frequency (Hz)", "Real Permittivity", "Loss Permittivity")
   assign(paste0("D",dataset,".",i), temp)
@@ -332,7 +332,7 @@ startcols <- c(2,8,14,19)
 endcols <- c(5,11,17,22)
 
 for (i in 1:4) {
-  assign(paste0("D",dataset,".",i), readWorksheetFromFile(paste0(data_path, "/", filesToExtractFrom[dataset]), sheet = 1, startCol = startcols[i], endCol = endcols[i], startRow = startrows[i], header = TRUE))
+  assign(paste0("D",dataset,".",i), readWorksheetFromFile(paste0(data_path, filesToExtractFrom[dataset]), sheet = 1, startCol = startcols[i], endCol = endcols[i], startRow = startrows[i], header = TRUE))
   temp <- get(paste0("D",dataset,".",i))
   colnames(temp) <- c("Frequency (Hz)", "Storage Modulus (Pa)", "Loss Modulus (Pa)", "Tan delta")
   assign(paste0("D",dataset,".",i), temp)
@@ -357,7 +357,7 @@ startcols <- c(2,9,16)
 endcols <- c(3,10,17)
 
 for (i in 1:3) {
-  assign(paste0("D",dataset,".",i), readWorksheetFromFile(paste0(data_path, "/", filesToExtractFrom[dataset]), sheet = 1, startCol = startcols[i], endCol = endcols[i], startRow = startrows[i], header = TRUE))
+  assign(paste0("D",dataset,".",i), readWorksheetFromFile(paste0(data_path, filesToExtractFrom[dataset]), sheet = 1, startCol = startcols[i], endCol = endcols[i], startRow = startrows[i], header = TRUE))
   temp <- get(paste0("D",dataset,".",i))
   colnames(temp) <- c("Time (min)", "Heat Flow (W/g)")
   assign(paste0("D",dataset,".",i), temp)
@@ -392,7 +392,7 @@ startcols <- c(1,7,17)
 endcols <- c(5,10,21)
 
 for (i in 1:3) {
-  assign(paste0("D",dataset,".",i), readWorksheetFromFile(paste0(data_path, "/", filesToExtractFrom[dataset]), sheet = 1, startCol = startcols[i], endCol = endcols[i], startRow = startrows[i], header = TRUE))
+  assign(paste0("D",dataset,".",i), readWorksheetFromFile(paste0(data_path, filesToExtractFrom[dataset]), sheet = 1, startCol = startcols[i], endCol = endcols[i], startRow = startrows[i], header = TRUE))
   temp <- get(paste0("D",dataset,".",i))
   colnames(temp)[1] <- "q" # first column is "q"
   for (k in 2:ncol(get(paste0("D",dataset,".",i)))) {
@@ -416,7 +416,7 @@ startcols <- c(8,14)
 endcols <- c(11,17)
 
 for (i in 1:2) {
-  assign(paste0("D",dataset,".",i), readWorksheetFromFile(paste0(data_path, "/", filesToExtractFrom[dataset]), sheet = 1, startCol = startcols[i], endCol = endcols[i], startRow = startrows[i], header = TRUE))
+  assign(paste0("D",dataset,".",i), readWorksheetFromFile(paste0(data_path, filesToExtractFrom[dataset]), sheet = 1, startCol = startcols[i], endCol = endcols[i], startRow = startrows[i], header = TRUE))
   temp <- get(paste0("D",dataset,".",i))
   colnames(temp) <- c("Time (min)", "T (C)", "mass (mg)", "%")
   assign(paste0("D",dataset,".",i), temp)
@@ -440,17 +440,17 @@ masterdf <- tibble(matrix_MW = NA, NP_loading = NA, crystallization_process = NA
 # ADD NECESSARY COLUMNS
 
 # Table 1 data (melting_temp, degree_crystallization)
-masterdf <- add_column(masterdf, melting_temp = NA, degree_crystallization = NA)
+masterdf <- add_column(masterdf, melting_temp = NA, degree_crystallization = NA)         # 2020-06-08 updated .csv to .xlsx
 # D1-D2: Dielectric Spectra (datafiles: real permittivity, loss permittivity)
-masterdf <- add_column(masterdf, dielec_perm_real_filename = "_DS_real_permittivity.csv", dielec_perm_real_datafile = NA, dielec_perm_loss_filename = "_DS_loss_permittivity.csv", dielec_perm_loss_datafile = NA)
+masterdf <- add_column(masterdf, dielec_perm_real_filename = "_DS_real_permittivity.xlsx", dielec_perm_real_datafile = NA, dielec_perm_loss_filename = "_DS_loss_permittivity.xlsx", dielec_perm_loss_datafile = NA)
 # D3: DMA (datafiles: storage modulus, loss modulus, tan delta)
-masterdf <- add_column(masterdf, storage_modulus_filename = "_DMA_storage_modulus.csv", storage_modulus_datafile = NA, loss_modulus_filename = "_DMA_loss_modulus.csv", loss_modulus_datafile = NA, DMA_tan_delta_filename = "_DMA_tan_delta.csv", DMA_tan_delta_datafile = NA)
+masterdf <- add_column(masterdf, storage_modulus_filename = "_DMA_storage_modulus.xlsx", storage_modulus_datafile = NA, loss_modulus_filename = "_DMA_loss_modulus.xlsx", loss_modulus_datafile = NA, DMA_tan_delta_filename = "_DMA_tan_delta.xlsx", DMA_tan_delta_datafile = NA)
 # D4: DSC
-masterdf <- add_column(masterdf, DSC_filename = "_DSC_data.csv", DSC_datafile = NA)
+masterdf <- add_column(masterdf, DSC_filename = "_DSC_data.xlsx", DSC_datafile = NA)
 # D5: SAXS
-masterdf <- add_column(masterdf, SAXS_filename = "_SAXS_data.csv", SAXS_datafile = NA)
+masterdf <- add_column(masterdf, SAXS_filename = "_SAXS_data.xlsx", SAXS_datafile = NA)
 # D6: TGA
-masterdf <- add_column(masterdf, TGA_filename = "_TGA_data.csv", TGA_datafile = NA)
+masterdf <- add_column(masterdf, TGA_filename = "_TGA_data.xlsx", TGA_datafile = NA)
 
 #######
 
@@ -468,7 +468,7 @@ masterdf <- add_row(masterdf, matrix_MW = table1[,2], NP_loading = table1[,4], c
 for (i in 1:4) {
   temp_MW <- 152
   temp_loading <- c(0,0,10,10)
-  temp_cryst <- c("quenched", "isothermal crystallized (Tc = 128 °C)","quenched", "isothermal crystallized (Tc = 128 °C)")
+  temp_cryst <- c("quenched", "isothermal crystallized (Tc = 128 ?C)","quenched", "isothermal crystallized (Tc = 128 ?C)")
 
   # Real permittivity
   masterdf$dielec_perm_real_datafile[!is.na(masterdf$matrix_MW) & masterdf$matrix_MW==temp_MW & masterdf$NP_loading==temp_loading[i] & masterdf$crystallization_process==temp_cryst[i]][[1]] <- get(paste0("D1.",i,".1"))
@@ -480,7 +480,7 @@ for (i in 1:4) {
 for (i in 1:4) {
   temp_MW <- 4
   temp_loading <- c(10,10,0,0)
-  temp_cryst <- c("quenched", "isothermal crystallized (Tc = 105 °C)","quenched", "isothermal crystallized (Tc = 105 °C)")
+  temp_cryst <- c("quenched", "isothermal crystallized (Tc = 105 ?C)","quenched", "isothermal crystallized (Tc = 105 ?C)")
 
   # Real permittivity
   masterdf$dielec_perm_real_datafile[!is.na(masterdf$matrix_MW) & masterdf$matrix_MW==temp_MW & masterdf$NP_loading==temp_loading[i] & masterdf$crystallization_process==temp_cryst[i]][[1]] <- get(paste0("D2.",i,".1"))
@@ -492,7 +492,7 @@ for (i in 1:4) {
 for (i in 1:4) {
   temp_MW <- 152
   temp_loading <- c(0,0,10,10)
-  temp_cryst <- c("quenched", "isothermal crystallized (Tc = 128 °C)","quenched", "isothermal crystallized (Tc = 128 °C)")
+  temp_cryst <- c("quenched", "isothermal crystallized (Tc = 128 ?C)","quenched", "isothermal crystallized (Tc = 128 ?C)")
 
   # Storage modulus
   masterdf$storage_modulus_datafile[!is.na(masterdf$matrix_MW) & masterdf$matrix_MW==temp_MW & masterdf$NP_loading==temp_loading[i] & masterdf$crystallization_process==temp_cryst[i]][[1]] <- get(paste0("D3.",i,".1"))
@@ -504,11 +504,11 @@ for (i in 1:4) {
 
 # D4 DSC (152k and 10% loading only)
 # First must add two new rows because new level of crystallization_process introduced (Iso 125)
-masterdf <- add_row(masterdf, matrix_MW=152, NP_loading=10, crystallization_process=c("isothermal crystallized (Tc = 125 °C)"))
+masterdf <- add_row(masterdf, matrix_MW=152, NP_loading=10, crystallization_process=c("isothermal crystallized (Tc = 125 ?C)"))
 for (i in 1:3) {
   temp_MW <- 152
   temp_loading <- 10
-  temp_cryst <- c("isothermal crystallized (Tc = 125 °C)","isothermal crystallized (Tc = 128 °C)","isothermal crystallized (Tc = 129.5 °C)")
+  temp_cryst <- c("isothermal crystallized (Tc = 125 ?C)","isothermal crystallized (Tc = 128 ?C)","isothermal crystallized (Tc = 129.5 ?C)")
 
   # DSC curve
   masterdf$DSC_datafile[!is.na(masterdf$matrix_MW) & masterdf$matrix_MW==temp_MW & masterdf$NP_loading==temp_loading & masterdf$crystallization_process==temp_cryst[i]][[1]] <- get(paste0("D4.",i))
@@ -516,12 +516,12 @@ for (i in 1:3) {
 
 # D5 SAXS data
 # First must add two new rows because new level of crystallization_process introduced (Iso 130)
-masterdf <- add_row(masterdf, matrix_MW=152, NP_loading=0, crystallization_process=c("isothermal crystallized (Tc = 130 °C)"))
+masterdf <- add_row(masterdf, matrix_MW=152, NP_loading=0, crystallization_process=c("isothermal crystallized (Tc = 130 ?C)"))
 # D5.1.x
 for (i in 1:4) {
   temp_MW <- 152
   temp_loading <- 0
-  temp_cryst <- c("quenched","isothermal crystallized (Tc = 128 °C)","isothermal crystallized (Tc = 129.5 °C)","isothermal crystallized (Tc = 130 °C)")
+  temp_cryst <- c("quenched","isothermal crystallized (Tc = 128 ?C)","isothermal crystallized (Tc = 129.5 ?C)","isothermal crystallized (Tc = 130 ?C)")
 
   # DSC curve
   masterdf$SAXS_datafile[!is.na(masterdf$matrix_MW) & masterdf$matrix_MW==temp_MW & masterdf$NP_loading==temp_loading & masterdf$crystallization_process==temp_cryst[i]][[1]] <- get(paste0("D5.1.",i))
@@ -530,7 +530,7 @@ for (i in 1:4) {
 for (i in 1:3) {
   temp_MW <- 152
   temp_loading <- 10
-  temp_cryst <- c("quenched","isothermal crystallized (Tc = 128 °C)","isothermal crystallized (Tc = 129.5 °C)")
+  temp_cryst <- c("quenched","isothermal crystallized (Tc = 128 ?C)","isothermal crystallized (Tc = 129.5 ?C)")
 
   # DSC curve
   masterdf$SAXS_datafile[!is.na(masterdf$matrix_MW) & masterdf$matrix_MW==temp_MW & masterdf$NP_loading==temp_loading & masterdf$crystallization_process==temp_cryst[i]][[1]] <- get(paste0("D5.2.",i))
@@ -539,7 +539,7 @@ for (i in 1:3) {
 for (i in 1:4) {
   temp_MW <- 4
   temp_loading <- c(0,0,10,10)
-  temp_cryst <- c("quenched","isothermal crystallized (Tc = 105 °C)","quenched","isothermal crystallized (Tc = 105 °C)")
+  temp_cryst <- c("quenched","isothermal crystallized (Tc = 105 ?C)","quenched","isothermal crystallized (Tc = 105 ?C)")
 
   # DSC curve
   masterdf$SAXS_datafile[!is.na(masterdf$matrix_MW) & masterdf$matrix_MW==temp_MW & masterdf$NP_loading==temp_loading[i] & masterdf$crystallization_process==temp_cryst[i]][[1]] <- get(paste0("D5.3.",i))
@@ -628,12 +628,12 @@ masterdf <- add_column(masterdf, imagefolder = NA)
 for (i in 1:nrow(masterdf)) {
   if(!is.na(masterdf$matrix_MW[i]) & masterdf$NP_loading[i]==10) { #TEM images only for composite samples
     # 4k matrix MW
-    if(masterdf$matrix_MW[i]==4 & masterdf$crystallization_process[i]=="isothermal crystallized (Tc = 103.5 °C)") masterdf$imagefolder[[i]] <- paste0(image_path, "/4k Composite 103.5C")
-    if(masterdf$matrix_MW[i]==4 & masterdf$crystallization_process[i]=="isothermal crystallized (Tc = 105 °C)") masterdf$imagefolder[[i]] <- paste0(image_path, "/4k Composite 105C")
+    if(masterdf$matrix_MW[i]==4 & masterdf$crystallization_process[i]=="isothermal crystallized (Tc = 103.5 ?C)") masterdf$imagefolder[[i]] <- paste0(image_path, "/4k Composite 103.5C")
+    if(masterdf$matrix_MW[i]==4 & masterdf$crystallization_process[i]=="isothermal crystallized (Tc = 105 ?C)") masterdf$imagefolder[[i]] <- paste0(image_path, "/4k Composite 105C")
     if(masterdf$matrix_MW[i]==4 & masterdf$crystallization_process[i]=="quenched") masterdf$imagefolder[[i]] <- paste0(image_path, "/4k Composite Quench")
     
     # 152k matrix MW
-    if(masterdf$matrix_MW[i]==152 & masterdf$crystallization_process[i]=="isothermal crystallized (Tc = 128 °C)") masterdf$imagefolder[[i]] <- paste0(image_path, "/152k Composite 128C")
+    if(masterdf$matrix_MW[i]==152 & masterdf$crystallization_process[i]=="isothermal crystallized (Tc = 128 ?C)") masterdf$imagefolder[[i]] <- paste0(image_path, "/152k Composite 128C")
     if(masterdf$matrix_MW[i]==152 & masterdf$crystallization_process[i]=="quenched") masterdf$imagefolder[[i]] <- paste0(image_path, "/152k Composite Quench")
   }
 }
@@ -707,7 +707,7 @@ masterdf %<>% right_join(.,controls[,c(1,2,4)]) %>% print()
 
 # Table with masterdf column names as rows and template locations (sheet, cell) as columns
 
-mappings <- tibble(variable = colnames(masterdf), sheet = NA, cellrow = NA, cellcol = NA)
+mappings <- tibble(variable = colnames(masterdf), sheet = as.character(NA), cellrow = as.numeric(NA), cellcol = as.numeric(NA)) # 2020-06-08 added as.character and as.numeric for NA handling
 
 # Function for adding mappings from variables in masterdf to location (sheet,row,col) in Excel template
 addToMappings <- function(var, sheetname, row, col, mappingdf = mappings) {
