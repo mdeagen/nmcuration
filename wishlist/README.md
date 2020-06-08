@@ -13,72 +13,67 @@ Analogous to a *manufacturing traveler*, this document will accompany the curati
 The format of the traveler is a `README.md` markdown file located in the sub-directory for the curation job. The purpose of this file is to document key steps in the curation process (e.g., moving the project between curation stages), as well as any issues/roadblocks encountered along the way. Documentation of issues and roadblocks is valuable information that will help the team continue to improve and streamline the curation process.
 
 An example format for the Traveler (in markdown format) is:
-> CURATION JOB TRAVELER
-> 
-> \# AuthName_YYYY [name of sub-directory]
->
-> \*\*Description:\*\* [brief description of curation job and purpose]
->
-> \---
-> 
-> \*\*Traveler Created:\*\* 2020-06-03
->
-> \*\*Traveler Modified:\*\* 2020-07-05
->
-> \*\*Current Status:\*\* \*Completed\*
->
-> \---
-> 
-> \## Bibliographic Info [DOI is sufficient if one exists, otherwise provide full info needed to identify dataset]
->
-> \* DOI: 10.1234/example.123.45 [DOI of publication]
->
-> \* DOI: 10.1234/example.123.45.001 [optional additional DOI of e.g., Supporting Info]
-> 
-> \---
->
-> \## Datasets of Interest
->
-> \* Figure 1, Tg vs. Mass Fraction data
->
-> \* Figure 2, Stress-strain data
->
-> \* Figure 5, Storage and loss modulus data
->
-> \---
->
-> \## Events
->
-> 2020-06-03: Added publication, curation project to "Wishlist" directory (M.E.D.)
->
-> 2020-06-04: Finalized list of figures with datasets of interest (M.E.D.)
->
-> 2020-06-05: Added project to "In Progress" (M.E.D.)
->
-> 2020-06-09: Completed Excel template files (M.E.D.)
->
-> 2020-06-10: Uploaded files to NanoMine successfully, moved project to "Complete" (M.E.D.)
->
-> \---
->
-> \## Open Issues
-> 
-> \---
->
-> \## Closed Issues
->
-> \---
->
-> \## Sub-directory Contents [Google Drive/Dropbox, not synced with Github]
->
-> \* \`ExampleName_2018_master-template.xlsx\`
->
-> \* \`ExampleName_2018_notebook.Rmd\`
->
-> \* \`/Raw Data/\`
->
-> \* \`/Submission/\`
->
+
+    CURATION JOB TRAVELER
+    
+    # AuthName_YYYY [name of sub-directory]
+
+    **Description:** [brief description of curation job and purpose]
+    
+    ---
+    
+    **Traveler Created:** 2020-06-03
+    
+    **Traveler Modified:** 2020-07-05
+    
+    **Current Status:** *Wishlist*
+    
+    ---
+    
+    ## Bibliographic Info [DOI is sufficient if one exists, otherwise provide full info needed to identify dataset]
+    
+    * DOI: 10.1234/example.123.45 [DOI of publication]
+    * DOI: 10.1234/example.123.45.001 [optional additional DOI of e.g., Supporting Info]
+    
+    ---
+    
+    ## Datasets of Interest
+    
+    * Figure 1, Tg vs. Mass Fraction data
+    * Figure 2, Stress-strain data
+    * Figure 5, Storage and loss modulus data
+    
+    ---
+    
+    ## Events
+    
+    2020-06-03: Added publication, curation project to "Wishlist" directory (M.E.D.)
+    
+    2020-06-04: Finalized list of figures with datasets of interest (M.E.D.)
+    
+    2020-06-05: Added project to "In Progress" (M.E.D.)
+    
+    2020-06-09: Completed Excel template files (M.E.D.)
+    
+    2020-06-10: Uploaded files to NanoMine successfully, moved project to "Complete" (M.E.D.)
+    
+    ---
+    
+    ## Open Issues
+    
+    ---
+    
+    ## Closed Issues
+    
+    ---
+    
+    ## Sub-directory Contents [Google Drive/Dropbox, not synced with Github]
+    
+    * `ExampleName_2018_master-template.xlsx`
+    * `ExampleName_2018_notebook.Rmd`
+    * `/Raw Data/`
+    * `/Submission/`
+    
 
 ## Is a Paper Already in the NanoMine Knowledge Graph?
 
