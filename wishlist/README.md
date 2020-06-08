@@ -80,6 +80,22 @@ An example format for the Traveler (in markdown format) is:
 > \* \`/Submission/\`
 >
 
+## Is a Paper Already in the NanoMine Knowledge Graph?
+
+Given a DOI, you can check whether that paper already resides in the NanoMine Knowledge Graph. 
+
+To check, run the following query on the [NanoMine (QA) SPARQL endpoint](https://qa.materialsmine.org/wi/sparql.html)
+
+    PREFIX sio: <http://semanticscience.org/resource/>
+    PREFIX nm: <http://nanomine.org/ns/>
+
+    SELECT DISTINCT ?doi WHERE {
+      ?doi sio:hasPart [ a nm:PolymerNanocomposite ] .
+      FILTER regex(str(?doi), "SubstringOfDOI")
+    }
+
+after replacing *SubstringOfDOI* with all or part of the actual DOI of interest. If a result is returned that matches the DOI, the paper has been fully or partially curated into the NanoMine Knowledge Graph. At this point, one should inspect further to identify what, if any, information still needs to be curated. If no results are returned by the above query, then it is most likely safe to proceed with curation.
+
 ## Requesting Raw Datasets from Authors
 Raw datasets that generated a figure are preferred over manual/digital extraction of the data from an image of the figure. Requests to the corresponding author of the paper should be made through the NanoMine email alias (contact Marc Palmeri at marc.j.palmeri`at`duke.edu for assistance in composing and sending the first email correspondence).
 
