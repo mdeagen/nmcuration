@@ -43,6 +43,30 @@ CURATION JOB TRAVELER
 
 2020-06-05: Added job to "In-Progress" (M.E.D.)
 
+2020-06-08: Updated R code (M.E.D.)
+* updates for R 4.0 compatibility (NA handling, tibble indices, etc)
+* changed output datafiles from `.csv` to `.xlsx`
+
+2020-06-08: Re-generated filesets for all samples (M.E.D.)
+
+2020-06-08: Attempted upload of S1 fileset to NanoMine QA (M.E.D.)
+* Not successful (contact administrator error)
+* May be issue with R code outputting blank supplementary datafiles (R 4.0 issue with is.null checking)
+
+2020-06-08: Re-attempted upload of S1 fileset to QA (M.E.D.)
+* Not successful (files not found error)
+* Requires update to R code similar to previous fix (where filenames are being added to Excel template)
+
+2020-06-08: Re-attempted upload of S1 fileset to QA (M.E.D.)
+* Received "successful" auto-generated email (5:14pm)
+
+2020-06-08: Uploaded remaining filesets S2-S14 (M.E.D.)
+* Files with supplementary images took long time to upload, without indicator of time remaining (S4 fileset, 191MB, took 9 min; S10 fileset, 43.5MB, took 2 min)
+* Error with S13, S14 (see Issue 3)
+* Confirmed issue with B.H., updated R code and re-ran for those samples
+
+2020-06-08: Successfully uploaded S13, S14 to QA (M.E.D.)
+
 
 
 ---
@@ -55,6 +79,30 @@ CURATION JOB TRAVELER
 
 ## Closed Issues
 
+### Issue 1
+>Unfortunately, your conversion job xmlconv-r2P2v6Ci5FdCavNsno8Amf was not successful.
+>job result code: 21
+>error messages: [Conversion Error] Oops! The conversion cannot be finished! Please contact the administrator.
+
+**Error:** Caused by blank supplementary files? 
+
+**Fix:** Update to R code (changed indices in is.null() check from `[[j]][i]` to `[[j]][[i]]`)
+
+### Issue 2
+>job result code: 21
+>error messages: [File Error] Missing file! Please include "S1_DSC_data.xlsx" in your uploads. [File Error] Missing file! Please include "S1_TGA_data.xlsx" in your uploads. [File Error] Missing file! Please include "S1_DMA_storage_modulus.xlsx" in your uploads. [File Error] Missing file! Please include "S1_DMA_loss_modulus.xlsx" in your uploads. [File Error] Missing file! Please include "S1_DMA_tan_delta.xlsx" in your uploads.
+
+**Error:** These filenames should not be written to the template. 
+
+**Fix:** Update to R code (if filename should not be in template, change filename to "")
+
+### Issue 3
+>job result code: 21
+>error messages: [XML Schema Validation Error] Element 'unit': This element is not expected. Expected is one of ( description, value )
+
+**Error:** These samples do not have a value for Melting Temperature, however master template includes "Celsius" as unit (even if value is blank)
+
+**Fix:** Add lines in R code to print "" into Unit cell for samples where `melting_temp` is NA
 
 
 ---
