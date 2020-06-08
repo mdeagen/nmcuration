@@ -30,6 +30,11 @@ CURATION JOB TRAVELER
 
 ---
 
+## Added Excel Template
+* `Koerner_2005_Polymer_Master.xlsx`
+
+---
+
 ## Events
 
 2020-06-05: Added curation job to "Wishlist" (M.E.D.)
