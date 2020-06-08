@@ -143,7 +143,7 @@ For convenience, global constants will be defined within a master template (in E
 
 Experimental factors are the input variables controlled by the experimenter. There may be several input variables linked to a particular factor (e.g. process parameters required to achieve different levels of a factor), however we will define factors as the *minimal* subset of controlled attributes necessary to uniquely define each sample in the experiment. The following table from the paper indicates the experimental factors in this experiment are **Matrix $M_w$**, **NP loading**, and **crystallization process**. Together, these factors form a "composite key" that uniquely identifies each experimental unit (sample). The factors do NOT need to be XML schema terms.
 
-#![This is Table 1](Table1.png)
+<TABLE REMOVED>
 
 ---
 
@@ -696,6 +696,18 @@ masterdf$NP_loading[masterdf$NP_loading==0] <- NA
 
 masterdf %<>% right_join(.,controls[,c(1,2,4)]) %>% print()
 
+
+## 2020-06-08 REMOVE "_FILENAME" value if "_DATAFILE" is NULL
+for (i in 1:nrow(masterdf)) {
+  for (j in 1:ncol(masterdf)) {
+    if(is.null(masterdf[[j]][[i]])) {
+      masterdf[[j-1]][[i]] <- ""
+    }
+  }
+}
+
+print(masterdf)
+
 ```
 
 
@@ -769,6 +781,13 @@ for (i in 1:nrow(masterdf)) {
   # Loop along columns in masterdf (add individual variables to worksheet, as well as save datafiles as separate csv's)
   for (j in 1:ncol(masterdf)) {
     
+    # 2020-06-08: if melting_temp is NA, print "" to "5.4 Properties-Thermal", row 30, col 4
+    if(grepl("melting_temp", names(masterdf)[j])) {
+      if(is.na(masterdf[[i,j]])){
+        writeWorksheetToFile(file = templateFile, data = "", sheet = "5.4 Properties-Thermal", startRow = 30, startCol = 4, header = FALSE)
+      }
+      
+    }
     
     if(!is.na(mappings$sheet[j])) { # only execute if a worksheet name is given in mappings dataframe
       writeWorksheetToFile(file = templateFile, data = masterdf[[i,j]], sheet = mappings$sheet[j], startRow = mappings$cellrow[j], startCol = mappings$cellcol[j],header = FALSE)
@@ -777,11 +796,14 @@ for (i in 1:nrow(masterdf)) {
     # Loop for writing datafiles
     if(grepl("_datafile", names(masterdf)[j])) { # only execute if "_datafile" is in column header
       #print(names(masterdf[j]))
-      if(!is.null(masterdf[[i,j]])) { # execute if the datafile cell is NOT NULL
+      if(!is.null(masterdf[[j]][[i]])) { # execute if the datafile cell is NOT NULL # 2020-06-08 updated datafile indices from [[i,j]] to [[j]][[i]] (R 4.0 compatibility?)
         #print(paste0("./SUBMISSION/", masterdf$sampleID[i], "/", masterdf[[i,j-1]]))
-        write_csv(masterdf[[i,j]], path=paste0("./SUBMISSION/", masterdf$sampleID[i], "/", masterdf[[i,j-1]])) # (filename is i,j-1)
+      #  write_csv(masterdf[[i,j]], path=paste0("./SUBMISSION/", masterdf$sampleID[i], "/", masterdf[[i,j-1]])) # (filename is i,j-1)
         ## NOTE: write_excel_csv produces unreadable files; we should implement csv handling (or JSON handling where can include metadata)
         ## the files are only readable once .csv is appended
+        
+        # 2020-06-08 added .xlsx output instead of .csv output
+        writeWorksheetToFile(file = paste0("./SUBMISSION/", masterdf$sampleID[i], "/", masterdf[[i,j-1]]), data = masterdf[[j]][[i]], sheet = "Sheet1")
       }
     }
   }
@@ -798,25 +820,25 @@ for (i in 1:nrow(masterdf)) {
     image_info <- tribble(
       ~x, ~y, ~z,
       "Imagefile #", "Datafile name.jpg/png/tif/gif", "Note",
-      "Microstructure filename", NA, NA,
-      "Description", NA, NA,
-      "Microscopy type", "TEM", NA,
-      "Image type", "grayscale", NA,
-      NA,NA,NA,
+      "Microstructure filename", "", "",
+      "Description", "", "",
+      "Microscopy type", "TEM", "",
+      "Image type", "grayscale", "",
+      "","","",
       "Image dimension", "Fixed Value", "Unit",
-      "Width", 4000, "pixel",
-      "Height", 2996, "pixel",
-      "Depth", 8, "bit",
-      "Preprocessing", NA, NA,
-      NA,NA,NA
-    )
-    aggregate_image_info <- tibble(x=NA,y=NA,z=NA)
+      "Width", "4000", "pixel",
+      "Height", "2996", "pixel",
+      "Depth", "8", "bit",
+      "Preprocessing", "", "",
+      "","",""
+    ) # 2020-06-08 removed NAs and replaced with empty character strings ""
+    aggregate_image_info <- tibble(x=as.character(NA),y=as.character(NA),z=as.character(NA)) # 2020-06-08 added as.character()
     image_info_sample <- tribble(
       ~x,~y,~z,
       "Sample experimental info", "Fixed Value", "Unit",
-      "Sample size", NA, NA,
-      "Sample thickness", 125, "nm"
-    )
+      "Sample size", "", "",
+      "Sample thickness", "125", "nm"
+    ) # 2020-06-08 removed NAs and replaced with empty character strings ""
     # rbind tibbles for each image in temp_list_of_images
     for (k in 1:length(temp_list_of_images)) {
       temp_image_info <- image_info
