@@ -57,16 +57,13 @@ CURATION JOB TRAVELER
 * S1 was uploaded twice (as test on 2020-06-02 and as part of complete batch on 2020-06-04)
 
 2020-06-09: Created new dataset and re-uploaded (S1-S5) to NanoMine QA (M.E.D.)
-* Received success email reports (7:54 AM - 7:56 AM)
+* Received success email reports (7:54-7:56 AM)
 
 
 ---
 
 ## Open Issues
 
-### Issue 2
-From E.D. to J.M. and S.R. (email)
-> When we attempted to ingest the Beneš samples, the celery backend processor looped because the key for the XML was built improperly apparently because of a different interpretation of the unicode character possibly caused by publish or RDF internal processing -- not sure. The fix seems to be to slugify it which should now be handled.  However, the looping is bothersome since the log entries would've eventually filled the disk.  Would you address this somehow to prevent it in the future?  The scenario was that it kept looking for the XML in the NanoMine rest service and failing with 404 because the request didn't properly use utf-8 encoding for the unicode character. The unicode issue should go away now, but the possibility of other issues causing this loop exist.
 
 ---
 
@@ -77,10 +74,17 @@ From E.D. to J.M. and S.R. (email)
 >job result code: 21
 >error messages: [File Error] Missing file! Please include "S1_storage_modulus.csv.xlsx" in your uploads. [File Error] Missing file! Please include "S1_loss_modulus.csv.xlsx" in your uploads.
 
-**Error:** XMLCONV cannot handle .csv files, instead only accepts .xlsx for tabular data
+**Error:** XMLCONV cannot handle .csv files, instead only accepts .xlsx for tabular data.
 
 **Fix:** Changed output in R script for these datafiles to .xlsx instead of .csv. However, .csv is a more compact and standard format for tabular data and should be supported.
 
+### Issue 2
+From E.D. to J.M. and S.R. (email)
+> When we attempted to ingest the Beneš samples, the celery backend processor looped because the key for the XML was built improperly apparently because of a different interpretation of the unicode character possibly caused by publish or RDF internal processing -- not sure. The fix seems to be to slugify it which should now be handled.  However, the looping is bothersome since the log entries would've eventually filled the disk.  Would you address this somehow to prevent it in the future?  The scenario was that it kept looking for the XML in the NanoMine rest service and failing with 404 because the request didn't properly use utf-8 encoding for the unicode character. The unicode issue should go away now, but the possibility of other issues causing this loop exist.
+
+**Error:** Special character handling during RDF ingest from XML.
+
+**Fix:** Slugify XML keys.
 
 
 ---
