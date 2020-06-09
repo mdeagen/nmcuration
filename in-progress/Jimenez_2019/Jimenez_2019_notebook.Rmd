@@ -15,21 +15,21 @@ require(XLConnect) # package for MS Excel integration
 require(tidyr)     # data wrangling/tidying
 require(tibble)    # improvement on dataframes
 require(readr)     # read_csv functionality
-require(here)      # identify present working directory based on file location
+#require(here)      # identify present working directory based on file location # 2020-06-09 
 require(dplyr)     # data wrangling tools
 require(magrittr)  # pipe operator (%>%), compound assignment operator (%<>%), exposition operator (%$%)
 
 # Set the working directory to the location of this R notebook (this directory should contain the master template and associated data to import)
-current_directory <- here()
+current_directory <- getwd() # 2020-06-09 updated
 
 setwd(current_directory)
 
 
 # file containing downloaded data (provided by the author)
-data_path <- "DATA.xlsx"
+data_path <- "./RawDataFromAuthors/DATA.xlsx" # 2020-06-09 updated
 
 # Sub-directory containing image data
-image_path <- "./TEM-20191212T195835Z-001/TEM"
+image_path <- "./Images" # 2020-06-09 updated
 
 # Name of MASTER TEMPLATE FILE, which must be stored in same directory as this R notebook
 master_template_path <- "master_template_2020_Jimenez.xlsx"
@@ -183,7 +183,7 @@ Fig8c <- readWorksheetFromFile(file = data_path, sheet="Figure 8C", startRow=2, 
 # NOTE: First col (q) is shared by all datasets. Use I (a.u.) cols and ignore I_fit (a.u.) cols
 fig4sheet <- readWorksheetFromFile(file = data_path, sheet="Figure 4", startRow=4, header=FALSE)
 fig4loadings <- c(0.012,0.03,0.048,0.074,0.11,0.16)
-fig4all <- tibble(graftdens=NA,NP_loading=NA,SAXS_df=NA)
+fig4all <- tibble(graftdens="",NP_loading=NA,SAXS_df="")
 fig4all <- fig4all[-1,] # remove dummy row of NAs
 for(i in 1:6) {
   assign(paste0("D4a.",i), tibble(q=fig4sheet[[1]],I=fig4sheet[[1+i]])) # double brackets needed in order to avoid special char $ in colnames
@@ -205,7 +205,7 @@ for(i in 1:5) {
 # Fig 10a-b: SAXS data (different isothermal crystallization temperatures)
 fig10asheet <- readWorksheetFromFile(file = data_path, sheet="Figure 10A", startRow=3, header=FALSE)
 fig10bsheet <- readWorksheetFromFile(file = data_path, sheet="Figure 10B", startRow=3, header=FALSE)
-fig10all <- tibble(graftdens=NA,NP_loading=NA,Tiso=NA,SAXS_df=NA)
+fig10all <- tibble(graftdens="",NP_loading=NA,Tiso=NA,SAXS_df="")
 fig10all <- fig10all[-1,] # remove dummy row of NAs
 for (i in 1:3) { #10a
   assign(paste0("D10a.",i), tibble(q=fig10asheet[[1]],I=fig10asheet[[1+i]])) # double brackets needed in order to avoid special char $ in colnames
@@ -250,7 +250,7 @@ mydf <- mydf %$% unique(.[,1:3]) %>% add_column(sampleID=paste0("S",seq.int(nrow
 
 # Add filename for SAXS data (if SAXS data exist for the sample, otherwise NA)
 mydf %<>% add_column(SAXS_filename=NA)
-mydf$SAXS_filename <- ifelse(!is.na(mydf$SAXS_df),paste0(mydf$sampleID,"_SAXS_data.csv"),NA)
+mydf$SAXS_filename <- ifelse(!is.na(mydf$SAXS_df),paste0(mydf$sampleID,"_SAXS_data.xlsx"),NA) # 2020-06-09 updated from .csv to .xlsx
 
 # Add fillerinfo column if NP_loading > 0
 fillerinfodf <- tribble(
@@ -353,7 +353,7 @@ If an attribute in the dataframe is a singular value with a **unit** associated 
 # Include OPTIONAL "units" field for writing a string representing the units to the cell immediately to the right of the numerical value in the Excel template (this avoids the clutter of extra columns or reduced readability by storing tibbles within the dataframe) **ONLY WORKS IF UNITS ARE CONSISTENT
 
 # Assign mappings to Excel schema templates
-mappings <- tibble(variable = colnames(mydf), sheet = NA, cellrow = NA, cellcol = NA, unit = NA)
+mappings <- tibble(variable = colnames(mydf), sheet = as.character(NA), cellrow = as.numeric(NA), cellcol = as.numeric(NA), unit = as.character(NA)) # 2020-06-09 added as.character(), as.numeric()
 
 # Function for adding mappings from variables in mydf to location (sheet,row,col) in Excel template
 addToMappings <- function(var, sheetname, row, col, unit=NA, mappingdf = mappings) {
@@ -387,7 +387,7 @@ mappings %>% print(n=nrow(.))
 
 ---
 
-### **Auto-Filling Excel Templates** and **Exporting Supplementary Datafiles (.csv)**
+### **Auto-Filling Excel Templates** and **Exporting Supplementary Datafiles**
 
 Programmatically generate Excel schema template files for each sample by:
 
@@ -398,7 +398,9 @@ Programmatically generate Excel schema template files for each sample by:
     + If column header is a "_datafile", write the "_filename" to the Excel template and save the tibble as a csv in the sub-directory
 4. If there are image files to copy over, use `file.copy` to copy these files and include aggregated image metadata in Excel schema template
 
-```{r write_templates, echo=TRUE, eval=TRUE}
+```{r write_templates, echo=TRUE, eval=FALSE} 
+# 2020-06-09 changed eval=FALSE for this code chunk
+
 # create directory for submission files (if already exists, nothing happens)
 dir.create("./SUBMISSION")
 
@@ -406,7 +408,7 @@ dir.create("./SUBMISSION")
 writenew <- tibble(sampleID=mydf$sampleID, write=TRUE)
 
 # Loop across all rows in dataframe
-for (i in 1:nrow(mydf)) {
+for (i in 104:nrow(mydf)) {
   
   rowSampleID <- mydf$sampleID[i]
   
@@ -437,9 +439,12 @@ for (i in 1:nrow(mydf)) {
       if(!is.na(mydf[[i,j]])) { # execute if the the value is NOT NA
         # write df WITH NA ROWS REMOVED, which will be the df saved to .csv ()
         tempdf <- get(mydf[[i,j]]) %>% .[complete.cases(.),]
-        # write nested tibble in _df column to csv in sub-directory
-        write_csv(tempdf, path=paste0(sample_folder, "/", mydf[[i,j+1]])) # (filename is i,j+1) [filename defined 2 columns before datafile tibble]
+        # write nested tibble in _df column to csv in sub-directory # REMOVED 2020-06-09
+        # write_csv(tempdf, path=paste0(sample_folder, "/", mydf[[i,j+1]])) # (filename is i,j+1) [filename defined 2 columns before datafile tibble]
         # use get(df[i,j-1]) to write the dataframe object directly
+        
+        # ADDED 2020-06-09: Write to .xlsx files for supplementary datafiles
+        writeWorksheetToFile(file = paste0(sample_folder,"/",mydf[[i,j+1]]), data = tempdf, sheet = "Sheet1")
       }
     }
   }
@@ -457,24 +462,24 @@ for (i in 1:nrow(mydf)) {
     image_info <- tribble(
       ~x, ~y, ~z,
       "Imagefile #", "Datafile name.jpg/png/tif/gif", "Note",
-      "Microstructure filename", NA, NA,
-      "Description", NA, NA,
-      "Microscopy type", "TEM", NA,
-      "Image type", "grayscale", NA,
-      NA,NA,NA,
+      "Microstructure filename", "", "",
+      "Description", "", "",
+      "Microscopy type", "TEM", "",
+      "Image type", "grayscale", "",
+      "","","",
       "Image dimension", "Fixed Value", "Unit",
-      "Width", 2048, "pixel",
-      "Height", 2048, "pixel",
-      "Depth", 8, "bit",
-      "Preprocessing", NA, NA,
-      NA,NA,NA
+      "Width", "2048", "pixel",
+      "Height", "2048", "pixel",
+      "Depth", "8", "bit",
+      "Preprocessing", "", "",
+      "","",""
     )
-    aggregate_image_info <- tibble(x=NA,y=NA,z=NA)
+    aggregate_image_info <- tibble(x="",y="",z="")
     image_info_sample <- tribble(
       ~x,~y,~z,
       "Sample experimental info", "Fixed Value", "Unit",
-      "Sample size", NA, NA,
-      "Sample thickness", 100, "nm"
+      "Sample size", "", "",
+      "Sample thickness", "100", "nm"
     )
     # rbind tibbles for each image in temp_list_of_images
     for (k in 1:length(temp_list_of_images)) {
