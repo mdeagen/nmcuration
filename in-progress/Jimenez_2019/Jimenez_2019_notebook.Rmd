@@ -336,6 +336,9 @@ mydf %<>% right_join(.,controls[,c('Tiso','control_sampleID')])
 # REMOVE NP_loading=0 and replace with NA
 mydf$NP_loading[mydf$NP_loading==0] <- NA
 
+# REMOVE graftdens=0 and replace with NA # added 2020-06-09
+mydf$graftdens[mydf$graftdens==0] <- NA
+
 
 print(mydf,n=nrow(mydf))
 
