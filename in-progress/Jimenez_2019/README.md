@@ -39,11 +39,52 @@ CURATION JOB TRAVELER
 
 2020-06-05: Added job to "In-Progress" (M.E.D.)
 
+2020-06-09: Updated R code (M.E.D.)
+* output datafiles as .xlsx (instead of .csv as previously)
+* datatype fixes related to R 4.0 upgrade
+
+2020-06-09: Ran R code, generated sample filesets (M.E.D.)
+
+2020-06-09: Attempted upload of S1 to QA (M.E.D.)
+* Excel template only (earlier issue requiring additional datafiles has been fixed)
+* Received "success" email (3:43 PM)
+
+2020-06-09: Attempted uploaded remaining samples S2-S104 (M.E.D.)
+* Successful upload of S2-S16 (3:45-3:49 PM)
+* Received error from S17 (3:49 PM) (see Issue 1)
+
+2020-06-09: Updated R code, regenerated S17-S104 (M.E.D.)
+* Added Boolean condition before printing to Excel (issue caused by two mappings for Crystallization Temperature)
+
+2020-06-09: Attempted upload remaining samples S17-S104 (M.E.D.)
+* Received "success" email for S17-S79 (4:07-4:26 PM)
+* Received error for S80 (see Issue 2)
+
+2020-06-09: Updated R code, regenerated filesets (M.E.D.)
+* Fixed Issue 2
+
+2020-06-09: Attempted upload remaining samples S80-S104 (M.E.D.)
+* Received "success" email for S80-S103 (4:36-4:43 PM)
+* S104 contained 20 images (fileset is 80.2 MB) and required ~2.5 min to upload
+* Received "success" email for S104 (4:47 PM)
+
+
+
+
 
 
 ---
 
 ## Open Issues
+
+### Issue 2
+>Unfortunately, your conversion job xmlconv-gSrDxPMZWJ5rxdN37DNcWw was not successful.
+>job result code: 21
+>error messages: [XML Schema Validation Error] Element 'value': [facet 'minExclusive'] The value '0.0' must be greater than '0' [XML Schema Validation Error] Element 'value': '0.0' is not a valid value of the atomic type 'PositiveValueType'
+
+**Error:** Graft density of 0.0 was printing (and schema requires positive value)
+
+**Fix:** Replaced instances of graftdens==0 with NA in R dataframe
 
 
 
@@ -51,7 +92,14 @@ CURATION JOB TRAVELER
 
 ## Closed Issues
 
+### Issue 1
+>Unfortunately, your conversion job xmlconv-q7nVhYr5z5Qs87dHaEWk2A was not successful.
+>job result code: 21
+>error messages: [XML Schema Validation Error] Element 'unit': This element is not expected. Expected is one of ( description, value )
 
+**Error:** Crystallization temperature prints unit "Celsius" when there is not a value for crystallization temperature.
+
+**Fix:** Added additional Boolean condition in R code before writing to Excel template
 
 ---
 
