@@ -10,7 +10,7 @@ CURATION JOB TRAVELER
 
 **Traveler Modified:** 2020-06-05
 
-**Current Status:** *In-Progress*
+**Current Status:** *Completed*
 
 ---
 
@@ -68,7 +68,7 @@ CURATION JOB TRAVELER
 * S104 contained 20 images (fileset is 80.2 MB) and required ~2.5 min to upload
 * Received "success" email for S104 (4:47 PM)
 
-
+2020-06-09: Moved curation job to "Completed" (M.E.D.)
 
 
 
@@ -77,14 +77,6 @@ CURATION JOB TRAVELER
 
 ## Open Issues
 
-### Issue 2
->Unfortunately, your conversion job xmlconv-gSrDxPMZWJ5rxdN37DNcWw was not successful.
->job result code: 21
->error messages: [XML Schema Validation Error] Element 'value': [facet 'minExclusive'] The value '0.0' must be greater than '0' [XML Schema Validation Error] Element 'value': '0.0' is not a valid value of the atomic type 'PositiveValueType'
-
-**Error:** Graft density of 0.0 was printing (and schema requires positive value)
-
-**Fix:** Replaced instances of graftdens==0 with NA in R dataframe
 
 
 
@@ -100,6 +92,16 @@ CURATION JOB TRAVELER
 **Error:** Crystallization temperature prints unit "Celsius" when there is not a value for crystallization temperature.
 
 **Fix:** Added additional Boolean condition in R code before writing to Excel template
+
+### Issue 2
+>Unfortunately, your conversion job xmlconv-gSrDxPMZWJ5rxdN37DNcWw was not successful.
+>job result code: 21
+>error messages: [XML Schema Validation Error] Element 'value': [facet 'minExclusive'] The value '0.0' must be greater than '0' [XML Schema Validation Error] Element 'value': '0.0' is not a valid value of the atomic type 'PositiveValueType'
+
+**Error:** Graft density of 0.0 was printing (and schema requires positive value)
+
+**Fix:** Replaced instances of graftdens==0 with NA in R dataframe
+
 
 ---
 
