@@ -408,7 +408,7 @@ dir.create("./SUBMISSION")
 writenew <- tibble(sampleID=mydf$sampleID, write=TRUE)
 
 # Loop across all rows in dataframe
-for (i in 104:nrow(mydf)) {
+for (i in 1:nrow(mydf)) {
   
   rowSampleID <- mydf$sampleID[i]
   
@@ -427,7 +427,7 @@ for (i in 104:nrow(mydf)) {
   # Loop along columns in mydf to place relevant attributes into Excel schema template
   for (j in 1:ncol(mydf)) {
     
-    if(!is.na(mappings$sheet[j])) { # only execute if a worksheet name is given in mappings dataframe
+    if(!is.na(mappings$sheet[j]) & !is.na(mydf[[i,j]][[1]][1])) { # only execute if a worksheet name is given in mappings dataframe # 2020-06-09 added additional Boolean to check if data itself is NA
       writeWorksheetToFile(file = templateFile, data = mydf[[i,j]], sheet = mappings$sheet[j], startRow = mappings$cellrow[j], startCol = mappings$cellcol[j], header = FALSE)
       ## If attribute value !NA and mappings contains UNITS, then include these units at startRow=mappings$cellrow[j] and (startCol=mappings$cellcol[j]+1)
       if(!is.na(mydf[[i,j]][[1]][1]) & !is.na(mappings$unit[j])) writeWorksheetToFile(file = templateFile, data = mappings$unit[j], sheet = mappings$sheet[j], startRow = mappings$cellrow[j], startCol = mappings$cellcol[j]+1, header = FALSE)
