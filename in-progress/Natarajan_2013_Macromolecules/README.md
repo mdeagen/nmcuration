@@ -56,6 +56,9 @@ CURATION JOB TRAVELER
 
 2020-06-11 : added SUBMISSION subdirectory containing templates of each sample (D.J.)
 
+2020-06-11: Attempted upload of S1 to NanoMine QA (M.E.D.)
+* Error returned related to datatype (see Issue 3)
+
 
 
 
@@ -70,7 +73,14 @@ CURATION JOB TRAVELER
 
 > How are particle surface energy values stored in the schema? Surface treatment of particles is an integral component of this work to control dispersion of nanoparticles by tuning surface energy.
 
+### Issue 3
 
+>Unfortunately, your conversion job xmlconv-nGTWhPLa3VGFsjhf9u4b1G was not successful.
+>job result code: 21
+>error messages: [XML Schema Validation Error] Element 'value': '60−80' is not a valid value of the atomic type 'xs:double', should be a number.
+
+**Error:** The value in the Excel cell describing sample thickness is not of type double (the author reported a range of 60-80 to convey uncertainty in sample thickness measurement)
+**Workaround:** Replace value with the average (70), and keep this issue open so that it may be addressed in future improvements to curation process
 
 ---
 
