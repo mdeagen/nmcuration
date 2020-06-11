@@ -89,7 +89,7 @@ def map_microstructre(workbook , sample):
     sheet["B5"] = df['image microstructure file'][sample]
 
 def mapping():    #Fill in every cell for every sample
-    create_dir('templates')
+    create_dir('SUBMISSION')
     nb_sample = df['sample no.'].shape[0]
     for i in range(nb_sample):
         file = original_path+'/master_template_ma302281b.xlsx'
