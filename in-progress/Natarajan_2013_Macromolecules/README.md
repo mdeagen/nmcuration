@@ -36,6 +36,8 @@ CURATION JOB TRAVELER
 
 2020-06-10: Moved curation job to "In-Progress"
 
+2020-06-11: Added master_template_DOI, Samples_DOI and Mapping.py
+
 
 
 
