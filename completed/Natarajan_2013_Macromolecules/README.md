@@ -10,7 +10,7 @@ CURATION JOB TRAVELER
 
 **Traveler Modified:** 2020-06-11
 
-**Current Status:** *In-Progress*
+**Current Status:** *Completed*
 
 ---
 
@@ -72,7 +72,7 @@ CURATION JOB TRAVELER
 * received "success" email (1:51 PM)
 * uploaded S14-S20 successfully (1:52-1:55 PM)
 
-
+2020-06-11: Moved job to "Completed" directory (M.E.D.)
 
 
 ---
