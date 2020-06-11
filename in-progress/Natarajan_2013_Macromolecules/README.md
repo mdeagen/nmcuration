@@ -54,7 +54,7 @@ CURATION JOB TRAVELER
 * PEMA: Tg = 65 C
 * Note: PMMA Tg differs from example DSC curve of Fig 2.11 of thesis, but will 
 
-2020-06-11 : added SUBMISSION subdirectory containing templates of each sample
+2020-06-11 : added SUBMISSION subdirectory containing templates of each sample (D.J.)
 
 
 
@@ -70,19 +70,25 @@ CURATION JOB TRAVELER
 
 > How are particle surface energy values stored in the schema? Surface treatment of particles is an integral component of this work to control dispersion of nanoparticles by tuning surface energy.
 
-### Issue 2
 
-> The author reported all values of glass transition temperature (Tg) as relative values (ΔTg), but did not provide the Tg of the reference control samples (neat polymers). Some additional inference is required in order to input these data in the schema.
 
 ---
 
 ## Closed Issues
 
+### Issue 2
 
+> The author reported all values of glass transition temperature (Tg) as relative values (ΔTg), but did not provide the Tg of the reference control samples (neat polymers). Some additional inference is required in order to input these data in the schema.
+
+**Solution:** Made a best-effort search of paper and thesis for absolute Tg values. Created a reference table of Tg values for the 4 polymers of interest, including reference. These Tg values were used to calculate Tg for the samples, based on the reported delta-Tg values from the article.
 
 ---
 
 ## Sub-directory Contents
 
-* Images contains microstructure photos
-* SUBMISSION contains templates for each sample
+* `/Images/` contains microstructure photos
+* `/SUBMISSION/` contains templates for each sample
+* `Mapping.py` mapping function from Samples table to sample Excel template files
+* `master_template_ma302281b.xlsx`
+* `Reference_Tg_values.xlsx` list of reference Tg values pulled from literature as a substitute for control Tg values
+* `Samples_ma302281b.xlsx` list of samples and relevant attributes to be mapped to sample Excel template files
