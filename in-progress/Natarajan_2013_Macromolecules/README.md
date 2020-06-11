@@ -38,7 +38,8 @@ CURATION JOB TRAVELER
 2020-06-10: Moved curation job to "In-Progress" (M.E.D.)
 
 2020-06-11: Added master_template_DOI, Samples_DOI and Mapping.py (D.J.)
-2020-06-11: Added Images subdirectory containing microstructures photos
+
+2020-06-11: Added Images subdirectory containing microstructure photos
 
 
 
