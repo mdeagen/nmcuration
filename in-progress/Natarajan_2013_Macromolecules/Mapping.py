@@ -15,6 +15,8 @@ original_path = os.getcwd()
 
 xl = pd.ExcelFile(original_path+'/Samples_ma302281b.xlsx')
 df  = xl.parse(sheet_name=0)
+xl = pd.ExcelFile(original_path+'/Tg_ma302281b.xlsx')
+df2  = xl.parse(sheet_name=0)
 
 #%% Auxiliary functions
 
@@ -47,6 +49,13 @@ def get_manufacturer(sample):
                 break
     return df['manufacturer'][k]
 
+def get_Tg(sample):
+    matrix = df['matrix'][sample]
+    for i, mat in enumerate(df2['chemical name']):
+            if mat == matrix:
+                k = i
+                break
+    return df2['Tg'][k]
 #%% Mapping
     
 def map_data_origin(workbook , sample): #fill in cells in '1. Data Origin' sheet for a sample
@@ -70,7 +79,11 @@ def map_synthesis_process(workbook ,sample):  #fill in cells in '3. Synthesis an
     
 def map_Tg(workbook ,sample): #fill in cells in '5.4 Properties-Thermal' sheet for a sample
     sheet = workbook['5.4 Properties-Thermal']
-    sheet["C26"] = df['delta Tg'][sample]
+    sheet["C26"] = df['delta Tg'][sample] + get_Tg(sample) 
+   
+def map_microstructre(workbook , sample):
+    sheet = workbook['6. Microstructure']
+    sheet["B5"] = df['image microstructure file'][sample]
 
 def mapping():    #Fill in every cell for every sample
     create_dir('templates')
@@ -83,6 +96,7 @@ def mapping():    #Fill in every cell for every sample
         map_material_type(workbook ,i)
         map_synthesis_process(workbook ,i)
         map_Tg(workbook ,i)
+        map_microstructre(workbook, i)
         
         sample = 'S'+str(i+1)
         os.mkdir(sample)   
