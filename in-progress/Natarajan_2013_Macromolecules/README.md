@@ -39,7 +39,20 @@ CURATION JOB TRAVELER
 
 2020-06-11: Added master_template_DOI, Samples_DOI and Mapping.py (D.J.)
 
-2020-06-11: Added Images subdirectory containing microstructure photos
+2020-06-11: Added Images subdirectory containing microstructure photos (D.J.)
+
+2020-06-11: Searched Natarajan thesis for absolute Tg values (D.J., M.E.D.)
+* Fig 2.11 shows example DSC curve indicating Tg of 109.56 deg C for neat PMMA
+* Did not find raw data for average Tg
+* No DSC curves provided for other polymers of interest (PS, P2VP, PEMA)
+* Will assemble and use reference table of Tg values from the literature in order to infer experimental Tg from delta-Tg values
+
+2020-06-11: Compiled and added reference table for Tg from literature (M.E.D.)
+* PS: Tg = 100 C
+* PMMA: Tg = 105 C
+* P2VP: Tg = 100 C
+* PEMA: Tg = 65 C
+* Note: PMMA Tg differs from example DSC curve of Fig 2.11 of thesis, but will 
 
 
 
