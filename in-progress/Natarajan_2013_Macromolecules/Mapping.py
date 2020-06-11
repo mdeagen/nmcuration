@@ -5,7 +5,7 @@ Created on Wed Jun 10 15:03:34 2020
 
 @author: davidjany
 """
-import os
+import os ,shutil
 from openpyxl import load_workbook
 import pandas as pd
 
@@ -88,6 +88,13 @@ def map_microstructre(workbook , sample):
     sheet = workbook['6. Microstructure']
     sheet["B5"] = df['image microstructure file'][sample]
 
+def copy_image(sample): 
+    file = str(df['image microstructure file'][sample])
+    if file[-1] =='g':
+        shutil.copyfile(original_path+"/Images/"+df['image microstructure file'][sample], 'S'+str(sample+1)+"/"+df['image microstructure file'][sample])      
+    else:
+        pass
+    
 def mapping():    #Fill in every cell for every sample
     create_dir('SUBMISSION')
     nb_sample = df['sample no.'].shape[0]
@@ -103,6 +110,7 @@ def mapping():    #Fill in every cell for every sample
         
         sample = 'S'+str(i+1)
         os.mkdir(sample)   
+        copy_image(i)
         workbook.save(filename=sample+'/S'+str(i+1)+'_template.xlsx')
         
         
