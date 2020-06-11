@@ -8,7 +8,7 @@ CURATION JOB TRAVELER
 
 **Traveler Created:** 2020-06-09
 
-**Traveler Modified:** 2020-06-10
+**Traveler Modified:** 2020-06-11
 
 **Current Status:** *In-Progress*
 
@@ -34,9 +34,9 @@ CURATION JOB TRAVELER
 2020-06-10: Added data of interest (M.E.D.)
 * Issue 1 and Issue 2 require resolution before data can be uploaded to NanoMine
 
-2020-06-10: Moved curation job to "In-Progress"
+2020-06-10: Moved curation job to "In-Progress" (M.E.D.)
 
-2020-06-11: Added master_template_DOI, Samples_DOI and Mapping.py
+2020-06-11: Added master_template_DOI, Samples_DOI and Mapping.py (D.J.)
 
 
 
