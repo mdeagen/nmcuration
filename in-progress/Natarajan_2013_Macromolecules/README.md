@@ -52,7 +52,7 @@ CURATION JOB TRAVELER
 * PMMA: Tg = 105 C
 * P2VP: Tg = 100 C
 * PEMA: Tg = 65 C
-* Note: PMMA Tg differs from example DSC curve of Fig 2.11 of thesis, but will 
+* Note: PMMA Tg differs from example DSC curve of Fig 2.11 of thesis, but will proceed with this literature value (105 C)
 
 2020-06-11 : added SUBMISSION subdirectory containing templates of each sample (D.J.)
 
