@@ -61,12 +61,16 @@ CURATION JOB TRAVELER
 
 2020-06-11: Updated master_template, re-ran Python code (D.J.)
 
-2020-06-11: Re-attemt upload of S1 to QA (M.E.D.)
+2020-06-11: Re-attempt upload of S1 to QA (M.E.D.)
 * received "success" email (1:27 PM)
 * uploaded samples S2-S12 (1:28-1:31 PM)
 * encountered error with S13 (see Issue 4)
 
+2020-06-11: Updated code to fix Issue 4, re-ran Python code (D.J.)
 
+2020-06-11: Re-attempt upload of S13 (M.E.D.)
+* received "success" email (1:51 PM)
+* uploaded S14-S20 successfully (1:52-1:55 PM)
 
 
 
@@ -79,14 +83,7 @@ CURATION JOB TRAVELER
 
 > How are particle surface energy values stored in the schema? Surface treatment of particles is an integral component of this work to control dispersion of nanoparticles by tuning surface energy.
 
-### Issue 4
->Unfortunately, your conversion job xmlconv-7Pw8hkyKhhSapExahhi1Nc was not successful.
->job result code: 21
->error messages: [XML Schema Validation Error] Element 'Description': This element is not expected. Expected is ( File )
 
-**Error:** Sample contains no image, and hence no filename. However, master template contains image description, etc. related to other samples in the dataset that do have images.
-
-**Fix:** Modify code to print blank strings "" to these cells in the "6. Microstructure" sheet if there is no image associated with the sample
 
 
 ---
@@ -107,6 +104,15 @@ CURATION JOB TRAVELER
 
 **Error:** The value in the Excel cell describing sample thickness is not of type double (the author reported a range of 60-80 to convey uncertainty in sample thickness measurement)
 **Workaround:** Replace value with the average (70), and keep this issue open so that it may be addressed in future improvements to curation process
+
+### Issue 4
+>Unfortunately, your conversion job xmlconv-7Pw8hkyKhhSapExahhi1Nc was not successful.
+>job result code: 21
+>error messages: [XML Schema Validation Error] Element 'Description': This element is not expected. Expected is ( File )
+
+**Error:** Sample contains no image, and hence no filename. However, master template contains image description, etc. related to other samples in the dataset that do have images.
+
+**Fix:** Modify code to print blank strings "" to these cells in the "6. Microstructure" sheet if there is no image associated with the sample
 
 ---
 
