@@ -54,6 +54,8 @@ CURATION JOB TRAVELER
 * PEMA: Tg = 65 C
 * Note: PMMA Tg differs from example DSC curve of Fig 2.11 of thesis, but will 
 
+2020-06-11 : added SUBMISSION subdirectory containing templates of each sample
+
 
 
 
@@ -82,4 +84,5 @@ CURATION JOB TRAVELER
 
 ## Sub-directory Contents
 
-* 
+* Images contains microstructure photos
+* SUBMISSION contains templates for each sample
