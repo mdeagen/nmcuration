@@ -5,7 +5,7 @@ This repository is dedicated to the curation of published data from the polymer 
 * [**Data Science Productivity Tools**](https://www.edx.org/course/data-science-productivity-tools): A free-to-audit course on edX covering RStudio, Git/Github, and Unix/Linux.
 * [**WebPlotDigitizer**](https://apps.automeris.io/wpd/): Tool for semi-automated extraction of raw data from plots.
 * [**NanoMine Schema**](https://github.com/bingyinh/nanomine-schema/tree/master/xml): XML Schema Definition (.xsd) files containing the full list of terms (refer to *most recent* schema; filenames contain date in MMDDYY format)
-* [**NanoMine Excel Template**](https://github.com/bingyinh/nanomine-schema/tree/master/xls-input-forms): Microsoft Excel workbook into which data for a given sample are assembled
+* [**NanoMine Excel Template**](https://github.com/mdeagen/nmcuration/blob/master/www/resources/master_template.xlsx): Microsoft Excel workbook into which data for a given sample are assembled
 * [**Tidy Data**](https://r4ds.had.co.nz/tidy-data.html): Principles for data tidiness laid out in *R for Data Science* by Hadley Wickham
 #### Supplementary links related to the Knowledge Graph side of NanoMine
 * [**Tetherless World repo for NanoMine**](https://github.com/tetherless-world/nanomine-graph): Ontology and Knowledge Graph approach to data storage (see [nanomine.ttl](https://github.com/tetherless-world/nanomine-graph/blob/master/nanomine.ttl)), using the RDF data model
