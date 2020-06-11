@@ -86,7 +86,18 @@ def map_Tg(workbook ,sample): #fill in cells in '5.4 Properties-Thermal' sheet f
     
 def map_microstructre(workbook , sample):
     sheet = workbook['6. Microstructure']
-    sheet["B5"] = df['image microstructure file'][sample]
+    file = str(df['image microstructure file'][sample])
+    if file[-1] =='g':
+        sheet["B5"] = df['image microstructure file'][sample]
+    else:
+        sheet["B6"] = ""
+        sheet["B7"] = ""
+        sheet["B8"] = ""
+        sheet["B11"] = ""
+        sheet["B12"] = ""
+        sheet["B14"] = ""
+        sheet["B18"] = ""
+        sheet["C18"] = ""
 
 def copy_image(sample): 
     file = str(df['image microstructure file'][sample])
