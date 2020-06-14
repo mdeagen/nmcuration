@@ -1,0 +1,503 @@
+---
+title: "Jimenez *et al.* **Macromolecules** (2019)"
+author: "Curated by Michael Deagen"
+date: "10 Feb, 2020"
+output: html_notebook
+---
+
+### Introduction
+
+```{r include=FALSE}
+#options(java.parameters = "-Xmx2048m") ## if XLConnect runs into memory issues, use this to increase memory allocation for Java
+
+require(rcrossref) # package for scraping CrossRef database given a DOI
+require(XLConnect) # package for MS Excel integration
+require(tidyr)     # data wrangling/tidying
+require(tibble)    # improvement on dataframes
+require(readr)     # read_csv functionality
+#require(here)      # identify present working directory based on file location # 2020-06-09 
+require(dplyr)     # data wrangling tools
+require(magrittr)  # pipe operator (%>%), compound assignment operator (%<>%), exposition operator (%$%)
+
+# Set the working directory to the location of this R notebook (this directory should contain the master template and associated data to import)
+current_directory <- getwd() # 2020-06-09 updated
+
+setwd(current_directory)
+
+
+# file containing downloaded data (provided by the author)
+data_path <- "./RawDataFromAuthors/DATA.xlsx" # 2020-06-09 updated
+
+# Sub-directory containing image data
+image_path <- "./Images" # 2020-06-09 updated
+
+# Name of MASTER TEMPLATE FILE, which must be stored in same directory as this R notebook
+master_template_path <- "master_template_2020_Jimenez.xlsx"
+
+# load master template file 
+masterwb <- loadWorkbook(file=master_template_path, create = FALSE) ## requires input of template file name
+
+# DOI of paper (extracted from DOI field of master template file)
+myDOI <- readWorksheet(masterwb, sheet = "1. Data Origin", startRow = 11, startCol = 2, endRow = 11, endCol = 2, header = FALSE)[[1]]
+```
+
+[R Markdown](http://rmarkdown.rstudio.com) Notebook for [this 2019 paper by Jimenez *et al.*](`r paste0("http://doi.org/", myDOI)`), for the purposes of semi-automated curation into NanoMine Excel template files.
+
+---
+
+### Defining **Global Constants**
+
+All schema variables that remain constant throughout these experiments shall be saved in the file ```r master_template_path```.
+
+This file will be copied, and schema variables for a given sample will be placed in the appropriate cells of that copy.
+
+---
+
+### Defining **Experimental Factors** (Controlled Independent Variables)
+
+The *minimal* subset of controlled parameters necessary to uniquely define each sample in the experiment is:
+
+* **Graft density** of PMMA surface modifier on silica NPs
+* **Volume fraction** of silica NPs
+* **Temperature** of crystallization (isothermal or non-isothermal)
+
+These **experimental factors** shall serve as the *primary key* needed to link variable data to the appropriate sample.
+
+---
+
+### **Factor-Level-Linked** Independent Variables (Functional Dependencies)
+
+Variables exhibiting a direct dependence on factor variables include:
+
+* **Volume fraction** of PEO matrix (depends on both graft density and volume fraction of silica NPs)
+* **Grafted chain M_n** of the PMMA surface modifier (40 kg/mol for low and medium graft density, 29 kg/mol for high graft density)
+* **Processing steps** for nanocomposite (vs neat samples)
+
+---
+
+### **"Abandoned" Data**
+
+Data that appear relevant to the context of the experiment but do not necessarily fit within the current version of the schema include:
+
+* DLS data showing particle size *distribution* (rather than assuming monodisperse particle diameter) [Fig 1a]
+* Lines showing relationship between PEO volume fraction and silica volume fraction for given graft density [Fig 1b]
+* Morphology diagram for empirically-defined self-assembly regimes [Fig 2]
+* NP spacings as determined by SAXS data and Percus-Yevick fits [Fig 5]
+* Growth rate of spherulites, as measured by PLOM [Fig 7a, 8a]
+* Normalized crystallization rate as a function of isothermal crystallization temperature [Fig 7c,d]
+* DSC analysis of nonisothermal melting, including onset and peak $T_m$ [Fig 9]
+* Peak scattering values, $q^*$, from SAXS [Fig 10c]
+* *Normalized* tensile modulus, $E'/E'_{neat}$ [Fig 12]
+* Irganox was used as matrix additive to prevent oxidation, but not clear whether is included in calculation of vol frac PEO
+* Multiple equipment of the same characterization type (e.g. DSC, SAXS)
+* Complex heating and cooling steps used for isothermal and nonisothermal crystallization in DSC
+
+---
+
+### Materials **Processing** Information
+
+Processing of the nanocomposite requires extra steps beyond the processing of the bare PEO. Base processing steps (all samples) will be included in ```r master_template_path```, while the extra steps will be read from a separate Excel file and added to the (nanocomposite only) templates.
+
+---
+
+### **Importing, Tidying, and Assembling** Data
+
+The following code chunk states how each dataset provided by the author shall be managed, incorporates into individual dataframe objects where relevant, and assembles these dataframe objects into a master dataframe (`mydf`) using the `dplyr::full_join()` function.
+
+```{r import_tidy, echo=TRUE, eval=TRUE}
+
+# Author provided data as an Excel workbook (Data.xlsx) with sheets corresponding to individual figures or parts of figures
+
+# List of IGNORED datasets from Excel workbook: Fig 1A, 1B, 2, 5, 7A, 7C, 7D, 8A, 9A, 9B, 9C, 10C, 12
+# List of ADD [tabular] datasets: Fig 6, 7B, 8B, 8C
+# List of ADD [datafiles] datasets: Fig 4, 10A, 10B
+
+# Converting f_PEO to NP_loading
+# f_PEO is functionally dependent on both graftdens and NP_loading
+# In some datasets, author only provided f_PEO (whereas we prefer to use NP_loading as the factor)
+# Must make conversions from f_PEO to NP_loading prior to joining dataframes
+# Use Fig 1B data as a LOOKUP TABLE to convert from f_PEO to NP_loading taking into account graft density
+Fig1b <- readWorksheetFromFile(file = data_path, sheet="Figure 1B", startRow=2, header=TRUE) %>% 
+  `colnames<-`(c("NP_loading","Low","Med","High")) %>% 
+    pivot_longer(cols=c(2:4), names_to = "graftdens", values_to = "fPEO", values_drop_na=TRUE) %>% 
+      add_row(.,NP_loading=0,graftdens="Neat",fPEO=1)
+  
+convertLoading <- function(df,fPEOcolumn,graftcol) {
+  tempdf <- df
+  for(i in 1:nrow(tempdf)) {
+    Fig1bsub <- Fig1b[Fig1b$graftdens==tempdf[[i,graftcol]],] # subset Fig1b df where graftdens is same as graftdens in current row of tempdf
+    tempdf$NP_loading[i] <- Fig1bsub$NP_loading[which.min(abs(tempdf[[i,fPEOcolumn]]-Fig1bsub$fPEO))]
+    tempdf$NP_loading[i] <- signif(tempdf$NP_loading[i], digits = 2) # rounding significant figures used for NP_loading elsewhere in experiment
+  }
+  return(tempdf)
+}
+
+convertfPEO <- function(df,NPcolumn,graftcol) {
+  tempdf <- df
+  for(i in 1:nrow(tempdf)) {
+    Fig1bsub <- Fig1b[Fig1b$graftdens==tempdf[[i,graftcol]],] # subset Fig1b df where graftdens is same as graftdens in current row of tempdf
+    tempdf$fPEO[i] <- Fig1bsub$fPEO[which.min(abs(tempdf[[i,NPcolumn]]-Fig1bsub$NP_loading))]
+    tempdf$fPEO[i] <- signif(tempdf$NP_loading[i], digits = 3) # rounding significant figures used for fPEO elsewhere in experiment
+  }
+  return(tempdf)
+}
+
+##### TABULAR DATA #####
+Fig6 <- readWorksheetFromFile(file = data_path, sheet="Figure 6", startRow=2, header=TRUE) %>% 
+  `colnames<-`(c("Neat_fPEO","Neat_Tcp","Neat_Tco","NA","Low_fPEO","Low_Tcp","Low_Tco","NA2","Med_fPEO","Med_Tcp","Med_Tco","NA3","High_fPEO","High_Tcp","High_Tco")) %>% # rename cols such that they can be more easily pivoted
+    select(-starts_with("NA")) %>% # remove blank cols
+      pivot_longer(cols=c(1:12), names_to=c("graftdens",".value"), names_sep="_", values_drop_na = TRUE) %>% # extract graft dens and fPEO/Tp/Tc
+        add_column(.,Tiso=as.numeric(NA)) %>% # add isothermal crystallization temp
+        add_column(.,NP_loading=as.numeric(NA)) %>% 
+          convertLoading(.,2,1) %>% # run NP_loading conversion
+            select(-starts_with("fPEO")) # for now, remove fPEO column
+ 
+Fig7b <- readWorksheetFromFile(file = data_path, sheet="Figure 7B", startRow=2, header=TRUE) %>% 
+  `colnames<-`(c("Tiso","Neat_0","Low_0.03","Low_0.16","High_0.048")) %>% # rename cols to facilitate pivot
+    pivot_longer(cols=c(2:5), names_to=c("graftdens","NP_loading"), names_sep = "_", values_to="1t50", values_drop_na = TRUE) %>% 
+      mutate(NP_loading = as.numeric(NP_loading))
+
+Fig8b <- readWorksheetFromFile(file = data_path, sheet="Figure 8B", startRow=2, header=TRUE) %>% 
+  `colnames<-`(c("Neat_fPEO","Neat_1t50","NA","Low_fPEO","Low_1t50","NA2","Med_fPEO","Med_1t50","NA3","High_fPEO","High_1t50")) %>% 
+    select(-starts_with("NA")) %>% 
+      pivot_longer(cols=c(1:8), names_to=c("graftdens",".value"), names_sep="_", values_drop_na=TRUE) %>% 
+        add_column(.,Tiso=56.5) %>% # add isothermal crystallization temp
+        add_column(.,NP_loading=as.numeric(NA)) %>% 
+          convertLoading(.,2,1) %>% # run NP_loading conversion
+            select(-starts_with("fPEO")) # for now, remove fPEO column
+
+Fig8c <- readWorksheetFromFile(file = data_path, sheet="Figure 8C", startRow=2, header=TRUE) %>% 
+  `colnames<-`(c("Neat_fPEO","Neat_%c","NA","Low_fPEO","Low_%c","NA2","Med_fPEO","Med_%c","NA3","High_fPEO","High_%c")) %>% 
+    select(-starts_with("NA")) %>% 
+      pivot_longer(cols=c(1:8), names_to=c("graftdens",".value"), names_sep="_", values_drop_na=TRUE) %>% 
+        add_column(.,Tiso=56.5) %>% # add isothermal crystallization temp
+        add_column(.,NP_loading=as.numeric(NA)) %>% 
+          convertLoading(.,2,1) %>% # run NP_loading conversion
+            select(-starts_with("fPEO")) # for now, remove fPEO column
+
+
+
+##### DATAFILES #####
+
+# Fig 4a-d: SAXS data (separate into D4a.1, D4a.2, etc.) then combine into df with keys (graft density and NP loading)
+# NOTE: First col (q) is shared by all datasets. Use I (a.u.) cols and ignore I_fit (a.u.) cols
+fig4sheet <- readWorksheetFromFile(file = data_path, sheet="Figure 4", startRow=4, header=FALSE)
+fig4loadings <- c(0.012,0.03,0.048,0.074,0.11,0.16)
+fig4all <- tibble(graftdens="",NP_loading=NA,SAXS_df="")
+fig4all <- fig4all[-1,] # remove dummy row of NAs
+for(i in 1:6) {
+  assign(paste0("D4a.",i), tibble(q=fig4sheet[[1]],I=fig4sheet[[1+i]])) # double brackets needed in order to avoid special char $ in colnames
+  fig4all <- add_row(fig4all,graftdens="Bare",NP_loading=fig4loadings[i],SAXS_df=paste0("D4a.",i))
+}
+for(i in 1:6) {
+  assign(paste0("D4b.",i), tibble(q=fig4sheet[[1]],I=fig4sheet[[2*i+7]])) # double brackets needed in order to avoid special char $ in colnames
+  fig4all <- add_row(fig4all,graftdens="Low",NP_loading=fig4loadings[i],SAXS_df=paste0("D4b.",i))
+}
+for(i in 1:6) {
+  assign(paste0("D4c.",i), tibble(q=fig4sheet[[1]],I=fig4sheet[[2*i+19]])) # double brackets needed in order to avoid special char $ in colnames
+  fig4all <- add_row(fig4all,graftdens="Med",NP_loading=fig4loadings[i],SAXS_df=paste0("D4c.",i))
+}  
+for(i in 1:5) {
+  assign(paste0("D4d.",i), tibble(q=fig4sheet[[1]],I=fig4sheet[[2*i+31]])) # double brackets needed in order to avoid special char $ in colnames
+  fig4all <- add_row(fig4all,graftdens="High",NP_loading=fig4loadings[i],SAXS_df=paste0("D4d.",i))
+} 
+
+# Fig 10a-b: SAXS data (different isothermal crystallization temperatures)
+fig10asheet <- readWorksheetFromFile(file = data_path, sheet="Figure 10A", startRow=3, header=FALSE)
+fig10bsheet <- readWorksheetFromFile(file = data_path, sheet="Figure 10B", startRow=3, header=FALSE)
+fig10all <- tibble(graftdens="",NP_loading=NA,Tiso=NA,SAXS_df="")
+fig10all <- fig10all[-1,] # remove dummy row of NAs
+for (i in 1:3) { #10a
+  assign(paste0("D10a.",i), tibble(q=fig10asheet[[1]],I=fig10asheet[[1+i]])) # double brackets needed in order to avoid special char $ in colnames
+  fig10all <- add_row(fig10all,Tiso=53,graftdens=c("Low","Med","High")[i],NP_loading=0.067, SAXS_df=paste0("D10a.",i))
+}
+for (i in 1:10) {
+  tempgraftdens <- ifelse(i<6,"Low","Med")
+  temploading <- ifelse(i<6,.121,.087)
+  assign(paste0("D10b.",i), tibble(q=fig10bsheet[[1]],I=fig10bsheet[[1+i]])) # double brackets needed in order to avoid special char $ in colnames
+  fig10all <- add_row(fig10all,Tiso=c(52,55,56,57,58)[(i-1)%%5+1],graftdens=tempgraftdens,NP_loading=temploading, SAXS_df=paste0("D10b.",i))
+}
+
+```
+
+
+```{r assemble_df, echo=TRUE, eval=TRUE}
+##### ASSEMBLE MASTER DATAFRAME #####
+
+mydf <- tibble(graftdens=as.character(NA),NP_loading=as.numeric(NA),Tiso=as.numeric(NA)) # Three factors: Graft Density, NP Loading, and Isothermal Crystallization Temperature
+mydf <- mydf[-1,] # remove dummy row of NAs
+
+# Use full_join to integrate dataframes into mydf
+mydf %<>% full_join(Fig6) %>% full_join(Fig7b) %>% full_join(Fig8b) %>% full_join(Fig8c) %>% full_join(fig4all) %>% full_join(fig10all)
+
+# Convert graftdens labels to graft densities provided in paper (units of ch/nm^2)
+mydf$graftdens <- c(NA,0,0.02,0.1,0.26)[match(mydf$graftdens, c('Neat','Bare','Low','Med','High'))]
+
+```
+
+
+---
+
+### Assigning **Surrogate Key** ("Sample ID")
+
+Using `unique()` function to identify all unique pairs of factors, define sample IDs (*surrogage key*) that can then be right-joined to the primary R dataframe.
+
+Add new columns corresponding to additional sample attributes such as filler info, particle surface treatment and processing, nanocomposite processing, variable conversions, and image folder names. Note that many of these attributes exhibit *functional dependencies*, and the `ifelse()` function is useful for handling these cases.
+
+```{r assign_surrogate_key, echo=TRUE, eval=TRUE}
+# Generate sample IDs (surrogate keys) in the form S1, S2, etc. using unique() function applied only to EXPERIMENTAL FACTOR columns
+mydf <- mydf %$% unique(.[,1:3]) %>% add_column(sampleID=paste0("S",seq.int(nrow(.))), .before=1) %>% right_join(., mydf)
+
+# Add filename for SAXS data (if SAXS data exist for the sample, otherwise NA)
+mydf %<>% add_column(SAXS_filename=NA)
+mydf$SAXS_filename <- ifelse(!is.na(mydf$SAXS_df),paste0(mydf$sampleID,"_SAXS_data.xlsx"),NA) # 2020-06-09 updated from .csv to .xlsx
+
+# Add fillerinfo column if NP_loading > 0
+fillerinfodf <- tribble(
+  ~w,~x,~y,~z,
+  "Silica",NA,NA,NA, #Filler description
+  "SiO2",NA,NA,NA, #Filler chemical name/Filler name
+  NA,NA,NA,NA, #Filler PubChem ref
+  "SiO2",NA,NA,NA, #Filler abbrev
+  "Nissan Chemical Industries",NA,NA,NA, #Mfgr or source name
+  "MEK-ST",NA,NA,NA, #Trade name
+  NA,NA,NA,NA, #Density
+  NA,NA,NA,NA, #Crystal phase
+  "provided by mfgr",14,"nm",4 #Particle diameter
+)
+mydf %<>% add_column(fillerinfo=list(NA))
+for (i in 1:nrow(mydf)) {
+  if(mydf$NP_loading[i]>0) mydf$fillerinfo[[i]] <-fillerinfodf
+}
+
+# Add particle surface treatment (PST) info if graft density is !NA and >0
+# PST processing defined in separate Excel file for convenience
+PSTinfodf <- tibble(x=c("Poly(methyl methacrylate)","PMMA"))
+PSTprocessingdf <- readWorksheetFromFile(file = "PST_processing_Jimenez.xlsx", sheet=1, startRow=1, header=FALSE)
+mydf %<>% add_column(PSTinfo=list(NA),PSTprocessing=list(NA))
+for (i in 1:nrow(mydf)) {
+  if(mydf$graftdens[i] > 0 & !is.na(mydf$graftdens[i])) {
+    mydf$PSTinfo[[i]] <- PSTinfodf
+    mydf$PSTprocessing[[i]] <- PSTprocessingdf
+  }
+}
+
+mydf %<>% add_column(graftMw=NA)
+mydf$graftMw <- c(40,40,29)[match(mydf$graftdens,c(0.02,0.1,0.26))]
+
+# Add column for nanocomposite processing (only applicable when NP_loading>0)
+nanoprocessingdf <- readWorksheetFromFile(file = "Nanocomposite_processing_Jimenez.xlsx", sheet=1, startRow=1, header=FALSE)
+mydf %<>% add_column(nanoprocessing=list(NA))
+for(i in 1:nrow(mydf)) {
+  if(mydf$NP_loading[i]>0) mydf$nanoprocessing[[i]] <- nanoprocessingdf
+}
+
+# Add half-life of crystallization (t50) column by inverting `1t50` column (also conditionally add "seconds" to t50Unit column)
+mydf %<>% add_column(t50=NA)
+mydf$t50 <- ifelse(!is.na(mydf$`1t50`),signif(1/mydf$`1t50`, digits = 3),NA) # NOTE: rounds to 3 sig figs (because 1/t50 is reported with 3 sig figs)
+
+# Importing image filename data
+mydf %<>% add_column(imagefolder=NA)
+for (i in 1:nrow(mydf))
+{
+  # only one sample has supplementary TEM files provided by author
+  if(mydf$graftdens[i]==0.1 & mydf$NP_loading[i]==0.087 & mydf$Tiso[i]==58.0) mydf$imagefolder[i] <- paste0(image_path, "/AMJ160_G5W10_58C")
+}
+
+```
+
+---
+
+### Define **"Control" Samples**
+
+Control samples at present are defined only with respect to **filler loading**. Therefore, for a given set of experimental factors (F1, F2, F3, ...) where one of these factors (e.g., F1) represents filler loading, the control samples represent the combinations of factor levels in which the filler loading is the null condition (filler loading = 0). While the samples include all combinations of (F1, F2, F3, ...), the control samples include the subset (F1=0, F2, F3, ...).
+
+Once the dataframe has been assembled with all other variables, the control samples may be added.
+
+```{r control_samples, echo=TRUE, eval=TRUE}
+
+# Identify list of unique combinations of factors EXCLUDING filler loading (in this case, we also ignore graftdens as this property is NA for null condition of filler loading)
+
+controls <- mydf %$% unique(.[,c('Tiso')]) %>% add_column(NP_loading=0) 
+
+# Map control sample IDs to `controls` dataframe using left_join(), and change colname to control_sampleID
+
+controls %<>% left_join(.,mydf[,c('Tiso','NP_loading','sampleID')]) 
+
+# Rename sampleID to control_sampleID
+
+names(controls)[3] <- "control_sampleID"
+
+# Add control_sampleID to masterdf using right_join() on all columns EXCEPT NP_loading
+
+mydf %<>% right_join(.,controls[,c('Tiso','control_sampleID')]) 
+
+
+# REMOVE NP_loading=0 and replace with NA
+mydf$NP_loading[mydf$NP_loading==0] <- NA
+
+# REMOVE graftdens=0 and replace with NA # added 2020-06-09
+mydf$graftdens[mydf$graftdens==0] <- NA
+
+
+print(mydf,n=nrow(mydf))
+
+```
+
+---
+
+### Assigning **Mappings** from R Dataframe to Excel schema template
+
+The `mappings` dataframe tells the `writeWorksheetToFile()` function the sheet, row, and column where to paste data from `mydf` into the Excel schema template files for each sample. In the case of data comprising multiple rows and/or columns, the row and cell mappings indicate the start row and cell for these data. Any data pasted to the template as multiple rows and columns should be contiguous, as it will overwrite any previous values writted to those cells.
+
+If an attribute in the dataframe is a singular value with a **unit** associated with it (to be pasted in the adjacent cell to the right of the Excel schema template), include the unit as a string in the `mappings` dataframe.
+
+```{r assign_mappings, echo=TRUE, eval=TRUE}
+# Include OPTIONAL "units" field for writing a string representing the units to the cell immediately to the right of the numerical value in the Excel template (this avoids the clutter of extra columns or reduced readability by storing tibbles within the dataframe) **ONLY WORKS IF UNITS ARE CONSISTENT
+
+# Assign mappings to Excel schema templates
+mappings <- tibble(variable = colnames(mydf), sheet = as.character(NA), cellrow = as.numeric(NA), cellcol = as.numeric(NA), unit = as.character(NA)) # 2020-06-09 added as.character(), as.numeric()
+
+# Function for adding mappings from variables in mydf to location (sheet,row,col) in Excel template
+addToMappings <- function(var, sheetname, row, col, unit=NA, mappingdf = mappings) {
+  mappingdf[mappingdf$variable==var,"sheet"] <- sheetname
+  mappingdf[mappingdf$variable==var,"cellrow"] <- row
+  mappingdf[mappingdf$variable==var,"cellcol"] <- col
+  mappingdf[mappingdf$variable==var,"unit"] <- unit
+  
+  return(mappingdf)
+}
+
+# Individual mappings for relevant columns in mydf
+mappings <- addToMappings("NP_loading","2. Material Types",46,3)
+mappings <- addToMappings("sampleID","1. Data Origin",5,2)
+mappings <- addToMappings("control_sampleID","1. Data Origin",6,2)
+mappings <- addToMappings("graftdens","2. Material Types",55,3,"ch/nm^2") # has UNIT of ch/nm^2
+mappings <- addToMappings("Tiso","5.4 Properties-Thermal",18,3,"Celsius") # has UNIT of Celsius
+mappings <- addToMappings("Tcp","5.4 Properties-Thermal",18,3,"Celsius") # note: using Tpeak for non-isothermal crystallized samples
+mappings <- addToMappings("%c","5.4 Properties-Thermal",12,3)
+mappings <- addToMappings("t50","5.4 Properties-Thermal",16,3,"seconds") # has UNIT of seconds
+mappings <- addToMappings("SAXS_filename","4. Characterization Methods",82,7)
+mappings <- addToMappings("fillerinfo","2. Material Types",27,2)
+mappings <- addToMappings("PSTinfo","2. Material Types",49,2)
+mappings <- addToMappings("graftMw","2. Material Types",56,3,"kg/mol") # has UNIT of kg/mol
+mappings <- addToMappings("PSTprocessing", "2. Material Types",62,1)
+mappings <- addToMappings("nanoprocessing","3. Synthesis and Processing",20,1) # note that is placed below processing steps that apply to all samples
+
+mappings %>% print(n=nrow(.))
+```
+
+
+---
+
+### **Auto-Filling Excel Templates** and **Exporting Supplementary Datafiles**
+
+Programmatically generate Excel schema template files for each sample by:
+
+1. Creating a copy of the master Excel template (already filled out with global constants), if a new template has not yet been created
+2. Storing the template file in a sub-directory with sample ID as the folder name
+3. For each row in `mydf`, looping along columns
+    + If column header contains `mappings` attributes, write to Excel template according to mapping
+    + If column header is a "_datafile", write the "_filename" to the Excel template and save the tibble as a csv in the sub-directory
+4. If there are image files to copy over, use `file.copy` to copy these files and include aggregated image metadata in Excel schema template
+
+```{r write_templates, echo=TRUE, eval=FALSE} 
+# 2020-06-09 changed eval=FALSE for this code chunk
+
+# create directory for submission files (if already exists, nothing happens)
+dir.create("./SUBMISSION")
+
+# prevent rewriting over previously saved sample Excel templates in the event of Sample ID occupying more than one row (if full_join is used and experimental factors are identified, this should not happen)
+writenew <- tibble(sampleID=mydf$sampleID, write=TRUE)
+
+# Loop across all rows in dataframe
+for (i in 1:nrow(mydf)) {
+  
+  rowSampleID <- mydf$sampleID[i]
+  
+  sample_folder <- paste0("./SUBMISSION/", rowSampleID) # sub-directory name for sample
+  
+  dir.create(sample_folder) # create directory (if already exists, will throw warning)
+  
+  templateFile <- paste0(sample_folder, "/", rowSampleID, "_template.xlsx") # filename for the Excel schema template file for the sample
+  
+  if(writenew[writenew$sampleID==rowSampleID,2][[1]]) { # create file if script is running anew
+    saveWorkbook(masterwb, templateFile) # save a copy of the master template, prepended with the "sample ID" surrogate key
+    writenew[writenew$sampleID==rowSampleID,2][[1]] <- FALSE # once template file created, ensures new file not saved over previous during rest of chunk
+  }
+  
+  
+  # Loop along columns in mydf to place relevant attributes into Excel schema template
+  for (j in 1:ncol(mydf)) {
+    
+    if(!is.na(mappings$sheet[j]) & !is.na(mydf[[i,j]][[1]][1])) { # only execute if a worksheet name is given in mappings dataframe # 2020-06-09 added additional Boolean to check if data itself is NA
+      writeWorksheetToFile(file = templateFile, data = mydf[[i,j]], sheet = mappings$sheet[j], startRow = mappings$cellrow[j], startCol = mappings$cellcol[j], header = FALSE)
+      ## If attribute value !NA and mappings contains UNITS, then include these units at startRow=mappings$cellrow[j] and (startCol=mappings$cellcol[j]+1)
+      if(!is.na(mydf[[i,j]][[1]][1]) & !is.na(mappings$unit[j])) writeWorksheetToFile(file = templateFile, data = mappings$unit[j], sheet = mappings$sheet[j], startRow = mappings$cellrow[j], startCol = mappings$cellcol[j]+1, header = FALSE)
+    }
+    
+    # Loop for writing datafiles
+    if(grepl("_df", names(mydf)[j])) { # only execute if "_df" is in column header (a.k.a. needs to be exported as separate csv)
+      
+      if(!is.na(mydf[[i,j]])) { # execute if the the value is NOT NA
+        # write df WITH NA ROWS REMOVED, which will be the df saved to .csv ()
+        tempdf <- get(mydf[[i,j]]) %>% .[complete.cases(.),]
+        # write nested tibble in _df column to csv in sub-directory # REMOVED 2020-06-09
+        # write_csv(tempdf, path=paste0(sample_folder, "/", mydf[[i,j+1]])) # (filename is i,j+1) [filename defined 2 columns before datafile tibble]
+        # use get(df[i,j-1]) to write the dataframe object directly
+        
+        # ADDED 2020-06-09: Write to .xlsx files for supplementary datafiles
+        writeWorksheetToFile(file = paste0(sample_folder,"/",mydf[[i,j+1]]), data = tempdf, sheet = "Sheet1")
+      }
+    }
+  }
+  
+  
+  # If sample contains an imagefolder, copy these to Sample ID subfolder and add relevant imageinfo to Excel template
+  if(!is.na(mydf$imagefolder[i])) {
+    # save temporary list of all files in the image directory
+    temp_list_of_images <- list.files(mydf$imagefolder[i])
+    # copy all files to the sample subdirectory
+    file.copy(paste0(mydf$imagefolder[i],"/",temp_list_of_images), sample_folder)
+    
+    # list files in Excel sample template
+    # base tibble (1 image, with data and placeholder for filename)
+    image_info <- tribble(
+      ~x, ~y, ~z,
+      "Imagefile #", "Datafile name.jpg/png/tif/gif", "Note",
+      "Microstructure filename", "", "",
+      "Description", "", "",
+      "Microscopy type", "TEM", "",
+      "Image type", "grayscale", "",
+      "","","",
+      "Image dimension", "Fixed Value", "Unit",
+      "Width", "2048", "pixel",
+      "Height", "2048", "pixel",
+      "Depth", "8", "bit",
+      "Preprocessing", "", "",
+      "","",""
+    )
+    aggregate_image_info <- tibble(x="",y="",z="")
+    image_info_sample <- tribble(
+      ~x,~y,~z,
+      "Sample experimental info", "Fixed Value", "Unit",
+      "Sample size", "", "",
+      "Sample thickness", "100", "nm"
+    )
+    # rbind tibbles for each image in temp_list_of_images
+    for (k in 1:length(temp_list_of_images)) {
+      temp_image_info <- image_info
+      temp_image_info[[2,2]] <- temp_list_of_images[k]
+      
+      aggregate_image_info <- rbind(aggregate_image_info,temp_image_info)
+    }
+    
+    # append final info with sample thickness to tibble
+    aggregate_image_info <- rbind(aggregate_image_info,image_info_sample)
+    
+    # add complete tibble to sheet '6. Microstructure' of sample template
+    writeWorksheetToFile(file = templateFile, data = aggregate_image_info, sheet = "6. Microstructure", startRow = 3, startCol = 1, header = FALSE)
+  }
+}
+```
+
