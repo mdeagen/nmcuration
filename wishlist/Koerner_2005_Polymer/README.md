@@ -45,7 +45,10 @@ CURATION JOB TRAVELER
 * This excel file can be used as a starting point for each of the following samples
 * `Koerner_2005_Polymer_Master.xlsx`
 
-
+2020-06-12: Added Tidy Table and updated master excel file (H.D.)
+* The initial draft of the Tidy Table is included with all inflormation in one location
+* The master excel file has been updated (`Koerner_2005_Polymer_Master.xlsx`)
+* `Koerner_2005_Polymer_Tidy_Table.xlsx`
 
 
 ---
