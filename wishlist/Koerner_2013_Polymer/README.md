@@ -1,6 +1,6 @@
 CURATION JOB TRAVELER
 
-# Koerner_2005_Polymer
+# Koerner_2013_Polymer
 
 **Description:** Published article by Koerner *et al.* (AFRL) on high temperature shape memory polymers (incl. nanocomposites).
 
