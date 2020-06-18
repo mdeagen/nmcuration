@@ -22,7 +22,6 @@ CURATION JOB TRAVELER
 
 ## Datasets of Interest
 
-* Note some samples (BT60-AP) have particle surface treatment (APTES)
 * Fig 4: DSC curves, Tg values
 * Fig 5a: Thermal conductivity vs composition (provided as BN:AlN ratio, would need to convert x-axis to actual filler loading)
 * Fig 6: Dielectric (loss) spectra vs. Temperature, Frequency
