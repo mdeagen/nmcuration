@@ -16,7 +16,7 @@ CURATION JOB TRAVELER
 
 ## Bibliographic Info
 
-* DOI: 10.1016/j.polymer.2006.03.057
+* DOI: 10.1021/mz4001805
 
 ---
 
