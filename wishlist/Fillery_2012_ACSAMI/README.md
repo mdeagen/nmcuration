@@ -40,6 +40,7 @@ CURATION JOB TRAVELER
 2020-06-19: Added curation job to "Wishlist" (M.E.D.)
 * Added list of datasets of interest
 * Added Issue 1 related to Weibull raw data extraction
+* Added Issue 2 related to curation of multiple Xray characterization datasets
 
 
 
