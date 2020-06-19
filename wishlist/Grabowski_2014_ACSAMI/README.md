@@ -28,6 +28,10 @@ CURATION JOB TRAVELER
 * Fig 3: Dielectric permittivity (real, imaginary) at 100 kHz (see Issue 2) vs. SiO2 vol%
 * Fig 4: Dielectric loss (tan delta) at 1 kHz (see Issue 2) vs. SiO2 vol%
 * Fig 5: Breakdown strength vs. SiO2 vol%
+* Fig S1: USAXS data
+* Fig S2: Dielectric spectra (see Issue 2)
+* Fig S3: Weibull data (see Issue 3)
+* Fig S4: Weibull data (see Issue 4)
 
 
 ---
