@@ -28,6 +28,7 @@ CURATION JOB TRAVELER
 * Fig 3: TEM images
 * Fig 5a: Elastic modulus vs. molecular weight (note vol% NPs) compared to neat matrix (PS)
 * Fig 6a: Yield stress vs. molecular weight (nots vol% NPs) compared to neat matrix (PS)
+* Fig S1: TEM images
 
 
 ---
