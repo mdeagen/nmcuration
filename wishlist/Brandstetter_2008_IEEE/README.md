@@ -30,7 +30,7 @@ CURATION JOB TRAVELER
 
 ## Events
 
-2020-06-19: Added curation job to "Wishlist" (M.E.D.)
+2020-06-22: Added curation job to "Wishlist" (M.E.D.)
 * Added list of datasets of interest
 
 
