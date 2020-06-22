@@ -10,7 +10,7 @@ CURATION JOB TRAVELER
 
 **Traveler Modified:** 2020-06-22
 
-**Current Status:** *Wishlist*
+**Current Status:** *In-Progress*
 
 ---
 
@@ -38,7 +38,7 @@ CURATION JOB TRAVELER
 2020-06-22: Added curation job to "Wishlist" (M.E.D.)
 * Added list of datasets of interest
 
-
+2020-06-22: Moved to "In-Progress" (M.E.D.)
 
 
 ---
