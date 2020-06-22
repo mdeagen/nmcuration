@@ -1,8 +1,8 @@
 CURATION JOB TRAVELER
 
-# Koerner_2013_ACSMacroLett
+# Kumar_2002_Macromolecules
 
-**Description:** Published article by Koerner *et al.* (AFRL) on hairy nanoparticle assemblies.
+**Description:** Published article by Kumar *et al.* (AFRL) on PBO/SWNT composites.
 
 ---
 
@@ -16,15 +16,16 @@ CURATION JOB TRAVELER
 
 ## Bibliographic Info
 
-* DOI: 10.1021/mz4001805
+* DOI: 10.1021/ma0205055
 
 ---
 
 ## Datasets of Interest
 
-* Note: These samples do not contain a matrix (see Issue 1), but are compared to neat PS
-* Table 1: mass fraction, graft density, Tg data
-* Fig 3f: Stress-strain data
+* Fig 2: Cross-polarized optical micrographs (see Issue 1)
+* Table 1: (tensile tests performed on fibers) tensile modulus, strain to failure (elongation at break), tensile strength, compressive strength
+* Fig 3: Stress-strain data
+* Fig 8: Raman spectroscopy data
 
 ---
 
@@ -40,9 +41,7 @@ CURATION JOB TRAVELER
 
 ## Open Issues
 
-### Issue 1
 
-> These are assemblies of hairy nanoparticles (no "matrix" in conventional sense). How to represent this geometry?
 
 ---
 

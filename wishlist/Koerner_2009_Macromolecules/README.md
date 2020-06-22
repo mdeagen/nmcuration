@@ -1,8 +1,8 @@
 CURATION JOB TRAVELER
 
-# Koerner_2013_ACSMacroLett
+# Koerner_2009_Macromolecules
 
-**Description:** Published article by Koerner *et al.* (AFRL) on hairy nanoparticle assemblies.
+**Description:** Published article by Koerner *et al.* (AFRL) on dispersion, surface chemistry effect on hardness, Tg.
 
 ---
 
@@ -16,15 +16,16 @@ CURATION JOB TRAVELER
 
 ## Bibliographic Info
 
-* DOI: 10.1021/mz4001805
+* DOI: 10.1021/ma901671v
 
 ---
 
 ## Datasets of Interest
 
-* Note: These samples do not contain a matrix (see Issue 1), but are compared to neat PS
-* Table 1: mass fraction, graft density, Tg data
-* Fig 3f: Stress-strain data
+* Fig 5: Stress-strain data
+* Table 2: tensile modulus, stress at failure, strain at failure
+* Table 4: fixity (see Issue 1)
+
 
 ---
 
@@ -32,6 +33,9 @@ CURATION JOB TRAVELER
 
 2020-06-19: Added curation job to "Wishlist" (M.E.D.)
 * Added list of datasets of interest
+* Added Issue 1 related to expansion of schema/ontology
+
+
 
 
 
@@ -42,7 +46,7 @@ CURATION JOB TRAVELER
 
 ### Issue 1
 
-> These are assemblies of hairy nanoparticles (no "matrix" in conventional sense). How to represent this geometry?
+> Strain set (fixity)? Term specific to [SMPs](https://en.wikipedia.org/wiki/Shape-memory_polymer)
 
 ---
 

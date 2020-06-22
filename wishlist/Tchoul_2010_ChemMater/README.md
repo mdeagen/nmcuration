@@ -1,8 +1,8 @@
 CURATION JOB TRAVELER
 
-# Koerner_2013_ACSMacroLett
+# Tchoul_2010_ChemMater
 
-**Description:** Published article by Koerner *et al.* (AFRL) on hairy nanoparticle assemblies.
+**Description:** Published article by Tchoul *et al.* (AFRL) on "hairy" hybrid nanoparticle assemblies.
 
 ---
 
@@ -16,15 +16,19 @@ CURATION JOB TRAVELER
 
 ## Bibliographic Info
 
-* DOI: 10.1021/mz4001805
+* DOI: 10.1021/cm903182n
+* SI: https://pubs-acs-org.ezproxy.uvm.edu/doi/suppl/10.1021/cm903182n/suppl_file/cm903182n_si_001.pdf
 
 ---
 
 ## Datasets of Interest
 
 * Note: These samples do not contain a matrix (see Issue 1), but are compared to neat PS
-* Table 1: mass fraction, graft density, Tg data
-* Fig 3f: Stress-strain data
+* Table 3: Graft density (ch/nm^2)
+* Fig 11: SAXS data
+* Fig 12: DSC data
+* Fig 13: Dielectric spectra
+
 
 ---
 

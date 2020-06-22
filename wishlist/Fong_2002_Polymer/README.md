@@ -1,8 +1,8 @@
 CURATION JOB TRAVELER
 
-# Koerner_2013_ACSMacroLett
+# Fong_2002_Polymer
 
-**Description:** Published article by Koerner *et al.* (AFRL) on hairy nanoparticle assemblies.
+**Description:** Published article by Fong *et al.* (AFRL) on electrospun fiber composites.
 
 ---
 
@@ -16,15 +16,17 @@ CURATION JOB TRAVELER
 
 ## Bibliographic Info
 
-* DOI: 10.1021/mz4001805
+* DOI: 10.1016/S0032-3861(01)00665-6
 
 ---
 
 ## Datasets of Interest
 
-* Note: These samples do not contain a matrix (see Issue 1), but are compared to neat PS
-* Table 1: mass fraction, graft density, Tg data
-* Fig 3f: Stress-strain data
+* Processing related data
+* Fig 1: SEM images of fibers
+* Fig 2: TEM images of ribbons
+* Fig 5: TEM images of fibers
+
 
 ---
 
@@ -40,9 +42,7 @@ CURATION JOB TRAVELER
 
 ## Open Issues
 
-### Issue 1
 
-> These are assemblies of hairy nanoparticles (no "matrix" in conventional sense). How to represent this geometry?
 
 ---
 

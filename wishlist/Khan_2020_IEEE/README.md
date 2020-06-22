@@ -33,7 +33,6 @@ CURATION JOB TRAVELER
 
 2020-06-11: Added curation job to "Wishlist" (M.E.D.)
 * Added datasets of interest
-* Added Issue 1 related to schema
 
 
 ---
