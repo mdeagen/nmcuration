@@ -39,7 +39,14 @@ CURATION JOB TRAVELER
 
 2020-06-22: Moved to "In-Progress" (M.E.D.)
 
-2020-06-23: Uploaded curation files
+2020-06-23: Assembled relevant datasets (D.J.)
+
+2020-06-23: Generated mapping code (D.J.)
+
+2020-06-23: Uploaded curation Excel files to repo (D.J.)
+
+
+
 
 ---
 
