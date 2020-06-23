@@ -35,6 +35,9 @@ CURATION JOB TRAVELER
 * Added datasets of interest
 * Added Issue 1 related to schema
 
+2020-06-23: Included Tidy Table Excel sheet to master repo (H.D.)
+* `WangS_2020_IEEE_Tidy_Table.xlsx`
+* Currently includes initial data tables for Figures 4,7, and 9
 
 ---
 
