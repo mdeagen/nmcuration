@@ -45,6 +45,12 @@ CURATION JOB TRAVELER
 
 2020-06-23: Uploaded curation Excel files to repo (D.J.)
 
+2020-06-23: Attempted upload of S1 to NanoMine QA (M.E.D.)
+* Received "Success!" email (2:22pm)
+* Successfully uploaded S2-S5
+* Received error uploading S6 (2:25pm) (see Issue 1)
+* Contacted D.J. to update template/re-run mapping code
+
 
 
 
@@ -52,7 +58,14 @@ CURATION JOB TRAVELER
 
 ## Open Issues
 
+### Issue 1
+ > Unfortunately, your conversion job xmlconv-k4eahXh4MGFA3dBbBHUzMu was not successful.
+> job result code: 21
+> error messages: [XML Schema Validation Error] Element 'value': 'twice its weight ratio' is not a valid value of the atomic type 'PositiveValueType'
 
+**Error:** In the Processing section, "Additive - amount" features a text description, but the schema expects a positive numeric value
+
+**Fix:** Leave this cell blank
 
 ---
 
