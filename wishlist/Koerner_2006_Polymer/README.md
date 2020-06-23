@@ -29,7 +29,7 @@ CURATION JOB TRAVELER
 * Fig 7a: Hardness (Vickers scale) data
 * Fig 7b: Coefficient of thermal expansion (See Issue 1)
 * Fig 8: Storage modulus and tan delta vs. temperature (tan delta curves are those with peak)
-* Table 3: Tg data (See Issue 2); Use DSC values
+* Table 3: Tg data (See Issue 2); Use DMA values
 
 
 ---
