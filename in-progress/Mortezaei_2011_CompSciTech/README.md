@@ -39,6 +39,7 @@ CURATION JOB TRAVELER
 
 2020-06-22: Moved to "In-Progress" (M.E.D.)
 
+2020-06-23: Uploaded curation files
 
 ---
 
