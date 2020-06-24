@@ -27,7 +27,7 @@ CURATION JOB TRAVELER
 * Fig 2a-c: DMA data (storage mod, loss mod, tan delta) as a function of temperature (treated silica)
 * Fig 4a-c: DMA data (storage mod, loss mod, tan delta) as a function of frequency (treated and untreated silica)
 > Glass-transition of pure polystyrene is around 102 °C and shift to 103, 105, 107 and 110 °C for the untreated silica content of 0.5%, 1.5%, 2.5% and 5.0%, respectively.
-* Estimate Tg of treated polystyrene samples? (Did not see in article text)
+* Estimate Tg of treated polystyrene samples (Based on tan delta curves)
 
 
 ---
@@ -51,12 +51,33 @@ CURATION JOB TRAVELER
 * Received error uploading S6 (2:25pm) (see Issue 1)
 * Contacted D.J. to update template/re-run mapping code
 
+2020-06-24: Updated code and re-uploaded filesets (D.J.)
+* Also fixed column headers (need to REUPLOAD S1-S5)
 
+2020-06-24: Created new dataset for re-upload (L391) (M.E.D.)
+* Attempted upload of S1 (received "success" email 6:42am)
+* Successfully uploaded S2-S9 (6:43-6:46am)
+* Received error uploading S10 (6:46am) (see Issue 2)
+
+2020-06-24: Contacted NM systems team regarding Issue 2 (M.E.D.)
 
 
 ---
 
 ## Open Issues
+
+### Issue 2
+> Unfortunately, your conversion job xmlconv-wfYcpKSzbkvVaLcs95pEUy was not successful.
+> job result code: 21
+> error messages: [Conversion Error] Oops! The conversion cannot be finished! Please contact the administrator.
+
+**Error:** 
+
+**Fix:** 
+
+---
+
+## Closed Issues
 
 ### Issue 1
  > Unfortunately, your conversion job xmlconv-k4eahXh4MGFA3dBbBHUzMu was not successful.
@@ -66,12 +87,6 @@ CURATION JOB TRAVELER
 **Error:** In the Processing section, "Additive - amount" features a text description, but the schema expects a positive numeric value
 
 **Fix:** Leave this cell blank
-
----
-
-## Closed Issues
-
-
 
 ---
 
