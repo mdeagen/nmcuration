@@ -27,57 +27,40 @@ def create_dir(name): #creates a directory and change the location to it
     os.chdir(path+'/'+name)
 
 
-    
-def get_manufacturer(sample):
-    matrix = df['matrix'][sample]
-    for i, mat in enumerate(df['chemical name']):
-            if mat == matrix:
-                k = i
-                break
-    return df['manufacturer'][k]
-
-def get_Tg(sample):
-    matrix = df['matrix'][sample]
-    for i, mat in enumerate(df2['chemical name']):
-            if mat == matrix:
-                k = i
-                break
-    return df2['Tg (deg C)'][k]
-
 def get_columns_T(v , dataframe):
     if v ==0.05:
-        return dataframe.iloc[1:,0:2]
+        return dataframe.iloc[1:,0:2].astype(float)
     elif v == 0.025:
-        return dataframe.iloc[1:,2:4]
+        return dataframe.iloc[1:,2:4].astype(float)
     elif v == 0.015:
-        return dataframe.iloc[1:,4:6]
+        return dataframe.iloc[1:,4:6].astype(float)
     elif v == 0.005:
-        return dataframe.iloc[1:,6:8]
+        return dataframe.iloc[1:,6:8].astype(float)
     else:
-        return dataframe.iloc[1:,8:10]
+        return dataframe.iloc[1:,8:10].astype(float)
    
 def get_columns_F(v ,sample , dataframe):
     if df["pst"][sample] != 'vinyltriethoxysilane':
         if v ==0.05:
-            return dataframe.iloc[1:,0:2]
+            return dataframe.iloc[1:,0:2].astype(float)
         elif v == 0.025:
-            return dataframe.iloc[1:,4:6]
+            return dataframe.iloc[1:,4:6].astype(float)
         elif v == 0.015:
-            return dataframe.iloc[1:,8:10]
+            return dataframe.iloc[1:,8:10].astype(float)
         elif v == 0.005:
-            return dataframe.iloc[1:,12:14]
+            return dataframe.iloc[1:,12:14].astype(float)
         else:
-            return dataframe.iloc[1:,16:18]
+            return dataframe.iloc[1:,16:18].astype(float)
     
     else:
         if v ==0.05:
-            return dataframe.iloc[1:,2:4]
+            return dataframe.iloc[1:,2:4].astype(float)
         elif v == 0.025:
-            return dataframe.iloc[1:,6:8]
+            return dataframe.iloc[1:,6:8].astype(float)
         elif v == 0.015:
-            return dataframe.iloc[1:,10:12]
+            return dataframe.iloc[1:,10:12].astype(float)
         elif v == 0.005:
-            return dataframe.iloc[1:,14:16]
+            return dataframe.iloc[1:,14:16].astype(float)
 
 #%% Mapping
     
@@ -89,7 +72,7 @@ def map_material_type(workbook ,sample):  #fill in cells in '2. Material Types' 
     sheet = workbook['2. Material Types']
     sheet["C46"] = df['filler volume fraction'][sample]
 
-def map_viscoelasticity(workbook , sample , tsweep=False , fsweep=False ):
+def map_viscoelasticity(workbook , sample , tsweep=False , fsweep=False ):#fill in cells in '5.2 Properties-Viscoelastic' sheet for a sample
     sheet = workbook['5.2 Properties-Viscoelastic']
     vf = df["filler volume fraction"][sample]
     s = df["sample no."][sample]
@@ -109,9 +92,9 @@ def map_viscoelasticity(workbook , sample , tsweep=False , fsweep=False ):
             SM = get_columns_T(vf , pd.read_csv(original_path + "/RawData/SM_T.csv"))
             LM = get_columns_T(vf , pd.read_csv(original_path+ "/RawData/LM_T.csv"))
             
-        DF.columns = ["Temperature (Celsius)" , "Y"]
-        SM.columns = ["Temperature (Celsius)" , "Y"]
-        LM.columns = ["Temperature (Celsius)" , "Y"]
+        DF.columns = ["Temperature (Celsius)" , "Damping factor"]
+        SM.columns = ["Temperature (Celsius)" , "Storage modulus (Pa)"]
+        LM.columns = ["Temperature (Celsius)" , "Loss modulus (Pa)"]
         DF.to_excel(s+"_dampingfactor.xlsx", index=False)
         sheet["C21"] = s+"_dampingfactor.xlsx"
         SM.to_excel(s+"_storagemod.xlsx" , index=False)
@@ -127,9 +110,9 @@ def map_viscoelasticity(workbook , sample , tsweep=False , fsweep=False ):
         DF = get_columns_F(vf , sample , pd.read_csv(original_path+ "/RawData/DF_NT_frequency.csv"))
         SM = get_columns_F(vf , sample , pd.read_csv(original_path+ "/RawData/SM_NT_frequency.csv"))
         LM = get_columns_F(vf , sample , pd.read_csv(original_path+ "/RawData/LM_NT_frequency.csv"))
-        DF.columns = ["Frequency (Hz)" , "Y"]
-        SM.columns = ["Frequency (Hz)" , "Y"]
-        LM.columns = ["Frequency (Hz)" , "Y"]
+        DF.columns = ["Frequency (Hz)" , "Damping factor"]
+        SM.columns = ["Frequency (Hz)" , "Storage modulus (Pa)"]
+        LM.columns = ["Frequency (Hz)" , "Loss modulus (Pa)"]
         DF.to_excel(s+"_dampingfactor.xlsx", index=False)
         sheet["C21"] = s+"_dampingfactor.xlsx"
         SM.to_excel(s+"_storagemod.xlsx", index=False)
