@@ -61,6 +61,11 @@ CURATION JOB TRAVELER
 
 2020-06-24: Contacted NM systems team regarding Issue 2 (M.E.D.)
 
+2020-06-25: Reviewed error logs for failed upload (M.E.D.)
+* Noticed issue related to "Frequency"
+* Identified likely error in template
+* Contacted D.J. to update mapping code
+
 
 ---
 
@@ -71,9 +76,9 @@ CURATION JOB TRAVELER
 > job result code: 21
 > error messages: [Conversion Error] Oops! The conversion cannot be finished! Please contact the administrator.
 
-**Error:** 
+**Error:** For "Frequency sweep" DMA data, XML conversion fails when there is a value in the "Frequency" row
 
-**Fix:** 
+**Fix:** The constant temperature value (for S10, this value is 160 Celsius) should go in the Temperature row.
 
 ---
 
