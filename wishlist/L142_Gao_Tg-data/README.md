@@ -24,3 +24,7 @@ SELECT * WHERE {
 
 The paper's DOI is [10.1021/jp409474k](http://dx.doi.org/10.1021/jp409474k).
 
+
+### Surface Treatment Type
+
+Particle surface treatment is listed as "Hydrogen Peroxide" ... H2O2 may have been involved in a PST step, but might not itself be a particle surface treatment that remains attached to particles. Inspect further to determine how to revise.
