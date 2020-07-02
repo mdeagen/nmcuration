@@ -10,7 +10,7 @@ CURATION JOB TRAVELER
 
 **Traveler Modified:** 2020-07-02
 
-**Current Status:** *In-Progress*
+**Current Status:** *Completed*
 
 ---
 
@@ -72,6 +72,8 @@ CURATION JOB TRAVELER
 * Received "Success!" email for S10 (4:28 PM)
 * Uploaded S11-S18 successfully (4:29-4:32 PM)
 * Note: will need to re-configure Mapping.py if future changes are needed for dataset (Issue 1 left open)
+
+2020-07-02: Moved curation job to "Completed" (M.E.D.)
 
 ---
 
