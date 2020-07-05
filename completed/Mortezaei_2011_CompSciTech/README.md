@@ -8,9 +8,9 @@ CURATION JOB TRAVELER
 
 **Traveler Created:** 2020-06-22
 
-**Traveler Modified:** 2020-06-24
+**Traveler Modified:** 2020-07-02
 
-**Current Status:** *In-Progress*
+**Current Status:** *Completed*
 
 ---
 
@@ -66,6 +66,14 @@ CURATION JOB TRAVELER
 * Identified likely error in template
 * Contacted D.J. to update mapping code
 
+2020-07-02: Manually edited templates for S10-18 (M.E.D.)
+
+2020-07-02: Reattempt upload of S10-18 (M.E.D.)
+* Received "Success!" email for S10 (4:28 PM)
+* Uploaded S11-S18 successfully (4:29-4:32 PM)
+* Note: will need to re-configure Mapping.py if future changes are needed for dataset (Issue 1 left open)
+
+2020-07-02: Moved curation job to "Completed" (M.E.D.)
 
 ---
 
