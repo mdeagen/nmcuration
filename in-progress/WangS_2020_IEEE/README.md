@@ -39,6 +39,11 @@ CURATION JOB TRAVELER
 * `WangS_2020_IEEE_Tidy_Table.xlsx`
 * Currently includes initial data tables for Figures 4,7, and 9
 
+2020-07-02: Finalized Master Template (H.D.)
+* `WangS_2020_IEEE_Master.xlsx`
+* Updated the processing and filler information
+* Finalized and prepared for the code
+
 ---
 
 ## Open Issues
