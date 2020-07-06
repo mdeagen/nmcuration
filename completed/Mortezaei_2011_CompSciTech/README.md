@@ -71,7 +71,7 @@ CURATION JOB TRAVELER
 2020-07-02: Reattempt upload of S10-18 (M.E.D.)
 * Received "Success!" email for S10 (4:28 PM)
 * Uploaded S11-S18 successfully (4:29-4:32 PM)
-* Note: will need to re-configure Mapping.py if future changes are needed for dataset (Issue 1 left open)
+* Note: will need to re-configure Mapping.py if future changes are needed for dataset (Issue 2 left open)
 
 2020-07-02: Moved curation job to "Completed" (M.E.D.)
 
