@@ -64,6 +64,10 @@ CURATION JOB TRAVELER
 * Updated master template to prevent error messages in upload
 * Re-ran the code to update submissions
 
+2020-07-07: Attempted upload of S2 (M.E.D.)
+* Received "Success" email for S2 (10:49 AM)
+* Successfully uploaded S3-S24 (10:50 - 10:57 AM)
+
 
 
 ---
