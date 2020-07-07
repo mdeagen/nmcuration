@@ -64,8 +64,19 @@ CURATION JOB TRAVELER
 * Updated master template to prevent error messages in upload
 * Re-ran the code to update submissions
 
+<<<<<<< HEAD:completed/WangS_2020_IEEE/README.md
 2020-07-07: Moved curation job to completed (H.D.)
 * All uploads were successful and the curation job is now in the completed folder
+=======
+2020-07-07: Attempted upload of S2 (M.E.D.)
+* Received "Success" email for S2 (10:49 AM)
+* Successfully uploaded S3-S24 (10:50 - 10:57 AM)
+
+2020-07-07: Moved curation job to completed (H.D.)
+* The curation job was moved to the completed folder
+
+
+>>>>>>> 898678e8509edfe9ed4545424500e328111595da:in-progress/WangS_2020_IEEE/README.md
 
 ---
 
