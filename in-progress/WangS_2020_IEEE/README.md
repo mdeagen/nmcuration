@@ -44,8 +44,12 @@ CURATION JOB TRAVELER
 * Updated the processing and filler information
 * Finalized and prepared for the code
 
+2020-07-06: Finalized code and created submissions folder (H.D.)
+* Submissions folder created will all 24 samples
 
-
+2020-07-07: Control sample submissions corrected (H.D.)
+* Erased filler information in control sample submissions
+* Control samples should have no filler information
 
 2020-07-07: Attempt upload to NanoMine QA (M.E.D.)
 * Received error message for S1 (see Issue 2)
@@ -55,6 +59,10 @@ CURATION JOB TRAVELER
 
 2020-07-07: Re-attempt upload of S1 (M.E.D.)
 * Received "Success!" message (10:26 AM)
+
+2020-07-07: Master template updated and code re-run (H.D.)
+* Updated master template to prevent error messages in upload
+* Re-ran the code to update submissions
 
 
 
