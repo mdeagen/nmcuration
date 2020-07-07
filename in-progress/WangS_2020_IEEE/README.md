@@ -44,17 +44,54 @@ CURATION JOB TRAVELER
 * Updated the processing and filler information
 * Finalized and prepared for the code
 
+
+
+
+2020-07-07: Attempt upload to NanoMine QA (M.E.D.)
+* Received error message for S1 (see Issue 2)
+
+2020-07-07: Re-attempt upload of S1 (M.E.D.)
+* Received error message related to particle surface treatment (see Issue 3)
+
+2020-07-07: Re-attempt upload of S1 (M.E.D.)
+* Received "Success!" message (10:26 AM)
+
+
+
 ---
 
 ## Open Issues
+
+
+
+---
+
+## Closed Issues
 
 ### Issue 1
 
 > How to represent material state (e.g. Temperature)... and at what point does this become a different "sample"?
 
----
+**Workaround:** Included temperature as final "Heating" step of Processing
 
-## Closed Issues
+### Issue 2
+
+>Unfortunately, your conversion job xmlconv-7zYZYFpxjAFZvzRc4bfC3i was not successful.
+>job result code: 21
+>error messages: exception occurred during mass fraction-volume fraction conversion exception: Traceback (most recent call last): File "/apps/nanomine/src/jobs/XMLCONV/code_src/conversion.py", line 292, in conversion mvc.run() File "/apps/nanomine/src/jobs/XMLCONV/code_src/mfvf.py", line 316, in run self.computeFiller() File "/apps/nanomine/src/jobs/XMLCONV/code_src/mfvf.py", line 77, in computeFiller raise LookupError('[Filler Error] FillerComposition is missing.') LookupError: [Filler Error] FillerComposition is missing.
+
+**Error:** Filler information included for control sample (where there is no filler composition)
+
+**Fix:** Manually removed filler information.
+
+### Issue 3
+>Unfortunately, your conversion job xmlconv-a1LsXomRRiFXcHr4HyuZj2 was not successful.
+>job result code: 21
+>error messages: [XML Schema Validation Error] Element 'ParticleSurfaceTreatment': This element is not expected. Expected is ( ChemicalName )
+
+**Error:** Surface chemical processing info existed, but no filler in control sample
+
+**Fix:** Manually removed surface chemical processing for S1
 
 
 
