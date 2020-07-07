@@ -10,7 +10,7 @@ CURATION JOB TRAVELER
 
 **Traveler Modified:** 2020-07-07
 
-**Current Status:** *In-Progress*
+**Current Status:** *Completed*
 
 ---
 
@@ -64,7 +64,8 @@ CURATION JOB TRAVELER
 * Updated master template to prevent error messages in upload
 * Re-ran the code to update submissions
 
-
+2020-07-07: Moved curation job to completed (H.D.)
+* All uploads were successful and the curation job is now in the completed folder
 
 ---
 
