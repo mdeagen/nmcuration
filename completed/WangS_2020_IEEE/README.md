@@ -80,7 +80,7 @@ CURATION JOB TRAVELER
 
 ## Open Issues
 
->Processing/filler info manually removed for control samples (S1-S4); if making an update to these filesets, also need to update template/mapping code.
+> Processing/filler info manually removed for control samples (S1-S4); if making an update to these filesets, also need to update template/mapping code.
 
 ---
 
