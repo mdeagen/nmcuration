@@ -35,7 +35,7 @@ Here is a conversion table between y-axis labels (probabilities) and the lineari
 | 1 | -4.6 |
 
 
-In the below example, where Y-axis calibration labels are 1 and 99, you would type -4.6 and 1.527 respectively, and keep as a *linear scale*.
+In the below example, where y-axis calibration labels are 1 and 99, you would type -4.6 and 1.527 respectively, and keep as a *linear scale*.
 
 ![Screenshot of Weibull axis calibration](https://github.com/mdeagen/nmcuration/blob/master/weibull/www/calibration.PNG)
 
