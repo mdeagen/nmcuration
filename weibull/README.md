@@ -50,12 +50,12 @@ While these pasted rows are highlighted in Excel, use Data > Text to columns > C
 
 ![Screenshot of converted Weibull data](https://github.com/mdeagen/nmcuration/blob/master/weibull/www/conversion.PNG)
 
-**After confirming that the x-axis units are correct**, copy the converted data into its own separate file (including column headers) and name the file with the corresponding sample ID (e.g., S1_weibull.xlsx).
+**After confirming that the x-axis units are correct**, copy the converted data into its own separate file (including column headers) and name the file with the corresponding sample ID (e.g., `S1_weibull.xlsx`).
 
 
 ## Entering Weibull Data into Schema Excel Template
 
-In sheet "5.3 Properties-Electrical" of the Excel template, ensure that the correct filename is placed in cell C27. When the mapping code creates a sub-directory for a given sample, ensure that a copy of the file (e.g., S1_weibull.xlsx) is included in that sub-directory.
+In sheet "`5.3 Properties-Electrical`" of the Excel template, ensure that the correct filename is placed in cell `C27`. When the mapping code creates a sub-directory for a given sample, ensure that a copy of the file (e.g., S1_weibull.xlsx) is included in that sub-directory.
 
 ![Screenshot of filled-out Excel template](https://github.com/mdeagen/nmcuration/blob/master/weibull/www/template.PNG)
 
