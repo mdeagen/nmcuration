@@ -42,7 +42,7 @@ In the below example, where Y-axis calibration labels are 1 and 99, you will typ
 
 ## Extraction of Data
 
-Once the axes have been calibrated, use auto-extract or manual extraction to capture the x-y data. Copy these data to the clipboard and paste into the X column Weibull_converter.xlsx spreadsheet.
+Once the axes have been calibrated, use auto-extract or manual extraction to capture the x-y data. **Copy these data to the clipboard** and paste into the X column of the `Weibull_converter.xlsx` spreadsheet.
 
 ![Screenshot of extracted data from WebPlotDigitizer](https://github.com/mdeagen/nmcuration/blob/master/weibull/www/view-data.PNG)
 
