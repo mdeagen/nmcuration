@@ -5,16 +5,16 @@ This documentation provides step-by-step instructions on extracting data from We
 
 ## Introduction
 
-Dielectric breakdown tests measure the cumulative probability of failure as a function of electric field. Insulator materials typically break down under electrical stress following a Weibull distribution. As a result, Weibull plots are commonly used in research articles to present experimental data in the Results section.
+Dielectric breakdown tests measure the cumulative probability of failure as a function of electric field. Insulator materials tend to break down under electrical stress in a statistical manner following a Weibull distribution. As a result, Weibull plots are commonly used in research articles to present experimental data in the Results section.
 
-The x-axis in a Weibull plot typically follows a logarithmic scale. The y-axis is scaled by ln(-ln(1-p)), where p is the cumulative probability of failure.
+The x-axis in a Weibull plot (usually) follows a logarithmic scale. The y-axis is scaled by *ln(-ln(1-p))*, where *p* is the cumulative probability of failure.
 
-While the WebPlotDigitizer allows for logarithmic axis calibration, the tool does not include Weibull axis calibration. Therefore, we must extract the data as a **linear** scale, then convert to probability ourselves.
+While the WebPlotDigitizer allows for logarithmic axis calibration, the tool **does not** include Weibull axis calibration. Therefore, we must extract the data as a **linear** scale, then convert to probability ourselves.
 
 
 ## Linear Calibration of Weibull y-axis
 
-Typically, the author will label the y-axis with the probability of failure. In the end, these probabilities are the numeric values we want to extract as a function of the independent variable (Electric field, typically in units of kV/mm).
+In most Weibull plots, the y-axis label is the probability of failure. These values of the dependent variable (cumulative probability) are the numeric values we want to extract as a function of the independent variable (Electric field, typically in units of kV/mm). [**Note:** 1 kV/mm = 1 V/μm = MV/m]
 
 Here is a conversion table between y-axis labels (probabilities) and the linearized value. When calibrating the axis, type the value from the right hand column corresponding to the appropriate label. 
 
@@ -50,7 +50,9 @@ Paste these data into the X column of the `Weibull_converter.xlsx` Excel spreads
 
 ![Screenshot of converted Weibull data](https://github.com/mdeagen/nmcuration/blob/master/weibull/www/conversion.PNG)
 
-**After confirming that the x-axis units are correct**, copy the converted data into its own separate file (including column headers) and name the file with the corresponding sample ID (e.g., `S1_weibull.xlsx`).
+Before proceeding, perform a visual spot-check that the extracted datapoints correspond to what is visually presented in the plot. For example, the above example **fails** because the y-axis appears to have some scaling other than ln(-ln(1-p)).
+
+If the extracted data pass visual inspection, **confirm that the x-axis units are correct** and copy the converted data into its own separate file (including column headers) and name the file with the corresponding sample ID (e.g., `S1_weibull.xlsx`).
 
 
 ## Entering Weibull Data into Schema Excel Template
