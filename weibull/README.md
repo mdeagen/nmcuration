@@ -67,7 +67,7 @@ In sheet "`5.3 Properties-Electrical`" of the Excel template, ensure that the co
 When curating a sample fileset into NanoMine, include the Weibull data as an attachment.
 
 
-## Alternate y-axis Scaling
+# Alternate y-axis Scaling
 
 Some plotting software may distort the y-axis of output plots with an additional power law term, such as ln(-ln(1-p^n)), where n is a positive number. Such scaling is found in Weibull plots by Grabowski *et al.*, where n = 0.1.
 
@@ -97,4 +97,4 @@ An Excel file for converting Grabowski *et al.* where n = 0.1 has been added (`W
 
 ![Screenshot of converted Weibull data](https://github.com/mdeagen/nmcuration/blob/master/weibull/www/altscale1_conversion.PNG)
 
-Upon inspection, these data match those values reported on the plot much more closely.
+Upon inspection, these data match those values reported on the plot much more closely and may be curated into NanoMine.
