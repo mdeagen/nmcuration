@@ -14,7 +14,7 @@ While the WebPlotDigitizer allows for logarithmic axis calibration, the tool doe
 
 ## Linear Calibration of Weibull y-axis
 
-Typically, the author will label the y-axis with the probability of failure. In the end, these probabilities are the numeric values we want to extract as a function of the independent variable (electric field).
+Typically, the author will label the y-axis with the probability of failure. In the end, these probabilities are the numeric values we want to extract as a function of the independent variable (Electric field, typically in units of kV/mm).
 
 Here is a conversion table between y-axis labels (probabilities) and the linearized value. When calibrating the axis, type the value from the right hand column corresponding to the appropriate label. 
 
@@ -35,7 +35,7 @@ Here is a conversion table between y-axis labels (probabilities) and the lineari
 | 1 | -4.6 |
 
 
-In the below example, where Y-axis calibration labels are 1 and 99, you will type -4.6 and 1.527 respectively, and keep as a *linear scale*.
+In the below example, where Y-axis calibration labels are 1 and 99, you would type -4.6 and 1.527 respectively, and keep as a *linear scale*.
 
 ![Screenshot of Weibull axis calibration](https://github.com/mdeagen/nmcuration/blob/master/weibull/www/calibration.PNG)
 
