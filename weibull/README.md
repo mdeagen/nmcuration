@@ -42,11 +42,11 @@ In the below example, where Y-axis calibration labels are 1 and 99, you will typ
 
 ## Extraction of Data
 
-Once the axes have been calibrated, use auto-extract or manual extraction to capture the x-y data. **Copy these data to the clipboard** and paste into the X column of the `Weibull_converter.xlsx` spreadsheet ([link to download](https://github.com/mdeagen/nmcuration/blob/master/weibull/www/Weibull_converter.xlsx)).
+Once the axes have been calibrated, use auto-extract or manual extraction to capture the x-y data. **Copy these data to the clipboard**. 
 
 ![Screenshot of extracted data from WebPlotDigitizer](https://github.com/mdeagen/nmcuration/blob/master/weibull/www/view-data.PNG)
 
-While these pasted rows are highlighted in Excel, use Data > Text to columns > Comma delimited to convert the .csv data into two columns, X and Y. The converted values will appear in the columns to the right.
+Paste these data into the X column of the `Weibull_converter.xlsx` Excel spreadsheet ([link to download](https://github.com/mdeagen/nmcuration/blob/master/weibull/www/Weibull_converter.xlsx)). While the pasted rows are highlighted, use *Data* > *Text to columns* > *Comma delimited* to convert the .csv data into two columns, X and Y. The converted values will appear in the columns to the right, as in the below example.
 
 ![Screenshot of converted Weibull data](https://github.com/mdeagen/nmcuration/blob/master/weibull/www/conversion.PNG)
 
