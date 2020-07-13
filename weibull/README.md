@@ -50,7 +50,7 @@ Paste these data into the X column of the `Weibull_converter.xlsx` Excel spreads
 
 ![Screenshot of converted Weibull data](https://github.com/mdeagen/nmcuration/blob/master/weibull/www/conversion.PNG)
 
-Before proceeding, perform a visual spot-check that the extracted datapoints correspond to what is visually presented in the plot. For example, the above example **fails** because the y-axis appears to have some scaling other than ln(-ln(1-p)).
+Before proceeding, perform a visual spot-check that the extracted datapoints correspond to what is visually presented in the plot. For example, the above example **fails** because the y-axis appears to have some scaling other than ln(-ln(1-p)). **See "Alternate y-axis Scaling" section below.**
 
 If the extracted data pass visual inspection, **confirm that the x-axis units are correct** and copy the converted data into its own separate file (including column headers) and name the file with the corresponding sample ID (e.g., `S1_weibull.xlsx`).
 
@@ -67,5 +67,30 @@ In sheet "`5.3 Properties-Electrical`" of the Excel template, ensure that the co
 When curating a sample fileset into NanoMine, include the Weibull data as an attachment.
 
 
+## Alternate y-axis Scaling
 
+Some plotting software may distort the y-axis of output plots with an additional power law term, such as ln(-ln(1-p^n)), where n is a positive number. Such scaling is found in Weibull plots by Grabowski *et al.*, where n = 0.1.
 
+Below is a table with the linearized y-axis scale values for this alternate scaling.
+
+| Weibull  y-axis label | ln(-ln(1-p^0.1)) |
+|---|---|
+| 99 | 1.932 |
+| 90 | 1.517 |
+| 50 | 0.995 |
+| 10 | 0.458 |
+| 1 | -0.003 |
+
+The linearized scale would use values from this table instead, such as -0.003 and 1.932 shown below.
+
+![Screenshot of Weibull axis calibration](https://github.com/mdeagen/nmcuration/blob/master/weibull/www/altscale1_calibration.PNG)
+
+The acquired data using this alternate scale calibration can then be copied to the clipboard.
+
+![Screenshot of extracted data from WebPlotDigitizer](https://github.com/mdeagen/nmcuration/blob/master/weibull/www/altscale1_view-data.PNG)
+
+Because we added a power term (n), converting back to probabilities will need to account for this term (p = (1-e^(-e^y))^(1/n)). An Excel file for converting Grabowski *et al.* where n = 0.1 has been added (`Weibull_converter_altscale1.xlsx`, download [here](https://github.com/mdeagen/nmcuration/blob/master/weibull/www/Weibull_converter_altscale1.xlsx))
+
+![Screenshot of converted Weibull data](https://github.com/mdeagen/nmcuration/blob/master/weibull/www/altscale1_conversion.PNG)
+
+Upon inspection, these data match those values reported on the plot much more closely.
