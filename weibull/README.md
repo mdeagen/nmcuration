@@ -5,7 +5,7 @@ This documentation provides step-by-step instructions on extracting data from We
 
 ## Introduction
 
-Dielectric breakdown tests measure the cumulative probability of failure as a function of electric field. Insulator materials typically follow a Weibull distribution, and Weibull plots are commonly presented in research articles in the Results section.
+Dielectric breakdown tests measure the cumulative probability of failure as a function of electric field. Insulator materials typically break down under electrical stress following a Weibull distribution. As a result, Weibull plots are commonly used in research articles to present experimental data in the Results section.
 
 The x-axis in a Weibull plot typically follows a logarithmic scale. The y-axis is scaled by ln(-ln(1-p)), where p is the cumulative probability of failure.
 
