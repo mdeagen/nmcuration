@@ -69,19 +69,19 @@ When curating a sample fileset into NanoMine, include the Weibull data as an att
 
 # Alternate y-axis Scaling
 
-Some plotting software may distort the y-axis of output plots with an additional power law term, such as ln(-ln(1-p^n)), where n is a positive number. Such scaling is found in Weibull plots by Grabowski *et al.*, where n = 0.1.
+Some plotting software may distort the y-axis of output plots with an additional power law term, such as ln(-ln(1-p^n)), where n is a positive number. Such scaling is found in Weibull plots by Grabowski *et al.*, where n = 0.08.
 
 Below is a table with the linearized y-axis scale values for this alternate scaling.
 
-| Weibull  y-axis label | ln(-ln(1-p^0.1)) |
+| Weibull  y-axis label | ln(-ln(1-p^0.08)) |
 |---|---|
-| 99 | 1.932 |
-| 90 | 1.517 |
-| 50 | 0.995 |
-| 10 | 0.458 |
-| 1 | -0.003 |
+| 99 | 1.964 |
+| 90 | 1.565 |
+| 50 | 1.072 |
+| 10 | 0.578 |
+| 1 | 0.163 |
 
-The linearized scale would use values from this table instead, such as -0.003 and 1.932 shown below.
+The linearized scale would use values from this table instead, such as 0.163 and 1.964 shown below.
 
 ![Screenshot of Weibull axis calibration](https://github.com/mdeagen/nmcuration/blob/master/weibull/www/altscale1_calibration.PNG)
 
@@ -93,7 +93,7 @@ Because we added a power term (n), converting back to probabilities will need to
 
 >p = (1 - e^(-e^y))^(1/n)).
 
-An Excel file for converting Grabowski *et al.* where n = 0.1 has been added to this repo (`Weibull_converter_altscale1.xlsx`, download [here](https://github.com/mdeagen/nmcuration/blob/master/weibull/www/Weibull_converter_altscale1.xlsx)).
+An Excel file for converting Grabowski *et al.* where n = 0.08 has been added to this repo (`Weibull_converter_altscale1.xlsx`, download [here](https://github.com/mdeagen/nmcuration/blob/master/weibull/www/Weibull_converter_altscale1.xlsx)).
 
 ![Screenshot of converted Weibull data](https://github.com/mdeagen/nmcuration/blob/master/weibull/www/altscale1_conversion.PNG)
 
