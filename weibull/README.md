@@ -91,7 +91,7 @@ The acquired data using this alternate scale calibration can then be copied to t
 
 Because we added a power term (n), converting back to probabilities will need to account for this term:
 
->p = (1-e^(-e^y))^(1/n)).
+>p = (1 - e^(-e^y))^(1/n)).
 
 An Excel file for converting Grabowski *et al.* where n = 0.1 has been added to this repo (`Weibull_converter_altscale1.xlsx`, download [here](https://github.com/mdeagen/nmcuration/blob/master/weibull/www/Weibull_converter_altscale1.xlsx)).
 
