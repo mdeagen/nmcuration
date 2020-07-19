@@ -8,7 +8,7 @@ CURATION JOB TRAVELER
 
 **Traveler Created:** 2020-06-19
 
-**Traveler Modified:** 2020-06-19
+**Traveler Modified:** 2020-07-19
 
 **Current Status:** *Wishlist*
 
@@ -42,7 +42,8 @@ CURATION JOB TRAVELER
 * Added Issue 1 related to Weibull raw data extraction
 * Added Issue 2 related to curation of multiple Xray characterization datasets
 
-
+2020-07-19: Included Weibull Conversion File (H.D.)
+* Added excel file with converted data for Weibull plot(s)
 
 
 ---
