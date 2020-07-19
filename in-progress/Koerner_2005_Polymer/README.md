@@ -58,6 +58,9 @@ CURATION JOB TRAVELER
 
 2020-06-15: Moved curation job to "In-Progress" (M.E.D.)
 
+2020-07-17: Updated Tidy Table and added "Additional Data" (H.D.)
+* Added new folder with Additional Data
+* Updated Tidy Table with additional data file names included
 
 
 ---
