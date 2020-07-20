@@ -8,7 +8,7 @@ CURATION JOB TRAVELER
 
 **Traveler Created:** 2020-06-18
 
-**Traveler Modified:** 2020-06-18
+**Traveler Modified:** 2020-07-20
 
 **Current Status:** *Wishlist*
 
@@ -16,7 +16,7 @@ CURATION JOB TRAVELER
 
 ## Bibliographic Info
 
-* DOI: 10.1109/TDEI.2020.008606
+* DOI: 10.1109/TDEI.2020.008612
 
 ---
 
@@ -36,6 +36,8 @@ CURATION JOB TRAVELER
 * Added datasets of interest
 * Added Issue 1 related to schema
 * Added Issue 2 related to Weibull raw data extraction
+
+2020-07-20: Fixed DOI in Traveler (M.E.D.)
 
 
 ---
