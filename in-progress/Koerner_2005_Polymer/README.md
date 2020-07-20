@@ -62,6 +62,10 @@ CURATION JOB TRAVELER
 * Added new folder with Additional Data
 * Updated Tidy Table with additional data file names included
 
+2020-07-20: Made updates to tidy table (M.E.D.)
+* Fig 3 data - need to add weight% or vol%
+* Fig 5 - each point should be its own sample (samples at diff temps? 48 and 135)
+* Fig 11 - x-axis is elongation
 
 ---
 
