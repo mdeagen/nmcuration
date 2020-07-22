@@ -22,7 +22,6 @@ CURATION JOB TRAVELER
 
 ## Datasets of Interest
 
-NOTE: particles have surfact treatment (γ-methacryloxypropyl trimethoxy silane)
 * Table 1: Particle diameter for different types of SiO2 fillers used in study
 * Fig 2: DSC data
 * Table 2: Tg, Tm, Degree of crystallization (from first heating, see Issue 1)
