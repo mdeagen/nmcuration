@@ -23,8 +23,7 @@ CURATION JOB TRAVELER
 ## Datasets of Interest
 
 * Table 1: Tonset of degradation
-* Fig 5: DSC curves (arbitrary y-axis placement OK)
-* Fig 6: Tg vs. SiO2 content (wt%)
+* Fig 5: DSC curves (arbitrary y-axis placement OK) + Tg (labels) and wt% (see legend)
 
 
 ---
@@ -34,7 +33,8 @@ CURATION JOB TRAVELER
 2020-07-22: Added curation job to "Wishlist" (M.E.D.)
 * Added list of datasets of interest
 
-
+2020-07-24: Removed Fig 6 from datasets of interest (M.E.D.)
+* All info in Fig 6 is contained in Fig 5 (labels & legend)
 
 
 ---
