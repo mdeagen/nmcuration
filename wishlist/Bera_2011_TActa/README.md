@@ -34,7 +34,8 @@ CURATION JOB TRAVELER
 2020-07-22: Added curation job to "Wishlist" (M.E.D.)
 * Added list of datasets of interest
 
-
+2020-07-24: Added Tidy Table to Repo (H.D.)
+* Included Tidy Table in repo and included "Separate Datafiles" file as well
 
 
 ---
