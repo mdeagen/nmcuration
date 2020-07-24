@@ -36,7 +36,6 @@ CURATION JOB TRAVELER
 2020-07-24: Added Tidy Table to Repo (H.D.)
 * Included Tidy Table in repo and included "Separate Datafiles" file as well
 
-=======
 2020-07-24: Removed Fig 6 from datasets of interest (M.E.D.)
 * All info in Fig 6 is contained in Fig 5 (labels & legend)
 
