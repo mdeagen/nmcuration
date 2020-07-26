@@ -8,7 +8,7 @@ CURATION JOB TRAVELER
 
 **Traveler Created:** 2020-06-18
 
-**Traveler Modified:** 2020-07-20
+**Traveler Modified:** 2020-07-26
 
 **Current Status:** *Wishlist*
 
@@ -39,6 +39,8 @@ CURATION JOB TRAVELER
 
 2020-07-20: Fixed DOI in Traveler (M.E.D.)
 
+2020-07-24: Added Weibull Plot Converter (H.D.)
+* Included new excel file with all Weibull plot values converted
 
 ---
 
