@@ -45,7 +45,9 @@ CURATION JOB TRAVELER
 * Added Issue 1 related to schema and curation
 * Added Issue 2 related to Weibull raw data extraction
 
-
+2020-07-24: Added Weibull Conversion Excel Sheet (H.D.)
+* Included the Weibull conversions for Figure 3, S3, S4, and S5
+* Note: Most figures had unbalanced amounts of data
 
 
 ---
