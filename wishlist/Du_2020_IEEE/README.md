@@ -8,7 +8,7 @@ CURATION JOB TRAVELER
 
 **Traveler Created:** 2020-06-11
 
-**Traveler Modified:** 2020-06-11
+**Traveler Modified:** 2020-07-26
 
 **Current Status:** *Wishlist*
 
@@ -35,6 +35,8 @@ CURATION JOB TRAVELER
 * Added datasets of interest
 * Added Issue 1 related to schema
 
+2020-07-24: Added Weibull Conversion Excel Sheet (H.D.)
+* Included document with Weibull converisons
 
 ---
 
