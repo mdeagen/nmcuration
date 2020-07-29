@@ -8,7 +8,7 @@ CURATION JOB TRAVELER
 
 **Traveler Created:** 2020-07-22
 
-**Traveler Modified:** 2020-07-22
+**Traveler Modified:** 2020-07-29
 
 **Current Status:** *Wishlist*
 
@@ -39,7 +39,9 @@ CURATION JOB TRAVELER
 2020-07-24: Removed Fig 6 from datasets of interest (M.E.D.)
 * All info in Fig 6 is contained in Fig 5 (labels & legend)
 
-
+2020-07-29: Added the code and Submissions to repo (H.D.)
+* Included the python code
+* Added "Submissions" folder
 
 ---
 
