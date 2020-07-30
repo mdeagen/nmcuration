@@ -13,6 +13,8 @@ import pandas as pd
 
 original_path = os.getcwd()
 
+arr = os.listdir('.')
+print(arr)
 # %% Load spreadsheet with data for all samples
 
 xl = pd.ExcelFile(original_path + '/Bera_2011_TActa_Tidy_Table.xlsx')
@@ -67,6 +69,14 @@ def get_glass(sample):
             break
     return df['Glass Transition Temp'][k]
 
+def get_data(sample):
+    matrix = df['matrix'][sample]
+    for i, mat in enumerate(df['chemical name']):
+        if mat == matrix:
+            k = i
+            break
+    return df['Datafiles'][k]
+
 # %% Mapping
 
 def map_data_origin(workbook, sample):  # fill in cells in '1. Data Origin' sheet for a sample
@@ -76,18 +86,19 @@ def map_data_origin(workbook, sample):  # fill in cells in '1. Data Origin' shee
 
 def map_wt(workbook, sample):  # fill in cells in '2. Material Types' sheet for a sample
     sheet = workbook['2. Material Types']
-    sheet["C46"] = df['wt'][sample]
-
-
-def map_temp(workbook, sample):  # fill in cells in '3. Synthesis and Processing' sheet for a sample
-    sheet = workbook['3. Synthesis and Processing']
-    sheet["B49"] = df['Onset Temp'][sample]
-    sheet["B56"] = df['DTG'][sample]
+    temp = df['wt'][sample]
+    if temp > 0:
+        sheet["C46"] = df['wt'][sample]
+        sheet["B27"] = "Silica"
+        sheet["B31"] = "Evonik (Degussa Chemicals), Germany"
+        sheet["B32"] = "AEROSIL R812"
 
 
 def map_glass(workbook, sample):  # fill in cells in '5.4 Properties-Thermal' sheet for a sample
     sheet = workbook['5.4 Properties-Thermal']
+    sheet["B6"] = df['Datafiles'][sample]
     sheet["C26"] = df['Glass Transition Temp'][sample]
+    sheet["C24"] = df['Onset Temp'][sample]
 
 
 def map_loss(workbook, sample):  # fill in cells in '5.5 Properties-Volumetric' sheet for a sample
@@ -104,13 +115,20 @@ def mapping():  # Fill in every cell for every sample
 
         map_data_origin(workbook, i)
         map_wt(workbook, i)
-        map_temp(workbook, i)
         map_glass(workbook, i)
         map_loss(workbook, i)
 
         sample = 'S' + str(i + 1)
         os.mkdir(sample)
         workbook.save(filename=sample + '/S' + str(i + 1) + '_template.xlsx')
+
+
+    os.chdir(original_path)
+    for i in range(nb_sample):
+        files = [df['Datafiles'][i]]
+        for f in files:
+            shutil.copy(f, original_path + '/SUBMISSION' + '/S' + str(i + 1))
+
 
 
 # %% Launch program

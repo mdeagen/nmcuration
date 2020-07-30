@@ -8,7 +8,7 @@ CURATION JOB TRAVELER
 
 **Traveler Created:** 2020-07-22
 
-**Traveler Modified:** 2020-07-29
+**Traveler Modified:** 2020-07-30
 
 **Current Status:** *Wishlist*
 
@@ -42,6 +42,10 @@ CURATION JOB TRAVELER
 2020-07-29: Added the code and Submissions to repo (H.D.)
 * Included the python code
 * Added "Submissions" folder
+
+2020-07-30: Finalized code and Submissions (H.D.)
+* Fixed bugs with the original code
+* Added the "Separate Datafiles" to the "SUBMISSION" folders
 
 ---
 
