@@ -47,10 +47,19 @@ CURATION JOB TRAVELER
 * Fixed bugs with the original code
 * Added the "Separate Datafiles" to the "SUBMISSION" folders
 
+2020-07-30: Attempted upload of S1 to QA (M.E.D.)
+* Bug in QA uploader (See Issue 1)
+* Notified T.F. and A.J.
+
 ---
 
 ## Open Issues
 
+### Issue 1
+> Curation uploader not accepting `.xlsx` file extensions by default
+> If changed to "All Files (.*)" the .xlsx will not upload
+
+**Error:** System should accept data files in .xlsx format
 
 ---
 
