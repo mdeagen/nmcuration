@@ -87,6 +87,9 @@ CURATION JOB TRAVELER
 * thermoplastic --> elastomer (paper lists as "thermoplastic elastomer" so there is no right answer; chose elastomer because thermoplastic is used here as a modifier of elastomer type)
 * copolymer --> homopolymer
 
+2020-07-31: Re-ran Python code (M.E.D.)
+* stress-strain files for S12-S16 not copied from "/Additional Data/Stress-Elongation/" Directory?
+
 ---
 
 ## Open Issues
