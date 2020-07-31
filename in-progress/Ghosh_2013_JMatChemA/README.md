@@ -36,7 +36,7 @@ CURATION JOB TRAVELER
 
 2020-06-22: Moved to "In-Progress" (M.E.D.)
 
-
+2020-07-31: Submission files uploaded as well as mapping code
 ---
 
 ## Open Issues
