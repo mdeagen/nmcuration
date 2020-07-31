@@ -67,6 +67,10 @@ CURATION JOB TRAVELER
 * Fig 5 - each point should be its own sample (samples at diff temps? 48 and 135)
 * Fig 11 - x-axis is elongation
 
+2020-07-31: Created Issue 1 related to Fig 3 (M.E.D.)
+* Attempted to find wt% labels for datasets among raw data
+* Closed Issue 1
+
 ---
 
 ## Open Issues
@@ -77,6 +81,11 @@ CURATION JOB TRAVELER
 
 ## Closed Issues
 
+### Issue 1
+
+> Fig 3 stress-strain curves are not labeled with the respective samples. Raw data include "1%", "1%cb", and "1%repeat" data. "1%" and "1%repeat" show lower stress-strain curve than neat matrix, however "1%cb" supports the trend of increasing stress-strain with increasing volume fraction.
+
+**Workaround:** Curate Fig 3 data as presented, and assume labels of (0 vol%, 0.57 vol%, 2.9 vol%, 5.9 vol%, 10.2 vol%) apply to the curves in increasing order as implied by the caption.
 
 
 ---
