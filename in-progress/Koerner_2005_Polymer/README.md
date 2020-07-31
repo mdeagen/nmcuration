@@ -71,18 +71,21 @@ CURATION JOB TRAVELER
 * Attempted to find wt% labels for datasets among raw data
 * Closed Issue 1
 
-2020-07-31: Updated Master Template
+2020-07-31: Updated Master Template (H.D.)
 * Included finishing touches on Synthesis and Processing
 * Updated Filler information
 
-2020-07-31: Finished python code
+2020-07-31: Finished python code (H.D.)
 * Uploaded the working python code
 * Ran without error and created SUBMISSION folder
 
-2020-07-31: Uploaded SUBMISSION
+2020-07-31: Added SUBMISSION (H.D.)
 * Uploaded SUBMISSION folder with sample subfolders
 * Should be finalized sample submissions
 
+2020-07-31: Made edits to master template (M.E.D.)
+* thermoplastic --> elastomer (paper lists as "thermoplastic elastomer" so there is no right answer; chose elastomer because thermoplastic is used here as a modifier of elastomer type)
+* copolymer --> homopolymer
 
 ---
 
