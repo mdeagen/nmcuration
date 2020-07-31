@@ -8,7 +8,7 @@ CURATION JOB TRAVELER
 
 **Traveler Created:** 2020-06-05
 
-**Traveler Modified:** 2020-07-19
+**Traveler Modified:** 2020-07-31
 
 **Current Status:** *In-Progress*
 
@@ -70,6 +70,19 @@ CURATION JOB TRAVELER
 2020-07-31: Created Issue 1 related to Fig 3 (M.E.D.)
 * Attempted to find wt% labels for datasets among raw data
 * Closed Issue 1
+
+2020-07-31: Updated Master Template
+* Included finishing touches on Synthesis and Processing
+* Updated Filler information
+
+2020-07-31: Finished python code
+* Uploaded the working python code
+* Ran without error and created SUBMISSION folder
+
+2020-07-31: Uploaded SUBMISSION
+* Uploaded SUBMISSION folder with sample subfolders
+* Should be finalized sample submissions
+
 
 ---
 
