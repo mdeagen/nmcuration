@@ -22,13 +22,16 @@ CURATION JOB TRAVELER
 
 ## Datasets of Interest
 
-* 
+NOTE: 3 "samples" total: Neat resin (control), sub-micron BTO, nano-sized BTO
+* Fig 7: Weibull data
 
 ---
 
 ## Events
 
 2020-06-05: Added curation job to "Wishlist" (M.E.D.)
+
+2020-07-31: Added dataset of interest (M.E.D.)
 
 
 
