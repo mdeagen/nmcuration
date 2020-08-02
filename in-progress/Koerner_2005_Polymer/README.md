@@ -90,6 +90,9 @@ CURATION JOB TRAVELER
 2020-07-31: Re-ran Python code (M.E.D.)
 * stress-strain files for S12-S16 not copied from "/Additional Data/Stress-Elongation/" Directory?
 
+2020-07-31: Resubmit SUBMISSION (H.D.)
+* Resubmit submissions with "/Additional Data/Stress-Elongation/" included
+
 ---
 
 ## Open Issues
