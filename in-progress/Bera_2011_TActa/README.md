@@ -51,21 +51,34 @@ CURATION JOB TRAVELER
 * Bug in QA uploader (See Issue 1)
 * Notified T.F. and A.J.
 
+2020-07-31: T.F. and A.J. identified issue and reverted changes to NanoMine QA Uploader
+* Closed Issue 1
+
+2020-08-05: Attempted upload of S1 (M.E.D.)
+* Received error 9:39 AM (see Issue 2)
+
 ---
 
 ## Open Issues
 
-### Issue 1
-> Curation uploader not accepting `.xlsx` file extensions by default
-> If changed to "All Files (.*)" the .xlsx will not upload
+### Issue 2
+>Unfortunately, your conversion job xmlconv-cjxFmSiUauanisVNG1H9FE was not successful.
+>job result code: 21
+>error messages: [XML Schema Validation Error] Element 'Polydispersity': 'Polydispersity index (Mw/Mn) of 2.5' is not a valid value of the atomic type 'PolydispersityType'
 
-**Error:** System should accept data files in .xlsx format
+**Error:** Sheet "2. Material Types" of `Bera_2011_Master_Template.xlsx` includes "Polydispersity index (Mw/Mn) of 2.5" and instead should just be "2.5" in cell B16.
+**Fix:** 
 
 ---
 
 ## Closed Issues
 
+### Issue 1
+> Curation uploader not accepting `.xlsx` file extensions by default
+> If changed to "All Files (.*)" the .xlsx will not upload
 
+**Error:** System should accept data files in .xlsx format (error was related to updates to xml-conv that were intended only for MCR tools updates)
+**Fix:** Implemented
 
 ---
 
