@@ -8,9 +8,9 @@ CURATION JOB TRAVELER
 
 **Traveler Created:** 2020-07-22
 
-**Traveler Modified:** 2020-07-30
+**Traveler Modified:** 2020-08-05
 
-**Current Status:** *Wishlist*
+**Current Status:** *Completed*
 
 ---
 
@@ -56,6 +56,15 @@ CURATION JOB TRAVELER
 
 2020-08-05: Attempted upload of S1 (M.E.D.)
 * Received error 9:39 AM (see Issue 2)
+
+2020-08-05: Attempted upload of S1 (H.D.)
+* Recieved success message
+* Moving on to upload the rest
+
+2020-08-05: Uploaded all samples successfully (H.D.)
+* All samples were successfully uploaded to NanoMine
+
+2020-08-05: Added curation job to "Completed" (H.D.)
 
 ---
 

@@ -89,7 +89,7 @@ def map_wt(workbook, sample):  # fill in cells in '2. Material Types' sheet for 
     temp = df['wt'][sample]
     if temp > 0:
         sheet["C46"] = df['wt'][sample]
-        sheet["B27"] = "Silica"
+        sheet["B28"] = "Silica"
         sheet["B31"] = "Evonik (Degussa Chemicals), Germany"
         sheet["B32"] = "AEROSIL R812"
 
