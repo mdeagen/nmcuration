@@ -8,7 +8,7 @@ CURATION JOB TRAVELER
 
 **Traveler Created:** 2020-06-05
 
-**Traveler Modified:** 2020-07-31
+**Traveler Modified:** 2020-08-05
 
 **Current Status:** *In-Progress*
 
