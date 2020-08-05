@@ -10,7 +10,7 @@ CURATION JOB TRAVELER
 
 **Traveler Modified:** 2020-08-05
 
-**Current Status:** *In-Progress*
+**Current Status:** *Completed*
 
 ---
 
@@ -92,6 +92,18 @@ CURATION JOB TRAVELER
 
 2020-07-31: Resubmit SUBMISSION (H.D.)
 * Resubmit submissions with "/Additional Data/Stress-Elongation/" included
+
+2020-08-05: Uploaded S1-S16 (H.D.)
+* Successfully uploaded S1-S16
+
+2020-08-05: Attempted upload of S1 fileset to NanoMine QA (H.D.)
+* Unsuccessful at Sample 17
+* error messages: [XML Schema Validation Error] Element 'value': [facet 'maxInclusive'] The value '1.358818459400405' is greater than the maximum value allowed ('1') [XML Schema Validation Error] Element 'value': '1.358818459400405' is not a valid value of the atomic type 'PercentageValueType'
+
+2020-08-05: Uploaded remaining samples S17-S29 (H.D.)
+* Successfully uploaded remaining samples
+
+2020-08-05: Moved job to "Completed" (H.D.)
 
 ---
 
