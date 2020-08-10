@@ -47,10 +47,10 @@ CURATION JOB TRAVELER
 * Added this file, successfully ran code to re-generate sample files
 
 2020-08-10: Re-attempt upload of S1 (M.E.D.)
-* Received "success" email 10:06 AM
+* Received "success" email for S1 (10:06 AM)
 
 2020-08-10: Attempted upload of S2-S7 (M.E.D.)
-* Received error message for S2 10:07 AM (see Issue 2)
+* Received error message for S2 (10:07 AM) (see Issue 2)
 * Contacted T.F. requesting error log for xmlconv-fjbHREHyEZHRdzavP6bzHu
 
 2020-08-10: Received error log from T.F. (M.E.D.)
@@ -61,7 +61,7 @@ CURATION JOB TRAVELER
 * Re-ran Mapping.py to generate sample template files
 
 2020-08-10: Re-attempt upload of S2-S7 (M.E.D.)
-* Received same error message 2:16 PM
+* Received same error message (2:16 PM)
 * Observed same problem special characters in `S2_template.xlsx`
 * Earlier, had removed special characters from `master_template_APS.xlsx` and `master_template_APS_aa.xlsx`, but NOT `master_template.xlsx`
 * Updated `master_template.xlsx`
@@ -69,7 +69,8 @@ CURATION JOB TRAVELER
 * Confirmed special characters no longer appearing in `S2_template.xlsx`
 
 2020-08-10: Re-attempt upload of S2-S7 (M.E.D.)
-* Received "success" email 2:23 PM
+* Received "success" email for S2 (2:23 PM)
+* Successfully uploaded S3-S7 (2:26 PM - 2:27 PM)
 
 ---
 
