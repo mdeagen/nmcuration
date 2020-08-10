@@ -10,7 +10,7 @@ CURATION JOB TRAVELER
 
 **Traveler Modified:** 2020-08-10
 
-**Current Status:** *In-Progress*
+**Current Status:** *Completed*
 
 ---
 
@@ -71,6 +71,8 @@ CURATION JOB TRAVELER
 2020-08-10: Re-attempt upload of S2-S7 (M.E.D.)
 * Received "success" email for S2 (2:23 PM)
 * Successfully uploaded S3-S7 (2:26 PM - 2:27 PM)
+
+2020-08-10: Moved curation job to "Completed" (M.E.D.)
 
 ---
 
