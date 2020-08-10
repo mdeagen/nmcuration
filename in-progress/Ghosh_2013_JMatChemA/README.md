@@ -41,10 +41,21 @@ CURATION JOB TRAVELER
 2020-08-10: Attempted upload of S1 (M.E.D.)
 * Received error message 9:37 AM (see Issue 1)
 
+2020-08-10: Edited Mapping.py code to fix Issue 1 (M.E.D.)
+* Changed filename output in lines 71 and 74
+* Error running code (missing "G'(T).xlsx" template file for storage modulus data)
+* Added this file, successfully ran code to re-generate sample files
+
 
 ---
 
 ## Open Issues
+
+
+
+---
+
+## Closed Issues
 
 ### Issue 1
 >Unfortunately, your conversion job xmlconv-qcYkCyT9w5j96REQuy69bW was not successful.
@@ -52,13 +63,7 @@ CURATION JOB TRAVELER
 >error messages: [File Error] Missing file! Please include "S1/storage_modulus.xlsx" in your uploads.
 
 **Error:** Filename filed in Excel template includes directory
-**Fix:** 
-
----
-
-## Closed Issues
-
-
+**Fix:** Update Mapping.py with filename handling e.g. 'S1_storage_modulus.xlsx'
 
 ---
 
