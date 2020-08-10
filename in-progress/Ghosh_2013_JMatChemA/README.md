@@ -53,17 +53,29 @@ CURATION JOB TRAVELER
 * Received error message for S2 10:07 AM (see Issue 2)
 * Contacted T.F. requesting error log for xmlconv-fjbHREHyEZHRdzavP6bzHu
 
+2020-08-10: Received error log from T.F. (M.E.D.)
+* Identified possible issue with special characters that may have caused error in Issue 1:
+>mixture was then heated to 250°C under anitrogen atmosphere for the esterication phase.
+>temperature was raised to 280C in the polycondensationreactor under vacuum to form a high molecular weight polyester
+* Replaced special characters  and  in master templates
+* Re-ran Mapping.py to generate sample template files
+
+2020-08-10: Re-attempt upload of S2-S7 (M.E.D.)
+* Received same error message 2:16 PM
+* Observed same problem special characters in `S2_template.xlsx`
+* Earlier, had removed special characters from `master_template_APS.xlsx` and `master_template_APS_aa.xlsx`, but NOT `master_template.xlsx`
+* Updated `master_template.xlsx`
+* Re-ran Mapping.py
+* Confirmed special characters no longer appearing in `S2_template.xlsx`
+
+2020-08-10: Re-attempt upload of S2-S7 (M.E.D.)
+* Received "success" email 2:23 PM
+
 ---
 
 ## Open Issues
 
-### Issue 2
->Unfortunately, your conversion job xmlconv-fjbHREHyEZHRdzavP6bzHu was not successful.
->job result code: 21
->error messages: [Conversion Error] Oops! The conversion cannot be finished! Please contact the administrator.
 
-**Error:** 
-**Fix:** 
 
 ---
 
@@ -76,6 +88,14 @@ CURATION JOB TRAVELER
 
 **Error:** Filename filed in Excel template includes directory
 **Fix:** Update Mapping.py with filename handling e.g. 'S1_storage_modulus.xlsx'
+
+### Issue 2
+>Unfortunately, your conversion job xmlconv-fjbHREHyEZHRdzavP6bzHu was not successful.
+>job result code: 21
+>error messages: [Conversion Error] Oops! The conversion cannot be finished! Please contact the administrator.
+
+**Error:** Related to "lxml.etree.XMLSyntaxError: PCDATA invalid Char value 14, line 1, column 2862"
+**Fix:** Removed problematic special characters from Synthesis and Processing descriptions ( and )
 
 ---
 
