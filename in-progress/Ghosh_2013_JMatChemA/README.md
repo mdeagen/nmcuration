@@ -48,7 +48,10 @@ CURATION JOB TRAVELER
 
 2020-08-10: Re-attempt upload of S1 (M.E.D.)
 * Received "success" email 10:06 AM
-* Attempted upload of S2, received error message (see Issue 2)
+
+2020-08-10: Attempted upload of S2-S7 (M.E.D.)
+* Received error message for S2 10:07 AM (see Issue 2)
+* Contacted T.F. requesting error log for xmlconv-fjbHREHyEZHRdzavP6bzHu
 
 ---
 
