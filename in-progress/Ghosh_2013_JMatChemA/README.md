@@ -46,12 +46,21 @@ CURATION JOB TRAVELER
 * Error running code (missing "G'(T).xlsx" template file for storage modulus data)
 * Added this file, successfully ran code to re-generate sample files
 
+2020-08-10: Re-attempt upload of S1 (M.E.D.)
+* Received "success" email 10:06 AM
+* Attempted upload of S2, received error message (see Issue 2)
 
 ---
 
 ## Open Issues
 
+### Issue 2
+>Unfortunately, your conversion job xmlconv-fjbHREHyEZHRdzavP6bzHu was not successful.
+>job result code: 21
+>error messages: [Conversion Error] Oops! The conversion cannot be finished! Please contact the administrator.
 
+**Error:** 
+**Fix:** 
 
 ---
 
