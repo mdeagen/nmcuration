@@ -68,10 +68,10 @@ def map_rheology(workbook,sample):
     sheet['B2'] = df["G'(30)"][sample]
     sheet['B3'] = df["G'(150)"][sample]
     sheet['B4'] = df["G'(200)"][sample]
-    filename = df['sample no.'][sample]+'/storage_modulus.xlsx'
+    filename = df['sample no.'][sample]+'/'+df['sample no.'][sample]+'_storage_modulus.xlsx' # added sample prefix to filename (M.D.)
     wb.save(filename=filename)
     sheet = workbook['5.6 Properties-Rheological']
-    sheet['C14'] = filename
+    sheet['C14'] = df['sample no.'][sample]+'_storage_modulus.xlsx' # added sample prefix to filename (M.D.)
 
 def copy_image(sample): 
     file = str(df['image microstructure file'][sample])
