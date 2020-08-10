@@ -8,7 +8,7 @@ CURATION JOB TRAVELER
 
 **Traveler Created:** 2020-06-22
 
-**Traveler Modified:** 2020-06-22
+**Traveler Modified:** 2020-08-10
 
 **Current Status:** *In-Progress*
 
@@ -36,11 +36,23 @@ CURATION JOB TRAVELER
 
 2020-06-22: Moved to "In-Progress" (M.E.D.)
 
-2020-07-31: Submission files uploaded as well as mapping code
+2020-07-31: Submission files uploaded as well as mapping code (D.J.)
+
+2020-08-10: Attempted upload of S1 (M.E.D.)
+* Received error message 9:37 AM (see Issue 1)
+
+
 ---
 
 ## Open Issues
 
+### Issue 1
+>Unfortunately, your conversion job xmlconv-qcYkCyT9w5j96REQuy69bW was not successful.
+>job result code: 21
+>error messages: [File Error] Missing file! Please include "S1/storage_modulus.xlsx" in your uploads.
+
+**Error:** Filename filed in Excel template includes directory
+**Fix:** 
 
 ---
 
