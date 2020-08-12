@@ -13,8 +13,6 @@ import pandas as pd
 
 original_path = os.getcwd()
 
-arr = os.listdir('.')
-print(arr)
 # %% Load spreadsheet with data for all samples
 
 xl = pd.ExcelFile(original_path + '/L112_Tuncer_TT.xlsx')
@@ -28,21 +26,13 @@ def create_dir(name):  # creates a directory and change the location to it
     os.mkdir(name)
     os.chdir(path + '/' + name)
 
-def get_wt(sample):
+def get_control(sample):
     matrix = df['matrix'][sample]
     for i, mat in enumerate(df['chemical name']):
         if mat == matrix:
             k = i
             break
-    return df['wt'][k]
-
-def get_temp(sample):
-    matrix = df['matrix'][sample]
-    for i, mat in enumerate(df['chemical name']):
-        if mat == matrix:
-            k = i
-            break
-    return df['Onset Temp'][k]
+    return df['Control'][k]
 
 def get_data(sample):
     matrix = df['matrix'][sample]
@@ -50,7 +40,7 @@ def get_data(sample):
         if mat == matrix:
             k = i
             break
-    return df['Datafiles'][k]
+    return df['Datafile'][k]
 
 # %% Mapping
 
@@ -60,22 +50,17 @@ def map_data_origin(workbook, sample):  # fill in cells in '1. Data Origin' shee
     sheet["B6"] = "S1"
 
 
-def map_wt(workbook, sample):  # fill in cells in '2. Material Types' sheet for a sample
+def map_control(workbook, sample):  # fill in cells in '2. Material Types' sheet for a sample
     sheet = workbook['2. Material Types']
-    temp = df['wt'][sample]
-    if temp > 0:
-        sheet["C46"] = df['wt'][sample]
-        sheet["B28"] = "Silica"
-        sheet["B31"] = "Evonik (Degussa Chemicals), Germany"
-        sheet["B32"] = "AEROSIL R812"
+    temp = df['Sample'][sample]
+    if temp != "S1":
+        sheet["B27"] = "The filler particles are barium titanate and calcium copper titanate. In addition, BTO particles were prepared using conventional solid-state synthesis at Oak Ridge National Laboratory for comparison"
+        sheet["B28"] = "Barium titanate"
+        sheet["B30"] = "BTO"
 
-
-def map_loss(workbook, sample):  # fill in cells in '5.3 Properties-Electrical' sheet for a sample
+def map_data(workbook, sample):  # fill in cells in '5.3 Properties-Electrical' sheet for a sample
     sheet = workbook['5.3 Properties-Electrical']
-    sheet["C25"] = df['Breakdown'][sample]
-    sheet["C27"] = df["Datafile"][sample]
-    sheet["B29"] = df['Breakdown'][sample]
-
+    sheet["C27"] = df['Datafile'][sample]
 
 
 def mapping():  # Fill in every cell for every sample
@@ -86,9 +71,8 @@ def mapping():  # Fill in every cell for every sample
         workbook = load_workbook(filename=file)
 
         map_data_origin(workbook, i)
-        map_wt(workbook, i)
-        map_glass(workbook, i)
-        map_loss(workbook, i)
+        map_control(workbook, i)
+        map_data(workbook, i)
 
         sample = 'S' + str(i + 1)
         os.mkdir(sample)
@@ -97,7 +81,7 @@ def mapping():  # Fill in every cell for every sample
 
     os.chdir(original_path)
     for i in range(nb_sample):
-        files = [df['Datafiles'][i]]
+        files = [df['Datafile'][i]]
         for f in files:
             shutil.copy(f, original_path + '/SUBMISSION' + '/S' + str(i + 1))
 
