@@ -8,9 +8,9 @@ CURATION JOB TRAVELER
 
 **Traveler Created:** 2020-06-05
 
-**Traveler Modified:** 2020-06-05
+**Traveler Modified:** 2020-08-12
 
-**Current Status:** *Wishlist*
+**Current Status:** *In Progress*
 
 ---
 
@@ -33,8 +33,21 @@ NOTE: 3 "samples" total: Neat resin (control), sub-micron BTO, nano-sized BTO
 
 2020-07-31: Added dataset of interest (M.E.D.)
 
+2020-08-08: Added Tidy Table and Master Template to repo (H.D.)
+* Tidy Table added as 'L112_Tuncer_TT.xlsx'
+* Master Template added as 'L112_Tuncer_Master.xlsx'
 
+2020-08-08: Added python code to repo (H.D.)
 
+2020-08-08: Updated Tidy Table and included additional datasets (H.D.)
+* Additional datasets include 'Araldite_Pure.xlsx', 'BTO(Micro).xlsx', and 'BTO(Nano).xlsx
+
+2020-08-09: Finalized python code (H.D.)
+
+2020-08-12: Uploaded Submissions to repo (H.D.)
+* Uploaded the complete submissions folder
+
+2020-08-12: Updated Traveler (H.D.)
 
 
 ---
