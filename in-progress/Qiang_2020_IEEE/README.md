@@ -59,9 +59,7 @@ CURATION JOB TRAVELER
 2020-08-13: Attempted to upload S1 (H.D.)
 * Error was received
 * Error: "[Conversion Error] Oops! The conversion cannot be finished! Please contact the administrator."
-* 
-
-2020-08-13:
+* Error appears to be liked to DOI
 
 ---
 
@@ -71,6 +69,7 @@ CURATION JOB TRAVELER
 
 > WebPlotDigitizer does not accommodate Weibull probability scale as y-axis needed in order to perform pixel->value extraction
 
+> Error in upload: Error on line 1199 in doiretriever.py -> "unhashable type:'list'"
 
 ---
 
