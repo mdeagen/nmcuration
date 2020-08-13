@@ -8,9 +8,9 @@ CURATION JOB TRAVELER
 
 **Traveler Created:** 2020-06-11
 
-**Traveler Modified:** 2020-06-11
+**Traveler Modified:** 2020-08-13
 
-**Current Status:** *Wishlist*
+**Current Status:** *In Progress*
 
 ---
 
@@ -33,7 +33,20 @@ CURATION JOB TRAVELER
 * Added datasets of interest
 * Added Issue 1 related to Weibull plot extraction
 
+2020-08-12: Added Tidy Table to repo (H.D.)
+* Uploaded 'Qiang_2020_TT.xlsx'
 
+2020-08-12: Added Weibull Conversion and separated Weibull data (H.D.)
+* Uploaded single excel sheet that converted all Weibull data
+* Uploaded individual excel sheets of Weibull data for both AC and DC at each wt% 
+
+2020-08-12: Added Master template to repo (H.D.)
+* Uploaded 'Qiang_2020_Master.xlsx'
+
+2020-08-13: Added Python code to repo (H.D.)
+* Uploaded 'Qiang.py'
+
+2020-08-13: Moved curation job to "In Progress" (H.D.)
 ---
 
 ## Open Issues
