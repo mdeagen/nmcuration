@@ -82,8 +82,6 @@ CURATION JOB TRAVELER
 * Journal article title contains a `/` character, potentially problematic
 * Line 19 of `doiretriever.py` indicates that "ieee" articles are handled as text only, instead of using BeautifulSoup package
 
-> Error in upload: Error on line 1199 in doiretriever.py -> "unhashable type:'list'"
-
 ---
 
 ## Closed Issues
