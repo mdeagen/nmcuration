@@ -54,6 +54,7 @@ def map_control(workbook, sample):  # fill in cells in '2. Material Types' sheet
     sheet = workbook['2. Material Types']
     temp = df['Sample'][sample]
     if temp != "S1":
+        sheet["C46"] = "0.05"
         sheet["B27"] = "The filler particles are barium titanate and calcium copper titanate. In addition, BTO particles were prepared using conventional solid-state synthesis at Oak Ridge National Laboratory for comparison"
         sheet["B28"] = "Barium titanate"
         sheet["B30"] = "BTO"
