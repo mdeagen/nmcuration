@@ -47,6 +47,11 @@ CURATION JOB TRAVELER
 * Uploaded 'Qiang.py'
 
 2020-08-13: Moved curation job to "In Progress" (H.D.)
+
+2020-08-13: Uploaded Final Master Template to repo (H.D.)
+
+2020-08-13: Ran code and uplaoded SUBMISSION folder (H.D.)
+* Uploaded SUBMISSION folder with all samples and additianl datafiles included
 ---
 
 ## Open Issues
