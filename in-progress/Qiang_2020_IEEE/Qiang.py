@@ -78,10 +78,10 @@ def map_control(workbook, sample):  # fill in cells in '2. Material Types' sheet
     sheet = workbook['2. Material Types']
     sheet["C46"] = df['wt'][sample]
     temp = df['wt'][sample]
-    #if temp > 0:
-        #sheet["B27"] = "The filler particles are barium titanate and calcium copper titanate. In addition, BTO particles were prepared using conventional solid-state synthesis at Oak Ridge National Laboratory for comparison"
-        #sheet["B28"] = "Barium titanate"
-        #sheet["B30"] = "BTO"
+    if temp > 0:
+        sheet["B27"] = "The fillers used in the study are commercially available untreated SiO2 fillers provided by Sigma-Aldrich."
+        sheet["B30"] = "SiO2"
+        sheet["B31"] = "Sigma-Aldrich"
 
 def map_data(workbook, sample):  # fill in cells in '5.3 Properties-Electrical' sheet for a sample
     sheet = workbook['5.3 Properties-Electrical']
