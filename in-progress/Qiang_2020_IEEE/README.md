@@ -52,6 +52,10 @@ CURATION JOB TRAVELER
 
 2020-08-13: Ran code and uplaoded SUBMISSION folder (H.D.)
 * Uploaded SUBMISSION folder with all samples and additianl datafiles included
+
+2020-08-13: Updated Python code (H.D.)
+* Added code to include filler name when applicable
+
 ---
 
 ## Open Issues

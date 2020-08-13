@@ -80,6 +80,7 @@ def map_control(workbook, sample):  # fill in cells in '2. Material Types' sheet
     temp = df['wt'][sample]
     if temp > 0:
         sheet["B27"] = "The fillers used in the study are commercially available untreated SiO2 fillers provided by Sigma-Aldrich."
+        sheet["B28"] = "Silicon Dioxide"
         sheet["B30"] = "SiO2"
         sheet["B31"] = "Sigma-Aldrich"
 
