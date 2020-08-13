@@ -59,24 +59,39 @@ CURATION JOB TRAVELER
 2020-08-13: Attempted to upload S1 (H.D.)
 * Error was received
 * Error: "[Conversion Error] Oops! The conversion cannot be finished! Please contact the administrator."
-* 
 
-2020-08-13:
+2020-08-13: Requested error logs from T.F. (M.E.D.)
+* Error related to doiretriever.py (see Issue 2)
 
 ---
 
 ## Open Issues
 
-### Issue 1
+### Issue 2
 
-> WebPlotDigitizer does not accommodate Weibull probability scale as y-axis needed in order to perform pixel->value extraction
+> File "/apps/nanomine/src/jobs/XMLCONV/code_src/doiretriever.py", line 1199, in <listcomp>
+>    return [x for x in myList if not (x in seen or seen_add(x))]
+> TypeError: unhashable type: 'list'
+
+**Error:** Unknown, but somehow related to doi parser `doiretriever.py`
+
+[**Link to code**](https://github.com/bluedevil-oit/nanomine/blob/dev/src/jobs/XMLCONV/code_src/doiretriever.py)
+
+**Initial notes:**
+* Have successfully curated from this IEEE journal issue before, so problem likely not with journal itself
+* Journal article title contains a `/` character, potentially problematic
+* Line 19 of `doiretriever.py` indicates that "ieee" articles are handled as text only, instead of using BeautifulSoup package
 
 
 ---
 
 ## Closed Issues
 
+### Issue 1
 
+> WebPlotDigitizer does not accommodate Weibull probability scale as y-axis needed in order to perform pixel->value extraction
+
+**Workaround:** Used homebuilt converter in Excel that linearizes Weibull scale, then convrets back to probability.
 
 ---
 
