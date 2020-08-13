@@ -8,9 +8,9 @@ CURATION JOB TRAVELER
 
 **Traveler Created:** 2020-06-05
 
-**Traveler Modified:** 2020-08-12
+**Traveler Modified:** 2020-08-13
 
-**Current Status:** *In Progress*
+**Current Status:** *Completed*
 
 ---
 
@@ -48,6 +48,11 @@ NOTE: 3 "samples" total: Neat resin (control), sub-micron BTO, nano-sized BTO
 * Uploaded the complete submissions folder
 
 2020-08-12: Updated Traveler (H.D.)
+
+2020-08-13: Uploaded Submissions Successfully (H.D.)
+* Uploaded samples without error
+
+2020-08-13: Moved curation job to "Completed" (H.D.)
 
 
 ---
