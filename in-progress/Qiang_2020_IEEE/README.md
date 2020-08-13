@@ -56,6 +56,13 @@ CURATION JOB TRAVELER
 2020-08-13: Updated Python code (H.D.)
 * Added code to include filler name when applicable
 
+2020-08-13: Attempted to upload S1 (H.D.)
+* Error was received
+* Error: "[Conversion Error] Oops! The conversion cannot be finished! Please contact the administrator."
+* 
+
+2020-08-13:
+
 ---
 
 ## Open Issues
